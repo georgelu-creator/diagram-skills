@@ -1,0 +1,125 @@
+{
+  "title": "Aurora Deep-Space Resilience Network",
+  "subtitle": "A fictional autonomy loop for sensing, simulation, safe action and scientific learning",
+  "direction": "LR",
+  "theme": "spectrum",
+  "legend": true,
+  "groups": [
+    {"id": "signal", "label": "COSMIC INPUT"},
+    {"id": "perception", "label": "PERCEPTION MESH"},
+    {"id": "cognition", "label": "MISSION COGNITION"},
+    {"id": "assurance", "label": "SAFETY ENVELOPE"},
+    {"id": "action", "label": "ORBITAL RESPONSE"},
+    {"id": "outcomes", "label": "DISCOVERY OUTPUT"}
+  ],
+  "nodes": [
+    {
+      "id": "stellar-signal",
+      "label": "Stellar signal",
+      "subtitle": "Spectra · radiation · gravitational events",
+      "type": "external",
+      "group": "signal",
+      "link": "https://science.nasa.gov/universe/"
+    },
+    {
+      "id": "mission-charter",
+      "label": "Mission charter",
+      "subtitle": "Science priorities and autonomy boundaries",
+      "type": "input",
+      "group": "signal"
+    },
+    {
+      "id": "sensor-fusion",
+      "label": "Sensor fusion",
+      "subtitle": "Align clocks · reject noise · infer state",
+      "type": "process",
+      "group": "perception"
+    },
+    {
+      "id": "ephemeris-store",
+      "label": "Ephemeris vault",
+      "subtitle": "Orbits, celestial maps and uncertainty",
+      "type": "database",
+      "group": "perception",
+      "link": "https://ssd.jpl.nasa.gov/"
+    },
+    {
+      "id": "swarm-planner",
+      "label": "Swarm planner",
+      "subtitle": "Coordinate probes across time and energy",
+      "type": "agent",
+      "group": "cognition"
+    },
+    {
+      "id": "digital-twin",
+      "label": "Digital twin",
+      "subtitle": "Simulate trajectories and failure modes",
+      "type": "process",
+      "group": "cognition",
+      "link": "https://eyes.nasa.gov/"
+    },
+    {
+      "id": "risk-gate",
+      "label": "Risk envelope",
+      "subtitle": "Fuel · collision · thermal · comms limits",
+      "type": "decision",
+      "group": "assurance"
+    },
+    {
+      "id": "anomaly-sentinel",
+      "label": "Anomaly sentinel",
+      "subtitle": "Detect drift and predict cascading faults",
+      "type": "agent",
+      "group": "assurance"
+    },
+    {
+      "id": "maneuver-fleet",
+      "label": "Maneuver fleet",
+      "subtitle": "Retask instruments and coordinate burns",
+      "type": "agent",
+      "group": "action"
+    },
+    {
+      "id": "science-archive",
+      "label": "Science archive",
+      "subtitle": "Evidence lineage and replayable telemetry",
+      "type": "database",
+      "group": "action",
+      "link": "https://science.nasa.gov/astrophysics/data/"
+    },
+    {
+      "id": "insight-beacon",
+      "label": "Insight beacon",
+      "subtitle": "Verified discoveries and mission lessons",
+      "type": "document",
+      "group": "outcomes"
+    },
+    {
+      "id": "ground-observer",
+      "label": "Ground observer",
+      "subtitle": "Human review and long-horizon intent",
+      "type": "external",
+      "group": "outcomes",
+      "link": "https://deepspace.jpl.nasa.gov/"
+    }
+  ],
+  "edges": [
+    {"source": "stellar-signal", "target": "sensor-fusion", "label": "raw events", "kind": "primary"},
+    {"source": "mission-charter", "target": "ephemeris-store", "label": "constraints", "kind": "control"},
+    {"source": "mission-charter", "target": "sensor-fusion", "label": "focus window", "kind": "control"},
+    {"source": "sensor-fusion", "target": "swarm-planner", "label": "world state", "kind": "primary"},
+    {"source": "ephemeris-store", "target": "digital-twin", "label": "orbit context", "kind": "primary"},
+    {"source": "sensor-fusion", "target": "digital-twin", "label": "live telemetry", "kind": "async"},
+    {"source": "swarm-planner", "target": "risk-gate", "label": "candidate plan", "kind": "primary"},
+    {"source": "digital-twin", "target": "anomaly-sentinel", "label": "simulated state", "kind": "primary"},
+    {"source": "digital-twin", "target": "risk-gate", "label": "risk forecast", "kind": "control"},
+    {"source": "risk-gate", "target": "maneuver-fleet", "label": "approved", "kind": "success"},
+    {"source": "anomaly-sentinel", "target": "science-archive", "label": "anomaly stream", "kind": "async"},
+    {"source": "risk-gate", "target": "science-archive", "label": "hold packet", "kind": "error"},
+    {"source": "maneuver-fleet", "target": "insight-beacon", "label": "mission result", "kind": "primary"},
+    {"source": "science-archive", "target": "ground-observer", "label": "evidence trail", "kind": "async"},
+    {"source": "maneuver-fleet", "target": "ground-observer", "label": "status pulse", "kind": "async"},
+    {"source": "insight-beacon", "target": "mission-charter", "label": "next charter", "kind": "feedback"},
+    {"source": "ground-observer", "target": "mission-charter", "label": "human intent", "kind": "feedback"}
+  ]
+}

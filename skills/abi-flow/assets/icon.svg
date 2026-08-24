@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">ABI Flow</title>
+  <rect width="128" height="128" rx="28" fill="#0f172a"/>
+  <rect x="18" y="22" width="38" height="28" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="4"/>
+  <rect x="72" y="78" width="38" height="28" rx="8" fill="#dcfce7" stroke="#34d399" stroke-width="4"/>
+  <path d="M56 36H91V72" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 63L91 72L100 63" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M72 92H37V56" fill="none" stroke="#c4b5fd" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M28 65L37 56L46 65" fill="none" stroke="#c4b5fd" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

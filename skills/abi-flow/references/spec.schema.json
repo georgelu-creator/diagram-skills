@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/georgelu-creator/abi-flow/blob/main/skills/abi-flow/references/spec.schema.json",
+  "title": "ABI Flow diagram",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["title", "nodes", "edges"],
+  "properties": {
+    "title": {"type": "string", "minLength": 1},
+    "subtitle": {"type": "string"},
+    "direction": {"enum": ["LR", "TB"], "default": "LR"},
+    "theme": {"enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
+    "legend": {"type": "boolean"},
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "label": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "subtitle": {"type": "string"},
+          "type": {"enum": ["process", "decision", "input", "document", "database", "agent", "external"], "default": "process"},
+          "group": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "link": {"type": "string"}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "target"],
+        "properties": {
+          "source": {"type": "string"},
+          "target": {"type": "string"},
+          "label": {"type": "string"},
+          "kind": {"enum": ["primary", "control", "feedback", "async", "success", "error"], "default": "primary"}
+        }
+      }
+    }
+  }
+}

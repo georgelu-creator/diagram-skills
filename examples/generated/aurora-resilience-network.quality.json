@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "diagram": {
+    "title": "Aurora Deep-Space Resilience Network",
+    "nodes": 12,
+    "edges": 17,
+    "groups": 6,
+    "direction": "LR",
+    "theme": "spectrum"
+  },
+  "canvas": {
+    "width": 2230.2,
+    "height": 620
+  },
+  "geometry": {
+    "node_overlap_count": 0,
+    "edge_node_collision_count": 0,
+    "edge_crossing_count": 0,
+    "group_overlap_count": 0,
+    "group_intrusion_count": 0,
+    "route_segment_count": 51
+  },
+  "issues": [],
+  "visual_review": "pending: inspect generated PNG"
+}
