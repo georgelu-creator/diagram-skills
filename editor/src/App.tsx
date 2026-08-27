@@ -264,7 +264,7 @@ function ImportDialog({ onClose, onImport }: { onClose: () => void; onImport: (m
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="modal" role="dialog" aria-modal="true" aria-label="Import" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="modal__header"><div><strong>导入到 VisualSpec</strong><span>JSON Workspace · CSV · Mermaid</span></div><button onClick={onClose}>×</button></div>
+        <div className="modal__header"><div><strong>导入到 VisualSkills</strong><span>JSON Workspace · CSV · Mermaid</span></div><button onClick={onClose}>×</button></div>
         <div className="segmented">{(["csv", "mermaid", "json"] as const).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{item.toUpperCase()}</button>)}</div>
         {mode !== "json" && <Field label="视图标题"><input value={title} onChange={(event) => setTitle(event.target.value)} /></Field>}
         <textarea value={source} onChange={(event) => setSource(event.target.value)} spellCheck={false} />
@@ -281,7 +281,7 @@ function downloadJson(workspace: Workspace) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `${workspace.title.replace(/[^A-Za-z0-9\u4e00-\u9fff-]+/g, "-") || "visualspec"}.json`;
+  anchor.download = `${workspace.title.replace(/[^A-Za-z0-9\u4e00-\u9fff-]+/g, "-") || "visualskills"}.json`;
   anchor.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -405,7 +405,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <div className="product"><span className="product__mark">V</span><div><strong>VisualSpec Studio</strong><span>Enterprise diagram workbench</span></div></div>
+        <div className="product"><span className="product__mark">V</span><div><strong>VisualSkills Studio</strong><span>Visual thinking workbench</span></div></div>
         <div className="breadcrumbs">{history.length > 0 && <button onClick={goBack}>← 返回</button>}<span>{workspace.title}</span><b>/</b><strong>{activeView.title}</strong></div>
         <div className="topbar__actions"><span className={`sync-status sync-status--${status}`}>{statusText}</span><button onClick={() => setShowImport(true)}>导入</button><button onClick={() => downloadJson(workspace)}>导出 JSON</button></div>
       </header>

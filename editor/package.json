@@ -2,7 +2,7 @@
   "name": "@visualspec/editor",
   "private": true,
   "version": "0.1.0",
-  "description": "VisualSpec Studio browser editor for enterprise diagrams and multi-view workspaces",
+  "description": "VisualSkills Studio browser workbench for enterprise diagrams and multi-view workspaces",
   "license": "MIT",
   "type": "module",
   "engines": {

@@ -10,7 +10,7 @@ Do not publish suspected vulnerabilities or sensitive diagram data in a public i
 
 ## Threat model
 
-ABI Flow treats diagram JSON as untrusted input:
+The DiagramSpec renderer treats diagram JSON as untrusted input:
 
 - all SVG and HTML text is escaped;
 - node links are restricted to HTTP(S), `mailto`, and page fragments;
@@ -18,12 +18,12 @@ ABI Flow treats diagram JSON as untrusted input:
 - the renderer does not execute content from the diagram specification;
 - output paths are supplied explicitly by the caller.
 
-VisualSpec Studio adds browser-side controls:
+VisualSkills Studio adds browser-side controls:
 
 - Workspace JSON is parsed through a strict Zod model with reference checks.
 - Mermaid uses the official renderer with `securityLevel: strict`.
 - Monaco and all editor code load from installed packages; no public CDN is required.
-- CSV is parsed locally and mapped into allowlisted VisualSpec fields.
+- CSV is parsed locally and mapped into allowlisted workspace fields.
 - Brand values accept only known keys and six- or eight-digit hex colors.
 - Enterprise boards accept only known section tones, block kinds, semantic edge kinds, and built-in icon names; JSON cannot inject arbitrary SVG, CSS, scripts, or remote images.
 - Yjs data persists in local IndexedDB. Network sync is disabled unless `VITE_YJS_WEBSOCKET_URL` names a trusted compatible endpoint.

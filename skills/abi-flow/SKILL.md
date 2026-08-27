@@ -1,11 +1,11 @@
 ---
 name: abi-flow
-description: Generate presentation-ready enterprise architecture diagrams, Agent workflows, data flows, capability maps, user flows, topologies, decisions, roadmaps, strategy maps, and swimlane processes directly from a request. Use when the Agent should deliver a polished, validated PNG/SVG/HTML plus reproducible JSON—not merely diagram source—including high-density layered boards, brand themes, Mermaid/CSV input, or multi-view drill-down. Do not use for quantitative charts or free-form raster illustration.
+description: Generate presentation-ready enterprise architecture diagrams, Agent workflows, data flows, capability maps, user flows, topologies, decisions, roadmaps, strategy maps, and swimlane processes from a request. Use when the Agent should deliver polished SVG/HTML with editable JSON, plus PNG when a local rasterizer is available—not merely diagram source. Includes high-density layered boards, graph starters, visual themes, and optional local Studio workflows. Do not use for quantitative charts or free-form raster illustration.
 ---
 
-# VisualSpec
+# VisualSkills
 
-Turn a diagram request into a finished visual deliverable with the bundled dependency-free renderer. The primary product is **Agent-generated diagram quality**: author the maintainable JSON, render SVG/HTML/PNG, inspect the PNG, fix the source, and return the visual. Do not make the user open an editor to finish ordinary work. The public Skill id remains `$abi-flow` for repository compatibility; the product is VisualSpec.
+Turn a diagram request into a finished visual deliverable with the bundled DiagramSpec renderer. The primary product is **Agent-generated diagram quality**: author maintainable JSON, render SVG/HTML and optional PNG, inspect the visual, fix the source, and return the result. Do not make the user open an editor to finish ordinary work. The public Skill id remains `$abi-flow` for compatibility; the user-facing brand is VisualSkills.
 
 ## Default delivery workflow
 
@@ -13,8 +13,8 @@ Turn a diagram request into a finished visual deliverable with the bundled depen
 2. Read the selected profile in [references/diagram-thinking-profiles.json](references/diagram-thinking-profiles.json), tailor at least three quality questions, and run `diagram_brief.py ... --strict` before drawing.
 3. For a layered overview with more than 14 visible concepts, read [references/enterprise-board.md](references/enterprise-board.md) and use `layout: board`. For smaller relationship graphs, use nodes/edges.
 4. Start from the matching template, replace its example content, and keep the brief and source JSON beside the outputs.
-5. Run `render ... --png --strict`. A source file alone is not a completed request.
-6. Inspect the generated PNG at full 1920-pixel width. Check hierarchy, Chinese text, icon consistency, clipping, crowded cards, line crossings, and whether the brief's narrative is visually dominant.
+5. Run `render ... --strict`; add `--png` when `rsvg-convert` is available. A source file alone is not a completed visual request.
+6. Inspect the generated SVG or 1920-pixel PNG at full size. Check hierarchy, Chinese text, icon consistency, clipping, crowded cards, line crossings, and whether the brief's narrative is visually dominant.
 7. Answer every brief quality question with concrete evidence and run `diagram_brief.py ... --spec ... --strict --reviewed`. If any answer fails or the type/composition differs from the source, correct the brief, source, or renderer and rerender. Stop after three evidence-based correction rounds; then simplify or split.
 8. Deliver the image first, then link the brief, SVG/HTML/source/quality evidence. Mention the browser editor only when the user asks for manual editing, imports, or drill-down.
 
@@ -64,7 +64,7 @@ Accept natural language or structured fields. Preserve user-provided values; inf
 - `brand`: allowlisted hex color tokens layered over a preset
 - `views`: overview and detail views; connect with `child_view`
 - `imports`: optional Mermaid source or CSV table
-- `outputs`: finished PNG/SVG/HTML plus source JSON and quality evidence by default
+- `outputs`: finished SVG/HTML plus source JSON and diagnostics by default; PNG when the local rasterizer is available
 
 Ask only when an unresolved choice materially changes meaning, publishing safety, or required output. Otherwise choose the conventional layout from the type guide and state the assumption.
 
@@ -79,7 +79,6 @@ python3 scripts/abi_flow.py new system-architecture --output work/architecture.j
 python3 scripts/abi_flow.py validate work/architecture.json --strict
 python3 scripts/abi_flow.py render work/architecture.json --output-dir output --png --strict
 python3 scripts/diagram_brief.py work/architecture.brief.json --spec work/architecture.json --strict --reviewed
-python3 scripts/abi_flow.py workspace-validate ../../examples/enterprise-ai-workspace.json --strict
 ```
 
 `render` writes `.svg`, `.html`, `.quality.json`, and—when `rsvg-convert` is available and `--png` is supplied—`.png`.

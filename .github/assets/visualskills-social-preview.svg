@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" width="100%" role="img" aria-labelledby="title desc">
+  <title id="title">VisualSkills — beautiful visual thinking skills for AI agents</title>
+  <desc id="desc">GitHub social preview with the VisualSkills brand, DiagramSpec pipeline and a generated enterprise Agent architecture example.</desc>
+  <defs/>
+  <polygon points="0,0 680,0 680,340 0,340" fill="#ffffff"/>
+  <path d="M14 1H666Q679 1 679 14V326Q679 339 666 339H14Q1 339 1 326V14Q1 1 14 1Z" fill="none" stroke="#D3D1C7" stroke-width="1"/>
+  <rect x="40" y="35" width="48" height="48" rx="12" fill="#26215C"/>
+  <rect x="50" y="45" width="13" height="11" rx="3" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1"/>
+  <rect x="65" y="54" width="13" height="11" rx="3" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/>
+  <rect x="50" y="63" width="13" height="11" rx="3" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1"/>
+  <text x="40" y="104" dominant-baseline="central" font-family="sans-serif" font-size="30" font-weight="500" letter-spacing="-1" fill="#171717">VisualSkills</text>
+  <text x="40" y="134" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="500" fill="#26215C">Beautiful visual thinking</text>
+  <text x="40" y="154" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="500" fill="#26215C">skills for AI agents.</text>
+  <text x="40" y="181" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#444441">Turn complex systems and workflows</text>
+  <text x="40" y="197" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#444441">into clear, editable visual deliverables.</text>
+  <rect x="40" y="220" width="200" height="28" rx="6" fill="#171717"/>
+  <text x="140" y="234" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#ffffff">Install → describe → get the visual</text>
+  <rect x="40" y="260" width="58" height="24" rx="12" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text x="69" y="272" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#3C3489">System</text>
+  <rect x="104" y="260" width="72" height="24" rx="12" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="140" y="272" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#0C447C">Workflow</text>
+  <rect x="182" y="260" width="62" height="24" rx="12" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text x="213" y="272" text-anchor="middle" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#3C3489">Data flow</text>
+  <text x="40" y="303" dominant-baseline="central" font-family="monospace" font-size="11" font-weight="500" fill="#444441">Powered by DiagramSpec</text>
+  <text x="40" y="321" dominant-baseline="central" font-family="monospace" font-size="11" font-weight="400" fill="#5F5E5A">typed source → layout → visual</text>
+  <rect x="300" y="35" width="340" height="270" rx="12" fill="#F8FAFC" stroke="#D3D1C7" stroke-width="1"/>
+  <text x="318" y="57" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="500" fill="#171717">Agent workspace architecture</text>
+  <text x="318" y="73" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#5F5E5A">A communication-ready layered overview</text>
+  <rect x="312" y="88" width="316" height="32" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="324" y="104" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#0C447C">Users &amp; Agents</text>
+  <text x="610" y="104" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#042C53">Mobile · Codex · CLI</text>
+  <rect x="312" y="126" width="316" height="32" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text x="324" y="142" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#3C3489">Access</text>
+  <text x="610" y="142" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#26215C">MCP · Auth · Routing</text>
+  <rect x="312" y="164" width="316" height="50" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="324" y="181" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#0C447C">Memory &amp; Context</text>
+  <text x="610" y="181" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#042C53">Search · Graph · Workspace</text>
+  <text x="610" y="198" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#042C53">Build context · Recent activity</text>
+  <rect x="312" y="220" width="316" height="32" rx="7" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text x="324" y="236" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#3C3489">Tools</text>
+  <text x="610" y="236" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#26215C">Drive · GitHub · APIs</text>
+  <rect x="312" y="258" width="316" height="32" rx="7" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="324" y="274" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="500" fill="#0C447C">Sources of truth</text>
+  <text x="610" y="274" text-anchor="end" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#042C53">Code · Docs · Data</text>
+  <path d="M63 50H66V59H65M65 59H63V68" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

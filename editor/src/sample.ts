@@ -14,7 +14,7 @@ export const sampleWorkspace: Workspace = {
       direction: "LR",
       theme: "spectrum",
       layout_mode: "ranked",
-      brand: { name: "VisualSpec", primary: "#4F46E5", accent: "#14B8A6" },
+      brand: { name: "VisualSkills", primary: "#4F46E5", accent: "#14B8A6" },
       groups: [],
       lanes: [
         { id: "business", label: "业务与产品 / BUSINESS", order: 0 },

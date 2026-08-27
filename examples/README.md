@@ -1,6 +1,6 @@
-# VisualSpec example gallery
+# VisualSkills example gallery
 
-Every example is reproducible from checked-in JSON. Complex showcase sources live in this directory; reusable starters live under [`../skills/abi-flow/templates`](../skills/abi-flow/templates). Generated assets stay together by basename:
+Every example keeps its checked-in JSON and generated artifacts together. The six launch showcases are also indexed by [`../gallery/manifest.json`](../gallery/manifest.json); reusable starters live under [`../skills/abi-flow/templates`](../skills/abi-flow/templates).
 
 | Example | Brief | Source | SVG | HTML | PNG | Quality |
 |---|---|---|---|---|---|---|

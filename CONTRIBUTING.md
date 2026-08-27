@@ -1,6 +1,6 @@
-# Contributing to VisualSpec
+# Contributing to VisualSkills
 
-VisualSpec accepts focused contributions that improve diagram meaning, deterministic rendering, validation, accessibility, templates, or documentation.
+VisualSkills accepts focused contributions that improve diagram meaning, source-driven rendering, validation, accessibility, templates, or documentation.
 
 ## Before opening a change
 
