@@ -4,7 +4,7 @@ Use these values in the GitHub **About** and **Social preview** settings while t
 
 ## Description
 
-> Beautiful visual thinking skills for AI agents — turn prompts into typed SVG, HTML and optional PNG with DiagramSpec.
+> Beautiful visual thinking skills for AI agents — turn prompts into typed diagram sources, SVG, HTML and optional PNG with DiagramSpec.
 
 ## Topics
 
