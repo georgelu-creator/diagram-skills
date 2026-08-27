@@ -1,0 +1,30 @@
+{
+  "title": "AI 产品能力地图",
+  "subtitle": "从产品北极星到平台能力、用户价值与业务结果",
+  "diagram_type": "capability-map",
+  "direction": "TB",
+  "theme": "spectrum",
+  "legend": false,
+  "groups": [
+    {"id": "northstar", "label": "北极星 / NORTH STAR"},
+    {"id": "capabilities", "label": "核心能力 / CORE CAPABILITIES"},
+    {"id": "outcomes", "label": "价值结果 / OUTCOMES"}
+  ],
+  "nodes": [
+    {"id": "vision", "label": "可信的智能工作平台", "subtitle": "Fast · Contextual · Governed", "type": "agent", "group": "northstar"},
+    {"id": "understand", "label": "理解与检索", "subtitle": "Search · Memory · Knowledge", "type": "database", "group": "capabilities"},
+    {"id": "orchestrate", "label": "规划与编排", "subtitle": "Agent · Workflow · Tooling", "type": "process", "group": "capabilities"},
+    {"id": "govern", "label": "治理与评估", "subtitle": "Permission · Eval · Audit", "type": "decision", "group": "capabilities"},
+    {"id": "speed", "label": "更快完成任务", "subtitle": "Time to value ↓", "type": "document", "group": "outcomes"},
+    {"id": "quality", "label": "更稳定的质量", "subtitle": "Success rate ↑", "type": "document", "group": "outcomes"},
+    {"id": "trust", "label": "可控与可追溯", "subtitle": "Risk & cost ↓", "type": "document", "group": "outcomes"}
+  ],
+  "edges": [
+    {"source": "vision", "target": "understand", "kind": "primary"},
+    {"source": "vision", "target": "orchestrate", "kind": "primary"},
+    {"source": "vision", "target": "govern", "kind": "primary"},
+    {"source": "understand", "target": "speed", "kind": "primary"},
+    {"source": "orchestrate", "target": "quality", "kind": "primary"},
+    {"source": "govern", "target": "trust", "kind": "primary"}
+  ]
+}

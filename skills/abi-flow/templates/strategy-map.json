@@ -1,0 +1,37 @@
+{
+  "title": "AI Native 组织战略地图",
+  "subtitle": "北极星、战略支柱、关键行动与可衡量结果",
+  "diagram_type": "strategy-map",
+  "direction": "TB",
+  "theme": "notion",
+  "legend": false,
+  "groups": [
+    {"id": "vision", "label": "愿景 / VISION"},
+    {"id": "pillars", "label": "战略支柱 / PILLARS"},
+    {"id": "actions", "label": "关键行动 / INITIATIVES"},
+    {"id": "metrics", "label": "衡量结果 / KEY RESULTS"}
+  ],
+  "nodes": [
+    {"id": "northstar", "label": "人机协作成为默认工作方式", "subtitle": "AI-native operating model", "type": "agent", "group": "vision"},
+    {"id": "experience", "label": "体验领先", "subtitle": "Useful · Fast · Trusted", "type": "process", "group": "pillars"},
+    {"id": "platform", "label": "平台复用", "subtitle": "Context · Skill · Governance", "type": "database", "group": "pillars"},
+    {"id": "adoption", "label": "组织采用", "subtitle": "Habit · Community · Change", "type": "external", "group": "pillars"},
+    {"id": "copilot", "label": "重做关键旅程", "subtitle": "Top 5 workflows", "type": "process", "group": "actions"},
+    {"id": "foundation", "label": "建设统一底座", "subtitle": "Shared services", "type": "process", "group": "actions"},
+    {"id": "enablement", "label": "规模化赋能", "subtitle": "Playbook · Academy", "type": "process", "group": "actions"},
+    {"id": "task", "label": "任务成功率", "subtitle": "≥ 85%", "type": "document", "group": "metrics"},
+    {"id": "reuse", "label": "能力复用率", "subtitle": "≥ 60%", "type": "document", "group": "metrics"},
+    {"id": "weekly", "label": "周活跃渗透", "subtitle": "≥ 70%", "type": "document", "group": "metrics"}
+  ],
+  "edges": [
+    {"source": "northstar", "target": "experience", "kind": "primary"},
+    {"source": "northstar", "target": "platform", "kind": "primary"},
+    {"source": "northstar", "target": "adoption", "kind": "primary"},
+    {"source": "experience", "target": "copilot", "kind": "primary"},
+    {"source": "platform", "target": "foundation", "kind": "primary"},
+    {"source": "adoption", "target": "enablement", "kind": "primary"},
+    {"source": "copilot", "target": "task", "kind": "primary"},
+    {"source": "foundation", "target": "reuse", "kind": "primary"},
+    {"source": "enablement", "target": "weekly", "kind": "primary"}
+  ]
+}

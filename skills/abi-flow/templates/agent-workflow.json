@@ -1,0 +1,29 @@
+{
+  "title": "Agent 任务执行闭环",
+  "subtitle": "意图理解、上下文构建、工具执行、质量校验与记忆回写",
+  "diagram_type": "agent-workflow",
+  "direction": "LR",
+  "theme": "spectrum",
+  "legend": true,
+  "nodes": [
+    {"id": "request", "label": "用户意图", "subtitle": "Goal · Constraint · Context", "type": "input"},
+    {"id": "plan", "label": "任务规划", "subtitle": "Decompose · Route · Budget", "type": "agent"},
+    {"id": "retrieve", "label": "构建上下文", "subtitle": "Memory · Files · Recent work", "type": "database"},
+    {"id": "gate", "label": "信息充分？", "subtitle": "Authority · Risk · Evidence", "type": "decision"},
+    {"id": "execute", "label": "调用工具执行", "subtitle": "MCP · API · Code", "type": "agent"},
+    {"id": "clarify", "label": "请求补充信息", "subtitle": "Only material choices", "type": "external"},
+    {"id": "verify", "label": "验证结果", "subtitle": "Tests · Review · Safety", "type": "process"},
+    {"id": "deliver", "label": "交付与回写", "subtitle": "Artifact · Summary · Memory", "type": "document"}
+  ],
+  "edges": [
+    {"source": "request", "target": "plan", "kind": "primary"},
+    {"source": "plan", "target": "retrieve", "kind": "control"},
+    {"source": "retrieve", "target": "gate", "kind": "primary"},
+    {"source": "gate", "target": "execute", "label": "是", "kind": "success"},
+    {"source": "gate", "target": "clarify", "label": "否", "kind": "error"},
+    {"source": "clarify", "target": "retrieve", "label": "new context", "kind": "feedback"},
+    {"source": "execute", "target": "verify", "kind": "primary"},
+    {"source": "verify", "target": "deliver", "kind": "success"},
+    {"source": "deliver", "target": "plan", "label": "learn", "kind": "feedback"}
+  ]
+}

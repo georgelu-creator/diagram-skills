@@ -1,6 +1,6 @@
 # Inspirations and provenance
 
-ABI Flow is an original implementation. It does not vendor, copy, or modify source code from the projects below. Their public interfaces and design approaches informed the requirements:
+VisualSpec (formerly ABI Flow) is an original implementation. It does not vendor, copy, or modify source code from the projects below. Their public interfaces and design approaches informed the requirements:
 
 - [Mermaid](https://github.com/mermaid-js/mermaid): text-first diagrams and SVG output
 - [D2](https://github.com/terrastruct/d2): declarative sources, themes and automated layout
@@ -10,4 +10,4 @@ ABI Flow is an original implementation. It does not vendor, copy, or modify sour
 - [Excalidraw](https://github.com/excalidraw/excalidraw): portable, editable vector diagrams
 - [fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph): semantic arrows, geometry validation and bounded visual review
 
-All ABI Flow source files were written for this repository. Refer to each upstream project for its own license and terms before using that project directly.
+All VisualSpec source files were written for this repository. Refer to each upstream project for its own license and terms before using that project directly.

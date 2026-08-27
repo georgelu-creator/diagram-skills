@@ -17,7 +17,11 @@ jobs:
           python-version: "3.11"
       - name: Unit tests
         run: python3 -m unittest discover -s tests -v
-      - name: Strict example validation
-        run: python3 skills/abi-flow/scripts/abi_flow.py validate examples/aurora-resilience-network.json --strict
+      - name: Strict example and template validation
+        run: |
+          python3 skills/abi-flow/scripts/abi_flow.py validate examples/aurora-resilience-network.json --strict
+          for spec in skills/abi-flow/templates/*.json; do
+            python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
+          done
       - name: Render example
         run: python3 skills/abi-flow/scripts/abi_flow.py render examples/aurora-resilience-network.json --output-dir /tmp/abi-flow --name aurora-resilience-network --strict

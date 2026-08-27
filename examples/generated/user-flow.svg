@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow" data-theme="light" viewBox="0 0 960 1348" role="img" aria-labelledby="abi-title abi-desc">
+<title id="abi-title">AI 助手首次激活用户流程</title><desc id="abi-desc">用户流程图 / User Flow with 7 nodes and 7 edges</desc>
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="var(--shadow)"/></filter>
+<marker id="arrow-feedback" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-feedback)"/></marker>
+<marker id="arrow-control" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-control)"/></marker>
+<marker id="arrow-error" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-error)"/></marker>
+<marker id="arrow-primary" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-primary)"/></marker>
+<marker id="arrow-success" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-success)"/></marker>
+<marker id="arrow-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-async)"/></marker>
+</defs>
+<style>
+.abi-flow{--page:#ffffff;--surface:#ffffff;--ink:#172033;--muted:#526071;--hair:#d7e0ea;--group:#f8fafc;--group_stroke:#c7d2e0;--shadow:#31537a18;--node-decision:#fff7ed;--node-decision-stroke:#fb923c;--node-process:#eff6ff;--node-process-stroke:#60a5fa;--node-external:#f8fafc;--node-external-stroke:#94a3b8;--node-agent:#f5f3ff;--node-agent-stroke:#8b5cf6;--node-input:#fdf4ff;--node-input-stroke:#d946ef;--node-database:#ecfeff;--node-database-stroke:#22d3ee;--node-document:#f0fdf4;--node-document-stroke:#4ade80;--group-tone-0:#eff6ff;--group-tone-1:#ecfeff;--group-tone-2:#f5f3ff;--group-tone-3:#fff7ed;--group-tone-4:#f0fdf4;--group-tone-5:#fff1f2;--edge-primary:#2563eb;--edge-control:#ea580c;--edge-feedback:#7c3aed;--edge-async:#64748b;--edge-success:#059669;--edge-error:#dc2626;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}
+.abi-flow[data-theme="dark"]{--page:#0c1117;--surface:#151b23;--ink:#f8fafc;--muted:#a8b3c2;--hair:#334155;--group:#16253a;--group_stroke:#42648f;--shadow:#00000055;--node-decision:#151b23;--node-decision-stroke:#334155;--node-process:#151b23;--node-process-stroke:#334155;--node-external:#151b23;--node-external-stroke:#334155;--node-agent:#151b23;--node-agent-stroke:#334155;--node-input:#151b23;--node-input-stroke:#334155;--node-database:#151b23;--node-database-stroke:#334155;--node-document:#151b23;--node-document-stroke:#334155;--group-tone-0:#16253a;--group-tone-1:#16253a;--group-tone-2:#16253a;--group-tone-3:#16253a;--group-tone-4:#16253a;--group-tone-5:#16253a}
+text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}.type-badge{font-size:10px;font-weight:800;fill:var(--muted);letter-spacing:.4px}.type-badge-bg{fill:var(--surface);stroke:var(--hair)}
+.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}
+.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}
+.node-title{font-size:14.5px;font-weight:750;text-anchor:middle;dominant-baseline:middle}.node-subtitle{font-size:11.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}
+.edge{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.edge.async,.edge.error{stroke-dasharray:6 5}.edge.feedback{stroke-width:2.2}.edge-label-bg{fill:var(--page);stroke:var(--hair);stroke-width:.7;opacity:.97}.edge-label{font-size:10.8px;font-weight:650;text-anchor:middle;dominant-baseline:middle;fill:var(--muted)}
+.legend-bg{fill:var(--surface);stroke:var(--hair)}.legend-text{font-size:10.5px;fill:var(--muted)}.node-link{cursor:pointer}.node-link:focus .node-shape,.node-link:hover .node-shape{stroke:var(--edge-primary);stroke-width:2.4}.node-link:focus{outline:none}
+</style>
+<rect class="page-bg" width="960" height="1348"/>
+<text class="title" x="72" y="48">AI 助手首次激活用户流程</text>
+<text class="subtitle" x="72" y="75">从价值感知、授权、首次成功到持续使用</text>
+<g class="diagram-type"><rect class="type-badge-bg" x="740.8" y="31" width="147.2" height="25" rx="12.5"/><text class="type-badge" x="814.4" y="47" text-anchor="middle">用户流程图 / User Flow</text></g>
+<path class="edge primary" style="stroke:var(--edge-primary)" d="M 480 196 L 480 255 L 480 314" marker-end="url(#arrow-primary)"/>
+<path class="edge primary" style="stroke:var(--edge-primary)" d="M 480 392 L 480 451 L 480 510" marker-end="url(#arrow-primary)"/>
+<path class="edge success" style="stroke:var(--edge-success)" d="M 480 622 L 480 681 L 360.7 681 L 360.7 740" marker-end="url(#arrow-success)"/>
+<path class="edge error" style="stroke:var(--edge-error)" d="M 480 622 L 480 681 L 621 681 L 621 740" marker-end="url(#arrow-error)"/>
+<path class="edge feedback" style="stroke:var(--edge-feedback)" d="M 621 818 L 621 1238 L 756.3 1238 L 756.3 286 L 480 286 L 480 314" marker-end="url(#arrow-feedback)"/>
+<path class="edge control" style="stroke:var(--edge-control)" d="M 360.7 818 L 360.7 877 L 480 877 L 480 936" marker-end="url(#arrow-control)"/>
+<path class="edge success" style="stroke:var(--edge-success)" d="M 480 1014 L 480 1073 L 480 1132" marker-end="url(#arrow-success)"/>
+<g class="node" id="node-entry"><rect class="node-shape external" x="367.2" y="118" width="225.6" height="78" rx="13"/><text class="node-title" x="480" y="147">发现产品</text><text class="node-subtitle" x="480" y="169">Referral · Search · Invite</text></g>
+<g class="node" id="node-promise"><rect class="node-shape process" x="373.4" y="314" width="213.2" height="78" rx="13"/><text class="node-title" x="480" y="343">理解核心价值</text><text class="node-subtitle" x="480" y="365">Use case · Proof · Trust</text></g>
+<g class="node" id="node-intent"><path class="node-shape decision" d="M 480 510 L 585 566 L 480 622 L 375 566 Z"/><text class="node-title" x="480" y="556">准备开始？</text><text class="node-subtitle" x="480" y="578">Motivation · Concern</text></g>
+<g class="node" id="node-connect"><path class="node-shape input" d="M 259.7 740 H 479.7 L 461.7 818 H 241.7 Z"/><text class="node-title" x="360.7" y="769">连接工作空间</text><text class="node-subtitle" x="360.7" y="791">Account · Permission · Scope</text></g>
+<g class="node" id="node-learn"><path class="node-shape document" d="M 523.7 740 H 700.3 L 718.3 758 V 809 Q 621 825 523.7 809 Z"/><path class="node-detail" d="M 700.3 740 V 758 H 718.3"/><text class="node-title" x="621" y="769">查看真实案例</text><text class="node-subtitle" x="621" y="791">Demo · Template · FAQ</text></g>
+<g class="node" id="node-first"><rect class="node-shape agent" x="386" y="936" width="188" height="78" rx="13"/><rect class="agent-inner" x="391" y="941" width="178" height="68" rx="9"/><text class="node-title" x="480" y="965">完成首个任务</text><text class="node-subtitle" x="480" y="987">Guided success</text></g>
+<g class="node" id="node-habit"><rect class="node-shape process" x="370.3" y="1132" width="219.4" height="78" rx="13"/><text class="node-title" x="480" y="1161">形成使用习惯</text><text class="node-subtitle" x="480" y="1183">Repeat · Share · Automate</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="402.35" y="663" width="36" height="20" rx="7"/><text class="edge-label" x="420.35" y="673">是</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="518.3" y="663" width="64.4" height="20" rx="7"/><text class="edge-label" x="550.5" y="673">还不确定</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="717.8" y="752" width="77" height="20" rx="7"/><text class="edge-label" x="756.3" y="762">reconsider</text></g>
+<g class="legend"><rect class="legend-bg" x="98" y="1282" width="764" height="36" rx="12"/>
+<path d="M 116 1300 H 140" stroke="var(--edge-primary)" stroke-width="2"/><text class="legend-text" x="148" y="1304">Primary flow</text>
+<path d="M 264 1300 H 288" stroke="var(--edge-success)" stroke-width="2"/><text class="legend-text" x="296" y="1304">Success branch</text>
+<path d="M 412 1300 H 436" stroke="var(--edge-error)" stroke-width="2" stroke-dasharray="6 5"/><text class="legend-text" x="444" y="1304">Error branch</text>
+<path d="M 560 1300 H 584" stroke="var(--edge-feedback)" stroke-width="2"/><text class="legend-text" x="592" y="1304">Feedback / iteration</text>
+<path d="M 708 1300 H 732" stroke="var(--edge-control)" stroke-width="2"/><text class="legend-text" x="740" y="1304">Control / trigger</text>
+</g>
+</svg>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-ui-theme="light">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>实时智能数据流</title><style>:root{color-scheme:light dark;--shell:#f3f4f6;--panel:#fff;--text:#111827;--muted:#667085;--border:#d0d5dd}
+:root[data-ui-theme="dark"]{--shell:#080d14;--panel:#111821;--text:#f8fafc;--muted:#a8b3c2;--border:#334155}
+*{box-sizing:border-box}body{margin:0;background:var(--shell);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC",sans-serif}
+.shell{max-width:1480px;margin:0 auto;padding:20px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.brand{font-weight:800;margin-right:auto}.hint{font-size:12px;color:var(--muted)}button{font:inherit;font-size:12px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:7px 11px;cursor:pointer}button:hover,button:focus-visible{border-color:#2563eb;outline:2px solid transparent}.viewport{overflow:hidden;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 8px 28px #0f172a14;touch-action:none}.viewport svg{display:block;width:100%;height:auto;min-height:520px;user-select:none}.viewport.dragging{cursor:grabbing}@media(max-width:720px){.shell{padding:8px}.hint{display:none}.viewport svg{min-height:72vh}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head>
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="theme" type="button">Light / dark</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport"><svg xmlns="http://www.w3.org/2000/svg" class="abi-flow" data-theme="light" viewBox="0 0 1965.8 620" role="img" aria-labelledby="abi-title abi-desc">
+<title id="abi-title">实时智能数据流</title><desc id="abi-desc">数据流图 / Data Flow with 7 nodes and 8 edges</desc>
+<defs>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="var(--shadow)"/></filter>
+<marker id="arrow-feedback" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-feedback)"/></marker>
+<marker id="arrow-async" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-async)"/></marker>
+<marker id="arrow-success" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-success)"/></marker>
+<marker id="arrow-control" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-control)"/></marker>
+<marker id="arrow-primary" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-primary)"/></marker>
+<marker id="arrow-error" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-error)"/></marker>
+</defs>
+<style>
+.abi-flow{--page:#ffffff;--surface:#ffffff;--ink:#172033;--muted:#526071;--hair:#d7e0ea;--group:#f8fafc;--group_stroke:#c7d2e0;--shadow:#31537a18;--node-decision:#fff7ed;--node-decision-stroke:#fb923c;--node-external:#f8fafc;--node-external-stroke:#94a3b8;--node-process:#eff6ff;--node-process-stroke:#60a5fa;--node-database:#ecfeff;--node-database-stroke:#22d3ee;--node-agent:#f5f3ff;--node-agent-stroke:#8b5cf6;--node-input:#fdf4ff;--node-input-stroke:#d946ef;--node-document:#f0fdf4;--node-document-stroke:#4ade80;--group-tone-0:#eff6ff;--group-tone-1:#ecfeff;--group-tone-2:#f5f3ff;--group-tone-3:#fff7ed;--group-tone-4:#f0fdf4;--group-tone-5:#fff1f2;--edge-primary:#2563eb;--edge-control:#ea580c;--edge-feedback:#7c3aed;--edge-async:#64748b;--edge-success:#059669;--edge-error:#dc2626;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}
+.abi-flow[data-theme="dark"]{--page:#0c1117;--surface:#151b23;--ink:#f8fafc;--muted:#a8b3c2;--hair:#334155;--group:#16253a;--group_stroke:#42648f;--shadow:#00000055;--node-decision:#151b23;--node-decision-stroke:#334155;--node-external:#151b23;--node-external-stroke:#334155;--node-process:#151b23;--node-process-stroke:#334155;--node-database:#151b23;--node-database-stroke:#334155;--node-agent:#151b23;--node-agent-stroke:#334155;--node-input:#151b23;--node-input-stroke:#334155;--node-document:#151b23;--node-document-stroke:#334155;--group-tone-0:#16253a;--group-tone-1:#16253a;--group-tone-2:#16253a;--group-tone-3:#16253a;--group-tone-4:#16253a;--group-tone-5:#16253a}
+text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}.type-badge{font-size:10px;font-weight:800;fill:var(--muted);letter-spacing:.4px}.type-badge-bg{fill:var(--surface);stroke:var(--hair)}
+.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}
+.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}
+.node-title{font-size:14.5px;font-weight:750;text-anchor:middle;dominant-baseline:middle}.node-subtitle{font-size:11.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}
+.edge{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.edge.async,.edge.error{stroke-dasharray:6 5}.edge.feedback{stroke-width:2.2}.edge-label-bg{fill:var(--page);stroke:var(--hair);stroke-width:.7;opacity:.97}.edge-label{font-size:10.8px;font-weight:650;text-anchor:middle;dominant-baseline:middle;fill:var(--muted)}
+.legend-bg{fill:var(--surface);stroke:var(--hair)}.legend-text{font-size:10.5px;fill:var(--muted)}.node-link{cursor:pointer}.node-link:focus .node-shape,.node-link:hover .node-shape{stroke:var(--edge-primary);stroke-width:2.4}.node-link:focus{outline:none}
+</style>
+<rect class="page-bg" width="1965.8" height="620"/>
+<text class="title" x="72" y="48">实时智能数据流</text>
+<text class="subtitle" x="72" y="75">采集、治理、流批一体处理、模型消费与在线服务</text>
+<g class="diagram-type"><rect class="type-badge-bg" x="1757.8" y="31" width="136" height="25" rx="12.5"/><text class="type-badge" x="1825.8" y="47" text-anchor="middle">数据流图 / Data Flow</text></g>
+<g class="group tone-0"><rect class="group-box" x="48" y="146" width="236" height="140" rx="16"/><text class="group-title" x="62" y="167">数据源 / SOURCES</text></g>
+<g class="group tone-1"><rect class="group-box" x="354" y="129" width="564" height="174" rx="16"/><text class="group-title" x="368" y="150">采集治理 / INGESTION</text></g>
+<g class="group tone-2"><rect class="group-box" x="988" y="80" width="279.8" height="272" rx="16"/><text class="group-title" x="1002" y="101">计算与存储 / COMPUTE</text></g>
+<g class="group tone-3"><rect class="group-box" x="1337.8" y="146" width="580" height="140" rx="16"/><text class="group-title" x="1351.8" y="167">智能服务 / SERVING</text></g>
+<path class="edge async" style="stroke:var(--edge-async)" d="M 260 223 L 319 223 L 378 223" marker-end="url(#arrow-async)"/>
+<path class="edge control" style="stroke:var(--edge-control)" d="M 566 223 L 625 223 L 684 223" marker-end="url(#arrow-control)"/>
+<path class="edge success" style="stroke:var(--edge-success)" d="M 894 223 L 956.1 223 L 956.1 157 L 1018.2 157" marker-end="url(#arrow-success)"/>
+<path class="edge primary" style="stroke:var(--edge-primary)" d="M 894 223 L 953 223 L 953 284 L 1012 284" marker-end="url(#arrow-primary)"/>
+<path class="edge async" style="stroke:var(--edge-async)" d="M 1237.6 157 L 1299.7 157 L 1299.7 223 L 1361.8 223" marker-end="url(#arrow-async)"/>
+<path class="edge primary" style="stroke:var(--edge-primary)" d="M 1243.8 284 L 1302.8 284 L 1302.8 223 L 1361.8 223" marker-end="url(#arrow-primary)"/>
+<path class="edge primary" style="stroke:var(--edge-primary)" d="M 1550.2 223 L 1609.2 223 L 1668.2 223" marker-end="url(#arrow-primary)"/>
+<path class="edge feedback" style="stroke:var(--edge-feedback)" d="M 1893.8 223 L 1921.8 223 L 1921.8 366 L 44 366 L 44 223 L 72 223" marker-end="url(#arrow-feedback)"/>
+<g class="node" id="node-events"><rect class="node-shape external" x="72" y="184" width="188" height="78" rx="13"/><text class="node-title" x="166" y="213">业务事件</text><text class="node-subtitle" x="166" y="235">App · Web · Device</text></g>
+<g class="node" id="node-connector"><rect class="node-shape process" x="378" y="184" width="188" height="78" rx="13"/><text class="node-title" x="472" y="213">接入总线</text><text class="node-subtitle" x="472" y="235">CDC · API · Queue</text></g>
+<g class="node" id="node-quality"><path class="node-shape decision" d="M 789 167 L 894 223 L 789 279 L 684 223 Z"/><text class="node-title" x="789" y="213">质量与契约</text><text class="node-subtitle" x="789" y="235">Schema · PII · Lineage</text></g>
+<g class="node" id="node-stream"><rect class="node-shape process" x="1018.2" y="118" width="219.4" height="78" rx="13"/><text class="node-title" x="1127.9" y="147">实时计算</text><text class="node-subtitle" x="1127.9" y="169">Window · Enrich · Feature</text></g>
+<g class="node" id="node-lakehouse"><path class="node-shape database" d="M 1012 252 C 1012 238 1243.8 238 1243.8 252 V 316 C 1243.8 330 1012 330 1012 316 Z"/><ellipse class="node-detail" cx="1127.9" cy="252" rx="115.9" ry="12"/><text class="node-title" x="1127.9" y="277">Lakehouse</text><text class="node-subtitle" x="1127.9" y="299">History · Replay · Training</text></g>
+<g class="node" id="node-model"><rect class="node-shape agent" x="1361.8" y="184" width="188.4" height="78" rx="13"/><rect class="agent-inner" x="1366.8" y="189" width="178.4" height="68" rx="9"/><text class="node-title" x="1456" y="213">模型与 Agent</text><text class="node-subtitle" x="1456" y="235">Inference · Reasoning</text></g>
+<g class="node" id="node-experience"><rect class="node-shape external" x="1668.2" y="184" width="225.6" height="78" rx="13"/><text class="node-title" x="1781" y="213">产品体验</text><text class="node-subtitle" x="1781" y="235">API · Copilot · Automation</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="330.5" y="205" width="36" height="20" rx="7"/><text class="edge-label" x="348.5" y="215">raw</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="622.3" y="205" width="64.4" height="20" rx="7"/><text class="edge-label" x="654.5" y="215">validate</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="933.35" y="180" width="45.5" height="20" rx="7"/><text class="edge-label" x="956.1" y="190">clean</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="930.25" y="243.5" width="45.5" height="20" rx="7"/><text class="edge-label" x="953" y="253.5">batch</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="1270.65" y="180" width="58.1" height="20" rx="7"/><text class="edge-label" x="1299.7" y="190">signals</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="1273.75" y="243.5" width="58.1" height="20" rx="7"/><text class="edge-label" x="1302.8" y="253.5">context</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="1606.5" y="205" width="64.4" height="20" rx="7"/><text class="edge-label" x="1638.7" y="215">decision</text></g>
+<g class="edge-label-group"><rect class="edge-label-bg" x="950.7" y="348" width="64.4" height="20" rx="7"/><text class="edge-label" x="982.9" y="358">feedback</text></g>
+<g class="legend"><rect class="legend-bg" x="600.9" y="554" width="764" height="36" rx="12"/>
+<path d="M 618.9 572 H 642.9" stroke="var(--edge-async)" stroke-width="2" stroke-dasharray="6 5"/><text class="legend-text" x="650.9" y="576">Async / event</text>
+<path d="M 766.9 572 H 790.9" stroke="var(--edge-control)" stroke-width="2"/><text class="legend-text" x="798.9" y="576">Control / trigger</text>
+<path d="M 914.9 572 H 938.9" stroke="var(--edge-success)" stroke-width="2"/><text class="legend-text" x="946.9" y="576">Success branch</text>
+<path d="M 1062.9 572 H 1086.9" stroke="var(--edge-primary)" stroke-width="2"/><text class="legend-text" x="1094.9" y="576">Primary flow</text>
+<path d="M 1210.9 572 H 1234.9" stroke="var(--edge-feedback)" stroke-width="2"/><text class="legend-text" x="1242.9" y="576">Feedback / iteration</text>
+</g>
+</svg></div></main><script>(() => {
+  const root = document.documentElement;
+  const svg = document.querySelector('.abi-flow');
+  const viewport = document.querySelector('.viewport');
+  const original = svg.viewBox.baseVal;
+  const base = {x: original.x, y: original.y, w: original.width, h: original.height};
+  let view = {...base}; let dragging = false; let last = null;
+  const applyView = () => svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+  const zoom = (factor, cx = view.x + view.w / 2, cy = view.y + view.h / 2) => {
+    const nextW = Math.max(base.w * .25, Math.min(base.w * 4, view.w * factor));
+    const nextH = nextW * base.h / base.w;
+    const rx = (cx - view.x) / view.w, ry = (cy - view.y) / view.h;
+    view = {x: cx - nextW * rx, y: cy - nextH * ry, w: nextW, h: nextH}; applyView();
+  };
+  document.getElementById('zoomIn').onclick = () => zoom(.82);
+  document.getElementById('zoomOut').onclick = () => zoom(1.22);
+  document.getElementById('reset').onclick = () => { view = {...base}; applyView(); };
+  document.getElementById('theme').onclick = () => {
+    const dark = root.dataset.uiTheme !== 'dark';
+    root.dataset.uiTheme = dark ? 'dark' : 'light'; svg.dataset.theme = dark ? 'dark' : 'light';
+  };
+  viewport.addEventListener('wheel', event => {
+    event.preventDefault(); const rect = svg.getBoundingClientRect();
+    const cx = view.x + (event.clientX - rect.left) / rect.width * view.w;
+    const cy = view.y + (event.clientY - rect.top) / rect.height * view.h;
+    zoom(event.deltaY > 0 ? 1.12 : .89, cx, cy);
+  }, {passive:false});
+  viewport.addEventListener('pointerdown', event => { if (event.target.closest('a')) return; dragging = true; last = event; viewport.classList.add('dragging'); viewport.setPointerCapture(event.pointerId); });
+  viewport.addEventListener('pointermove', event => { if (!dragging) return; const rect = svg.getBoundingClientRect(); view.x -= (event.clientX-last.clientX)/rect.width*view.w; view.y -= (event.clientY-last.clientY)/rect.height*view.h; last=event; applyView(); });
+  const endDrag = () => { dragging=false; viewport.classList.remove('dragging'); };
+  viewport.addEventListener('pointerup', endDrag); viewport.addEventListener('pointercancel', endDrag);
+  const basename = () => document.title.replace(/[^a-z0-9_-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase() || 'diagram';
+  const download = (blob, filename) => { const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000); };
+  document.getElementById('svgDownload').onclick = () => download(new Blob([new XMLSerializer().serializeToString(svg)], {type:'image/svg+xml'}), basename()+'.svg');
+  document.getElementById('pngDownload').onclick = () => {
+    const source = new XMLSerializer().serializeToString(svg), blob = new Blob([source], {type:'image/svg+xml'}), url=URL.createObjectURL(blob), image=new Image();
+    image.onload=()=>{const scale=2, canvas=document.createElement('canvas'); canvas.width=base.w*scale; canvas.height=base.h*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(image,0,0,canvas.width,canvas.height); URL.revokeObjectURL(url); canvas.toBlob(png=>download(png,basename()+'.png'),'image/png');}; image.onerror=()=>URL.revokeObjectURL(url); image.src=url;
+  };
+})();</script></body></html>

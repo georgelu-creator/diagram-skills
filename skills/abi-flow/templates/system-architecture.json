@@ -1,0 +1,36 @@
+{
+  "title": "企业 AI 工作系统架构",
+  "subtitle": "从多端接入、统一编排到长期记忆与可信资产沉淀",
+  "diagram_type": "system-architecture",
+  "direction": "TB",
+  "theme": "spectrum",
+  "legend": true,
+  "groups": [
+    {"id": "entry", "label": "终端 / USERS & AGENTS"},
+    {"id": "access", "label": "接入与编排 / ORCHESTRATION"},
+    {"id": "core", "label": "核心能力 / CORE CAPABILITIES"},
+    {"id": "truth", "label": "可信资产 / SOURCES OF TRUTH"},
+    {"id": "governance", "label": "治理闭环 / GOVERNANCE"}
+  ],
+  "nodes": [
+    {"id": "human", "label": "多端用户", "subtitle": "Mobile · Desktop · Web", "type": "external", "group": "entry"},
+    {"id": "agents", "label": "AI Agents", "subtitle": "ChatGPT · Codex · Claude", "type": "agent", "group": "entry"},
+    {"id": "gateway", "label": "统一接入网关", "subtitle": "Auth · Permission · Routing", "type": "process", "group": "access"},
+    {"id": "memory", "label": "记忆与上下文", "subtitle": "Search · Context · Relations", "type": "database", "group": "core"},
+    {"id": "tools", "label": "工具编排", "subtitle": "MCP · API · Actions", "type": "agent", "group": "core"},
+    {"id": "github", "label": "工程资产", "subtitle": "Code · Skill · Prompt · SOP", "type": "database", "group": "truth"},
+    {"id": "workspace", "label": "业务资料", "subtitle": "Docs · Drive · Database", "type": "document", "group": "truth"},
+    {"id": "audit", "label": "审计与学习闭环", "subtitle": "Trace · Review · Improve", "type": "process", "group": "governance"}
+  ],
+  "edges": [
+    {"source": "human", "target": "gateway", "label": "request", "kind": "primary"},
+    {"source": "agents", "target": "gateway", "label": "invoke", "kind": "control"},
+    {"source": "gateway", "target": "memory", "label": "context", "kind": "primary"},
+    {"source": "gateway", "target": "tools", "label": "task", "kind": "control"},
+    {"source": "memory", "target": "github", "label": "knowledge", "kind": "primary"},
+    {"source": "tools", "target": "workspace", "label": "artifact", "kind": "async"},
+    {"source": "github", "target": "audit", "label": "version", "kind": "primary"},
+    {"source": "workspace", "target": "audit", "label": "evidence", "kind": "async"},
+    {"source": "audit", "target": "gateway", "label": "policy update", "kind": "feedback"}
+  ]
+}

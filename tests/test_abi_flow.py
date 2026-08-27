@@ -118,6 +118,33 @@ class AbiFlowTests(unittest.TestCase):
         schema = json.loads((ROOT / "skills" / "abi-flow" / "references" / "spec.schema.json").read_text(encoding="utf-8"))
         self.assertEqual("object", schema["type"])
 
+    def test_every_diagram_type_has_a_strict_template(self):
+        template_dir = ROOT / "skills" / "abi-flow" / "templates"
+        self.assertEqual(set(abi_flow.DIAGRAM_TYPES), {path.stem for path in template_dir.glob("*.json")})
+        for diagram_type in abi_flow.DIAGRAM_TYPES:
+            spec = json.loads((template_dir / f"{diagram_type}.json").read_text(encoding="utf-8"))
+            _, _, report, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
+            self.assertEqual([], issues, diagram_type)
+            self.assertEqual("passed", report["status"], diagram_type)
+            self.assertEqual(diagram_type, report["diagram"]["type"])
+
+    def test_rejects_unknown_diagram_type(self):
+        spec = {
+            "title": "Unknown",
+            "diagram_type": "mind-map",
+            "nodes": [{"id": "a", "label": "A"}],
+            "edges": [],
+        }
+        self.assertIn("invalid-diagram-type", {issue.code for issue in abi_flow.validate_spec(spec)})
+
+    def test_cli_new_creates_a_valid_template_without_overwriting(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output = Path(temp_dir) / "architecture.json"
+            self.assertEqual(0, abi_flow.main(["new", "system-architecture", "--output", str(output)]))
+            spec = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual("system-architecture", spec["diagram_type"])
+            self.assertEqual(1, abi_flow.main(["new", "system-architecture", "--output", str(output)]))
+
     def test_escapes_svg_text(self):
         spec = {
             "title": "A < B",

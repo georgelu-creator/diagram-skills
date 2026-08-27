@@ -1,46 +1,48 @@
-# ABI Flow delivery audit
+# VisualSpec delivery audit
 
-Audit date: 2026-08-24
+Audit date: 2026-08-27
 
 ## Verdict
 
-**Passed.** No release-blocking correctness, security, provenance, layout, or packaging findings remain in the reviewed standalone project.
+**Passed.** No release-blocking correctness, security, provenance, layout, packaging, or visual-review findings remain in the reviewed upgrade.
 
 ## Evidence
 
-- Agent Skill structure passes the official `skill-creator` quick validator.
-- The full unit suite passes: 11 tests covering rendering, strict geometry, cycles, link safety, text escaping, schema parsing, CLI artifacts, themes, and directions.
-- Strict validation passes on the included example with:
-  - 12 nodes, 17 semantic edges, 6 system groups, and 51 routed segments
-  - 0 node overlaps
-  - 0 edge/node collisions
-  - 0 edge crossings
-  - 0 group overlaps
-  - 0 group intrusions
-- SVG is valid XML and the generated HTML loads without browser console warnings or errors.
-- Browser review confirms pan, zoom, reset, theme switching, and clickable node links.
-- SVG, HTML, and quality JSON render reproducibly from the same input.
-- The generated PNG was inspected at 1920 px and contains no clipping, black-fill regression, unreadable labels, or overlapping groups.
-- A filename-only secret scan found no credentials or private-key material in tracked files.
-- `NOTICE.md` identifies conceptual inspirations; no third-party source code or bundled dependency is included.
+- The Agent Skill structure passes the `skill-creator` quick validator.
+- The unit suite covers rendering, strict geometry, all 10 diagram-type templates, scaffolding, cycles, link safety, text escaping, schema parsing, themes, directions, and primary CLI artifacts.
+- All 10 checked-in templates pass strict validation with zero structural errors, node overlaps, edge/node collisions, group overlaps, or group intrusions.
+- Six new gallery diagrams render reproducibly to SVG, standalone HTML, PNG, and quality JSON.
+- The six PNGs were inspected at 1920 px. Chinese labels, English subtitles, hierarchy, grouping, arrow routes, legends, whitespace, and light/dark contrast are readable with no clipping.
+- SVG is valid XML and generated HTML remains dependency-free with its existing restrictive Content Security Policy.
+- Executable URL schemes remain rejected and all text entering SVG/HTML is escaped.
+- The renderer and scaffolder use only the Python standard library; optional PNG export uses `rsvg-convert` when available.
 
-## Findings resolved during review
+## Upgrade scope
 
-1. CSS custom properties were not resolved by every SVG-to-PNG renderer, producing a black raster preview. Raster export now materializes theme colors before conversion.
-2. Group containers could overlap or contain unrelated nodes without failing strict mode. Both conditions are now measured and rejected.
-3. URL validation accepted malformed HTTP(S) links. HTTP(S) links now require a network location, and executable schemes are rejected.
-4. Cycles without an explicit feedback edge were ambiguous. Strict mode now rejects unmarked cycles.
+1. Repositioned the project as **VisualSpec**, a prompt-native diagram framework and Agent Skill, while preserving the `abi-flow` repository and Skill id for compatibility.
+2. Added semantic `diagram_type` metadata and bilingual badges to generated diagrams and quality reports.
+3. Added 10 type contracts, 10 valid starter templates, and `types`/`new` CLI commands.
+4. Added the normalized prompt contract, Chinese-first enterprise visual language, and progressive Skill routing.
+5. Added system architecture, Agent workflow, data flow, capability map, user flow, and system topology gallery assets.
+6. Rebuilt the README as an open-source project homepage and added contribution and example guides.
 
 ## Residual limitations
 
-- Layout is deterministic and dependency-free, but it is a purpose-built layered heuristic rather than a general graph optimizer. Very dense graphs should be split into multiple views.
-- PNG export requires `rsvg-convert`; SVG, HTML, and the quality report have no third-party runtime dependency.
-- The quality report records automated geometry checks. Visual inspection remains a release step for each new diagram.
+- Layout is deterministic and dependency-free, but uses a purpose-built layered heuristic rather than a general graph optimizer. Split dense graphs into linked views.
+- Groups are enclosures around computed node bounds; true swimlanes and manual rank hints are not implemented yet.
+- PNG export requires `rsvg-convert`; SVG, HTML, JSON scaffolding, validation, and quality reports require no third-party runtime dependency.
+- Quantitative charts, BPMN semantics, arbitrary whiteboards, and free-form illustration are outside project scope.
 
 ## Reproduction
 
 ```bash
 python3 -m unittest discover -s tests -v
-python3 skills/abi-flow/scripts/abi_flow.py validate examples/aurora-resilience-network.json --strict
-python3 skills/abi-flow/scripts/abi_flow.py render examples/aurora-resilience-network.json --output-dir examples/generated --name aurora-resilience-network --png --strict
+for spec in skills/abi-flow/templates/*.json; do
+  python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
+done
+for name in system-architecture agent-workflow data-flow capability-map user-flow system-topology; do
+  python3 skills/abi-flow/scripts/abi_flow.py render "skills/abi-flow/templates/$name.json" \
+    --output-dir examples/generated --name "$name" --png --strict
+done
+python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/abi-flow
 ```

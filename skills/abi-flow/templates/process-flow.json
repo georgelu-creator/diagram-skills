@@ -1,0 +1,24 @@
+{
+  "title": "变更发布流程",
+  "subtitle": "从候选变更到自动验证、风险判断与稳定发布",
+  "diagram_type": "process-flow",
+  "direction": "LR",
+  "theme": "paper",
+  "legend": true,
+  "nodes": [
+    {"id": "change", "label": "候选变更", "subtitle": "Code · Config · Content", "type": "input"},
+    {"id": "test", "label": "自动验证", "subtitle": "Test · Lint · Security", "type": "process"},
+    {"id": "gate", "label": "风险可接受？", "subtitle": "Impact · Evidence", "type": "decision"},
+    {"id": "release", "label": "渐进发布", "subtitle": "Canary · Observe", "type": "process"},
+    {"id": "rework", "label": "退回修正", "subtitle": "Fix · Re-test", "type": "process"},
+    {"id": "learn", "label": "复盘与沉淀", "subtitle": "Metric · Lesson · SOP", "type": "document"}
+  ],
+  "edges": [
+    {"source": "change", "target": "test", "kind": "primary"},
+    {"source": "test", "target": "gate", "kind": "control"},
+    {"source": "gate", "target": "release", "label": "是", "kind": "success"},
+    {"source": "gate", "target": "rework", "label": "否", "kind": "error"},
+    {"source": "release", "target": "learn", "kind": "primary"},
+    {"source": "learn", "target": "change", "label": "next cycle", "kind": "feedback"}
+  ]
+}

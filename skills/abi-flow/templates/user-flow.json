@@ -1,0 +1,26 @@
+{
+  "title": "AI 助手首次激活用户流程",
+  "subtitle": "从价值感知、授权、首次成功到持续使用",
+  "diagram_type": "user-flow",
+  "direction": "TB",
+  "theme": "spectrum",
+  "legend": true,
+  "nodes": [
+    {"id": "entry", "label": "发现产品", "subtitle": "Referral · Search · Invite", "type": "external"},
+    {"id": "promise", "label": "理解核心价值", "subtitle": "Use case · Proof · Trust", "type": "process"},
+    {"id": "intent", "label": "准备开始？", "subtitle": "Motivation · Concern", "type": "decision"},
+    {"id": "connect", "label": "连接工作空间", "subtitle": "Account · Permission · Scope", "type": "input"},
+    {"id": "learn", "label": "查看真实案例", "subtitle": "Demo · Template · FAQ", "type": "document"},
+    {"id": "first", "label": "完成首个任务", "subtitle": "Guided success", "type": "agent"},
+    {"id": "habit", "label": "形成使用习惯", "subtitle": "Repeat · Share · Automate", "type": "process"}
+  ],
+  "edges": [
+    {"source": "entry", "target": "promise", "kind": "primary"},
+    {"source": "promise", "target": "intent", "kind": "primary"},
+    {"source": "intent", "target": "connect", "label": "是", "kind": "success"},
+    {"source": "intent", "target": "learn", "label": "还不确定", "kind": "error"},
+    {"source": "learn", "target": "promise", "label": "reconsider", "kind": "feedback"},
+    {"source": "connect", "target": "first", "kind": "control"},
+    {"source": "first", "target": "habit", "kind": "success"}
+  ]
+}

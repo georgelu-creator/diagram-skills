@@ -1,6 +1,7 @@
 {
   "title": "Aurora Deep-Space Resilience Network",
   "subtitle": "A fictional autonomy loop for sensing, simulation, safe action and scientific learning",
+  "diagram_type": "system-architecture",
   "direction": "LR",
   "theme": "spectrum",
   "legend": true,

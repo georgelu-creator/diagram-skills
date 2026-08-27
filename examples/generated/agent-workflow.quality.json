@@ -2,16 +2,16 @@
   "schema_version": 2,
   "status": "passed",
   "diagram": {
-    "title": "Aurora Deep-Space Resilience Network",
-    "type": "system-architecture",
-    "nodes": 12,
-    "edges": 17,
-    "groups": 6,
+    "title": "Agent 任务执行闭环",
+    "type": "agent-workflow",
+    "nodes": 8,
+    "edges": 9,
+    "groups": 0,
     "direction": "LR",
     "theme": "spectrum"
   },
   "canvas": {
-    "width": 2230.2,
+    "width": 2406.0,
     "height": 620
   },
   "geometry": {
@@ -20,7 +20,7 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
-    "route_segment_count": 51
+    "route_segment_count": 27
   },
   "issues": [],
   "visual_review": "pending: inspect generated PNG"

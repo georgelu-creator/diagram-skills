@@ -1,0 +1,33 @@
+{
+  "title": "实时智能数据流",
+  "subtitle": "采集、治理、流批一体处理、模型消费与在线服务",
+  "diagram_type": "data-flow",
+  "direction": "LR",
+  "theme": "spectrum",
+  "legend": true,
+  "groups": [
+    {"id": "source", "label": "数据源 / SOURCES"},
+    {"id": "ingest", "label": "采集治理 / INGESTION"},
+    {"id": "compute", "label": "计算与存储 / COMPUTE"},
+    {"id": "serve", "label": "智能服务 / SERVING"}
+  ],
+  "nodes": [
+    {"id": "events", "label": "业务事件", "subtitle": "App · Web · Device", "type": "external", "group": "source"},
+    {"id": "connector", "label": "接入总线", "subtitle": "CDC · API · Queue", "type": "process", "group": "ingest"},
+    {"id": "quality", "label": "质量与契约", "subtitle": "Schema · PII · Lineage", "type": "decision", "group": "ingest"},
+    {"id": "stream", "label": "实时计算", "subtitle": "Window · Enrich · Feature", "type": "process", "group": "compute"},
+    {"id": "lakehouse", "label": "Lakehouse", "subtitle": "History · Replay · Training", "type": "database", "group": "compute"},
+    {"id": "model", "label": "模型与 Agent", "subtitle": "Inference · Reasoning", "type": "agent", "group": "serve"},
+    {"id": "experience", "label": "产品体验", "subtitle": "API · Copilot · Automation", "type": "external", "group": "serve"}
+  ],
+  "edges": [
+    {"source": "events", "target": "connector", "label": "raw", "kind": "async"},
+    {"source": "connector", "target": "quality", "label": "validate", "kind": "control"},
+    {"source": "quality", "target": "stream", "label": "clean", "kind": "success"},
+    {"source": "quality", "target": "lakehouse", "label": "batch", "kind": "primary"},
+    {"source": "stream", "target": "model", "label": "signals", "kind": "async"},
+    {"source": "lakehouse", "target": "model", "label": "context", "kind": "primary"},
+    {"source": "model", "target": "experience", "label": "decision", "kind": "primary"},
+    {"source": "experience", "target": "events", "label": "feedback", "kind": "feedback"}
+  ]
+}

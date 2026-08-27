@@ -1,10 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
-  <title id="title">ABI Flow</title>
-  <rect width="128" height="128" rx="28" fill="#0f172a"/>
-  <rect x="18" y="22" width="38" height="28" rx="8" fill="#dbeafe" stroke="#60a5fa" stroke-width="4"/>
-  <rect x="72" y="78" width="38" height="28" rx="8" fill="#dcfce7" stroke="#34d399" stroke-width="4"/>
-  <path d="M56 36H91V72" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M82 63L91 72L100 63" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M72 92H37V56" fill="none" stroke="#c4b5fd" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M28 65L37 56L46 65" fill="none" stroke="#c4b5fd" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <title id="title">VisualSpec</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#312e81"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#bg)"/>
+  <path d="M32 31H96M32 64H96M32 97H96" stroke="#818cf8" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <rect x="19" y="18" width="32" height="26" rx="8" fill="#eef2ff" stroke="#a5b4fc" stroke-width="3"/>
+  <rect x="77" y="51" width="32" height="26" rx="8" fill="#ecfeff" stroke="#22d3ee" stroke-width="3"/>
+  <rect x="19" y="84" width="32" height="26" rx="8" fill="#fff7ed" stroke="#fb923c" stroke-width="3"/>
+  <path d="M51 31H67Q73 31 73 37V58Q73 64 79 64" fill="none" stroke="#f8fafc" stroke-width="6" stroke-linecap="round"/>
+  <path d="M77 64H63Q57 64 57 70V91Q57 97 51 97" fill="none" stroke="#c4b5fd" stroke-width="6" stroke-linecap="round"/>
+  <path d="M71 56L79 64L71 72M59 89L51 97L59 105" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

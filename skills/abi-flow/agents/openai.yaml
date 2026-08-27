@@ -1,9 +1,9 @@
 interface:
-  display_name: "ABI Flow"
-  short_description: "Polished, validated SVG and interactive HTML flowcharts"
+  display_name: "VisualSpec"
+  short_description: "Enterprise diagrams from structured intent"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
-  brand_color: "#2563EB"
-  default_prompt: "Use $abi-flow to turn this process into a polished, geometry-safe flowchart."
+  brand_color: "#4F46E5"
+  default_prompt: "Use $abi-flow to turn this system description into a polished, validated enterprise diagram."
 policy:
   allow_implicit_invocation: true

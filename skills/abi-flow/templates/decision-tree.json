@@ -1,0 +1,26 @@
+{
+  "title": "AI 功能上线决策图",
+  "subtitle": "以用户价值、风险与证据决定发布策略",
+  "diagram_type": "decision-tree",
+  "direction": "TB",
+  "theme": "paper",
+  "legend": true,
+  "nodes": [
+    {"id": "candidate", "label": "候选功能", "subtitle": "Problem · Hypothesis · Owner", "type": "input"},
+    {"id": "value", "label": "用户价值明确？", "subtitle": "Demand · Frequency · Pain", "type": "decision"},
+    {"id": "risk", "label": "风险可控？", "subtitle": "Privacy · Safety · Cost", "type": "decision"},
+    {"id": "evidence", "label": "证据充分？", "subtitle": "Eval · Test · Feedback", "type": "decision"},
+    {"id": "discover", "label": "继续研究", "subtitle": "Interview · Prototype", "type": "process"},
+    {"id": "pilot", "label": "小流量试点", "subtitle": "Guardrail · Rollback", "type": "process"},
+    {"id": "launch", "label": "正式发布", "subtitle": "Monitor · Learn · Iterate", "type": "process"}
+  ],
+  "edges": [
+    {"source": "candidate", "target": "value", "kind": "primary"},
+    {"source": "value", "target": "risk", "label": "是", "kind": "success"},
+    {"source": "value", "target": "discover", "label": "否", "kind": "error"},
+    {"source": "risk", "target": "evidence", "label": "是", "kind": "success"},
+    {"source": "risk", "target": "pilot", "label": "需护栏", "kind": "control"},
+    {"source": "evidence", "target": "launch", "label": "是", "kind": "success"},
+    {"source": "evidence", "target": "pilot", "label": "否", "kind": "error"}
+  ]
+}

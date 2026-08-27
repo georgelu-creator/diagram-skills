@@ -1,0 +1,32 @@
+{
+  "title": "高可用 AI 服务拓扑",
+  "subtitle": "边缘接入、服务平面、数据平面与可观测性",
+  "diagram_type": "system-topology",
+  "direction": "LR",
+  "theme": "blueprint",
+  "legend": true,
+  "groups": [
+    {"id": "edge", "label": "EDGE"},
+    {"id": "service", "label": "SERVICE PLANE"},
+    {"id": "data", "label": "DATA PLANE"},
+    {"id": "ops", "label": "OBSERVABILITY"}
+  ],
+  "nodes": [
+    {"id": "clients", "label": "Clients", "subtitle": "Web · App · Agent", "type": "external", "group": "edge"},
+    {"id": "gateway", "label": "Global Gateway", "subtitle": "WAF · Auth · Routing", "type": "process", "group": "edge"},
+    {"id": "api", "label": "Agent API", "subtitle": "Session · Context · Stream", "type": "agent", "group": "service"},
+    {"id": "worker", "label": "Async Worker", "subtitle": "Jobs · Tools · Retry", "type": "process", "group": "service"},
+    {"id": "database", "label": "Primary Store", "subtitle": "State · Metadata", "type": "database", "group": "data"},
+    {"id": "queue", "label": "Event Bus", "subtitle": "Queue · Topic · DLQ", "type": "database", "group": "data"},
+    {"id": "observe", "label": "Telemetry Hub", "subtitle": "Trace · Metric · Alert", "type": "external", "group": "ops"}
+  ],
+  "edges": [
+    {"source": "clients", "target": "gateway", "kind": "primary"},
+    {"source": "gateway", "target": "api", "label": "sync", "kind": "primary"},
+    {"source": "gateway", "target": "worker", "label": "async", "kind": "async"},
+    {"source": "api", "target": "database", "kind": "primary"},
+    {"source": "worker", "target": "queue", "kind": "async"},
+    {"source": "database", "target": "observe", "label": "metrics", "kind": "control"},
+    {"source": "queue", "target": "observe", "label": "events", "kind": "async"}
+  ]
+}

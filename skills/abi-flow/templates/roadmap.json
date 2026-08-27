@@ -1,0 +1,25 @@
+{
+  "title": "AI 平台 2027 Roadmap",
+  "subtitle": "能力基础、规模化交付、生态扩展与智能自治",
+  "diagram_type": "roadmap",
+  "direction": "LR",
+  "theme": "spectrum",
+  "legend": false,
+  "groups": [
+    {"id": "q1", "label": "Q1 · FOUNDATION"},
+    {"id": "q2", "label": "Q2 · SCALE"},
+    {"id": "q3", "label": "Q3 · ECOSYSTEM"},
+    {"id": "q4", "label": "Q4 · AUTONOMY"}
+  ],
+  "nodes": [
+    {"id": "foundation", "label": "统一上下文底座", "subtitle": "Identity · Memory · Audit", "type": "database", "group": "q1"},
+    {"id": "scale", "label": "团队级 Agent", "subtitle": "Workflow · Eval · Admin", "type": "agent", "group": "q2"},
+    {"id": "ecosystem", "label": "开放能力生态", "subtitle": "Skill · MCP · Marketplace", "type": "external", "group": "q3"},
+    {"id": "autonomy", "label": "受控智能自治", "subtitle": "Plan · Execute · Learn", "type": "agent", "group": "q4"}
+  ],
+  "edges": [
+    {"source": "foundation", "target": "scale", "label": "platform ready", "kind": "primary"},
+    {"source": "scale", "target": "ecosystem", "label": "repeatable", "kind": "primary"},
+    {"source": "ecosystem", "target": "autonomy", "label": "composable", "kind": "primary"}
+  ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic, dependency-free SVG and HTML flowchart renderer."""
+"""VisualSpec: deterministic, dependency-free diagram renderer."""
 
 from __future__ import annotations
 
@@ -24,8 +24,21 @@ NODE_TYPES = {"process", "decision", "input", "document", "database", "agent", "
 EDGE_KINDS = {"primary", "control", "feedback", "async", "success", "error"}
 THEMES = {"paper", "notion", "spectrum", "blueprint", "terminal"}
 DIRECTIONS = {"LR", "TB"}
+DIAGRAM_TYPES = {
+    "system-architecture": "系统架构图 / System Architecture",
+    "agent-workflow": "Agent 工作流 / Agent Workflow",
+    "data-flow": "数据流图 / Data Flow",
+    "capability-map": "产品能力地图 / Capability Map",
+    "user-flow": "用户流程图 / User Flow",
+    "system-topology": "系统拓扑图 / System Topology",
+    "decision-tree": "决策图 / Decision Tree",
+    "roadmap": "Roadmap / Delivery Roadmap",
+    "strategy-map": "战略图 / Strategy Map",
+    "process-flow": "流程图 / Process Flow",
+}
 ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 ALLOWED_LINK_SCHEMES = {"http", "https", "mailto"}
+TEMPLATE_DIR = Path(__file__).resolve().parents[1] / "templates"
 
 EDGE_LABELS = {
     "primary": "Primary flow",
@@ -218,7 +231,7 @@ def load_spec(path: Path) -> Tuple[Dict[str, Any], List[Issue]]:
 
 def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
     issues: List[Issue] = []
-    allowed_top = {"title", "subtitle", "direction", "theme", "nodes", "edges", "groups", "legend"}
+    allowed_top = {"title", "subtitle", "diagram_type", "direction", "theme", "nodes", "edges", "groups", "legend"}
     for key in sorted(set(spec) - allowed_top):
         issues.append(Issue("warning", "unknown-field", f"Unknown top-level field: {key}"))
     if not isinstance(spec.get("title"), str) or not spec.get("title", "").strip():
@@ -227,6 +240,8 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
         issues.append(Issue("error", "invalid-direction", "direction must be LR or TB"))
     if spec.get("theme", "paper") not in THEMES:
         issues.append(Issue("error", "invalid-theme", f"theme must be one of: {', '.join(sorted(THEMES))}"))
+    if spec.get("diagram_type", "process-flow") not in DIAGRAM_TYPES:
+        issues.append(Issue("error", "invalid-diagram-type", f"diagram_type must be one of: {', '.join(sorted(DIAGRAM_TYPES))}"))
 
     nodes = spec.get("nodes")
     edges = spec.get("edges")
@@ -663,7 +678,9 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
             kinds.append(kind)
     title = esc(spec["title"])
     subtitle = esc(spec.get("subtitle", ""))
-    desc = esc(f"Flowchart with {len(spec['nodes'])} nodes and {len(spec['edges'])} edges")
+    diagram_type = spec.get("diagram_type", "process-flow")
+    type_label = esc(DIAGRAM_TYPES[diagram_type])
+    desc = esc(f"{DIAGRAM_TYPES[diagram_type]} with {len(spec['nodes'])} nodes and {len(spec['edges'])} edges")
     lines: List[str] = [
         f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
         f'<title id="abi-title">{title}</title><desc id="abi-desc">{desc}</desc>',
@@ -675,7 +692,7 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     lines.extend(['</defs>', '<style>'])
     lines.append(f'.abi-flow{{{css_variables(THEME_TOKENS[theme])};' + ";".join(f"--edge-{kind}:{color}" for kind, color in EDGE_COLORS.items()) + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}')
     lines.append(f'.abi-flow[data-theme="dark"]{{{css_variables(DARK_TOKENS)}}}')
-    lines.append('text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}')
+    lines.append('text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}.type-badge{font-size:10px;font-weight:800;fill:var(--muted);letter-spacing:.4px}.type-badge-bg{fill:var(--surface);stroke:var(--hair)}')
     lines.append('.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}')
     lines.append('.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}')
     lines.append('.node-title{font-size:14.5px;font-weight:750;text-anchor:middle;dominant-baseline:middle}.node-subtitle{font-size:11.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}')
@@ -686,6 +703,8 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     lines.append(f'<text class="title" x="{canvas["margin"]:g}" y="48">{title}</text>')
     if subtitle:
         lines.append(f'<text class="subtitle" x="{canvas["margin"]:g}" y="75">{subtitle}</text>')
+    badge_w = display_units(DIAGRAM_TYPES[diagram_type]) * 5.6 + 24
+    lines.append(f'<g class="diagram-type"><rect class="type-badge-bg" x="{width - canvas["margin"] - badge_w:g}" y="31" width="{badge_w:g}" height="25" rx="12.5"/><text class="type-badge" x="{width - canvas["margin"] - badge_w / 2:g}" y="47" text-anchor="middle">{type_label}</text></g>')
 
     for index, group in enumerate(group_boxes(spec, boxes)):
         lines.append(f'<g class="group tone-{index % 6}"><rect class="group-box" x="{group["x"]:g}" y="{group["y"]:g}" width="{group["w"]:g}" height="{group["h"]:g}" rx="16"/><text class="group-title" x="{group["x"] + 14:g}" y="{group["y"] + 21:g}">{esc(group["label"])}</text></g>')
@@ -778,7 +797,7 @@ def render_html(spec: Dict[str, Any], svg: str) -> str:
     return f"""<!doctype html>
 <html lang="en" data-ui-theme="{initial}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>{title}</title><style>{HTML_STYLE}</style></head>
-<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">ABI Flow</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="theme" type="button">Light / dark</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="theme" type="button">Light / dark</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
 
 
 def validate_svg(svg: str) -> List[Issue]:
@@ -817,9 +836,9 @@ def build(spec: Dict[str, Any], initial_issues: Sequence[Issue]) -> Tuple[str, s
 
 def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, float], routes: Sequence[Dict[str, Any]], issues: Sequence[Issue]) -> Dict[str, Any]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "passed" if not any(issue.level == "error" for issue in issues) else "failed",
-        "diagram": {"title": spec.get("title"), "nodes": len(spec.get("nodes", [])), "edges": len(spec.get("edges", [])), "groups": len(spec.get("groups", [])), "direction": spec.get("direction", "LR"), "theme": spec.get("theme", "paper")},
+        "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "nodes": len(spec.get("nodes", [])), "edges": len(spec.get("edges", [])), "groups": len(spec.get("groups", [])), "direction": spec.get("direction", "LR"), "theme": spec.get("theme", "paper")},
         "canvas": {"width": canvas.get("width"), "height": canvas.get("height")},
         "geometry": {
             "node_overlap_count": count_node_overlaps(list(boxes.values())),
@@ -923,8 +942,30 @@ def command_render(args: argparse.Namespace) -> int:
     return 1 if args.strict and png_warning else 0
 
 
+def command_types(_: argparse.Namespace) -> int:
+    for slug, label in DIAGRAM_TYPES.items():
+        available = "yes" if (TEMPLATE_DIR / f"{slug}.json").exists() else "no"
+        print(f"{slug:20} {label}  template={available}")
+    return 0
+
+
+def command_new(args: argparse.Namespace) -> int:
+    template_path = TEMPLATE_DIR / f"{args.diagram_type}.json"
+    if not template_path.exists():
+        print(f"error: template not found for {args.diagram_type}: {template_path}", file=sys.stderr)
+        return 1
+    output: Path = args.output
+    if output.exists() and not args.force:
+        print(f"error: output already exists: {output} (pass --force to replace it)", file=sys.stderr)
+        return 1
+    output.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(template_path, output)
+    print(f"created: {output}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Render polished, validated flowcharts from JSON")
+    parser = argparse.ArgumentParser(description="VisualSpec: render polished, validated diagrams from JSON")
     subparsers = parser.add_subparsers(dest="command", required=True)
     validate = subparsers.add_parser("validate", help="Validate structure and computed geometry")
     validate.add_argument("input", type=Path)
@@ -937,6 +978,13 @@ def build_parser() -> argparse.ArgumentParser:
     render.add_argument("--png", action="store_true", help="Export a 1920 px PNG with rsvg-convert")
     render.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     render.set_defaults(func=command_render)
+    types = subparsers.add_parser("types", help="List supported diagram types and starter templates")
+    types.set_defaults(func=command_types)
+    new = subparsers.add_parser("new", help="Create a source specification from a diagram template")
+    new.add_argument("diagram_type", choices=sorted(DIAGRAM_TYPES))
+    new.add_argument("--output", type=Path, required=True)
+    new.add_argument("--force", action="store_true", help="Replace an existing output file")
+    new.set_defaults(func=command_new)
     return parser
 
 

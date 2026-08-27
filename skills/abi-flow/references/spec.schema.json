@@ -8,6 +8,10 @@
   "properties": {
     "title": {"type": "string", "minLength": 1},
     "subtitle": {"type": "string"},
+    "diagram_type": {
+      "enum": ["system-architecture", "agent-workflow", "data-flow", "capability-map", "user-flow", "system-topology", "decision-tree", "roadmap", "strategy-map", "process-flow"],
+      "default": "process-flow"
+    },
     "direction": {"enum": ["LR", "TB"], "default": "LR"},
     "theme": {"enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
     "legend": {"type": "boolean"},
