@@ -1,6 +1,6 @@
-# Contributing to VisualSkills
+# Contributing to DiagramSkills
 
-VisualSkills accepts focused contributions that improve diagram meaning, source-driven rendering, validation, accessibility, templates, or documentation.
+DiagramSkills accepts focused contributions that improve diagram meaning, source-driven rendering, validation, accessibility, templates, or documentation.
 
 ## Before opening a change
 
@@ -14,13 +14,13 @@ VisualSkills accepts focused contributions that improve diagram meaning, source-
 
 ```bash
 python3 -m unittest discover -s tests -v
-for spec in skills/abi-flow/templates/*.json; do
-  python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
+for spec in skills/diagram-skills/templates/*.json; do
+  python3 skills/diagram-skills/scripts/diagram_skills.py validate "$spec" --strict
 done
 python3 -m unittest tests.test_skill_package tests.test_gallery_manifest -v
-python3 skills/abi-flow/scripts/abi_flow.py png-backend
-python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
-python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
+python3 skills/diagram-skills/scripts/diagram_skills.py png-backend
+python3 skills/diagram-skills/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
+python3 skills/diagram-skills/scripts/diagram_skills.py workspace-validate examples/enterprise-ai-workspace.json --strict
 cd editor
 npm ci
 npm run typecheck
@@ -37,7 +37,7 @@ For editor changes, test a desktop viewport, overview-to-detail navigation, one 
 
 ## Add a diagram type
 
-1. Add the slug and bilingual label to `DIAGRAM_TYPES` in `scripts/abi_flow.py`.
+1. Add the slug and bilingual label to `DIAGRAM_TYPES` in `scripts/diagram_skills.py`.
 2. Add it to the `diagram_type` enum in `references/spec.schema.json`.
 3. Add `templates/<slug>.json`; it must pass strict validation.
 4. Add `references/diagram-types/<slug>.md` with use cases, input fields, fixed layout, visual rules, and an example prompt.

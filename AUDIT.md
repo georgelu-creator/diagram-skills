@@ -1,4 +1,4 @@
-# VisualSkills verification record
+# DiagramSkills verification record
 
 Verification date: 2026-08-27
 
@@ -8,7 +8,7 @@ This file records reproducible checks and known limits. It does not self-certify
 
 | Finding | Repair | Evidence |
 |---|---|---|
-| Installed Skill referenced repository-only editor/import paths | Generation is self-contained; Studio, Mermaid/CSV import, and workspace editing are explicitly repository companions | `tests/test_skill_package.py` copies only `skills/abi-flow` and scaffolds, validates, and renders a board |
+| Installed Skill referenced repository-only editor/import paths | Generation is self-contained; Studio, Mermaid/CSV import, and workspace editing are explicitly repository companions | `tests/test_skill_package.py` copies only `skills/diagram-skills` and scaffolds, validates, and renders a board |
 | Published schema and ten type names were not runtime contracts | Dependency-free schema evaluation now enforces types, required fields, enums, array limits, formats, and `additionalProperties`; type-specific direction and semantic rules are active | malformed-type/additional-field tests plus strict validation of all ten templates |
 | Omitting `diagram_type` bypassed the default contract | A missing type now selects the documented `process-flow` default before contract validation instead of returning early | single-node/zero-edge default-contract regression plus independent CLI probe |
 | Board text could escape unmeasured regions | Board grids lower effective columns; title, section, banner, list, card, footer, flow, principle, and connection regions report `text_overflow_count` | dense-grid and extreme subtitle/footer regressions plus regenerated boards |
@@ -36,19 +36,19 @@ This file records reproducible checks and known limits. It does not self-certify
 ```bash
 python3 -m unittest discover -s tests -v
 
-for spec in skills/abi-flow/templates/*.json; do
-  python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
+for spec in skills/diagram-skills/templates/*.json; do
+  python3 skills/diagram-skills/scripts/diagram_skills.py validate "$spec" --strict
 done
 
-python3 skills/abi-flow/scripts/abi_flow.py png-backend
-python3 skills/abi-flow/scripts/abi_flow.py render examples/enterprise-agent-office.json \
-  --output-dir /tmp/visualskills --name enterprise-agent-office --png --strict
-python3 skills/abi-flow/scripts/abi_flow.py review examples/enterprise-agent-office.json \
-  --quality /tmp/visualskills/enterprise-agent-office.quality.json \
+python3 skills/diagram-skills/scripts/diagram_skills.py png-backend
+python3 skills/diagram-skills/scripts/diagram_skills.py render examples/enterprise-agent-office.json \
+  --output-dir /tmp/diagramskills --name enterprise-agent-office --png --strict
+python3 skills/diagram-skills/scripts/diagram_skills.py review examples/enterprise-agent-office.json \
+  --quality /tmp/diagramskills/enterprise-agent-office.quality.json \
   --brief examples/briefs/enterprise-agent-office.brief.json \
-  --artifact /tmp/visualskills/enterprise-agent-office.png
+  --artifact /tmp/diagramskills/enterprise-agent-office.png
 
-python3 skills/abi-flow/scripts/abi_flow.py workspace-validate \
+python3 skills/diagram-skills/scripts/diagram_skills.py workspace-validate \
   examples/enterprise-ai-workspace.json --strict
 
 cd editor
@@ -68,7 +68,7 @@ The test suite replays all eleven checked-in SVG/HTML pairs through the current 
 - Seven homepage examples have individual reviewed Briefs and `status: passed` receipts whose hashes match their current source, brief, SVG, HTML, and PNG files.
 - The other four generated examples intentionally remain `pending-review`; generated does not mean visually approved.
 - The Hero and six other homepage PNGs were inspected at full size after regeneration for hierarchy, clipping, text fit, route clarity, edge semantics, contrast, and Chinese/English label treatment.
-- VisualSkills Studio was opened in a real desktop browser. The smoke test verified three view types, a document-specific URL and offline store, all nine Blueprint theme tokens reaching the canvas, and transactional CSV failure: a normalized-id collision remained visible in the open import dialog and did not replace the current workspace.
+- DiagramSkills Studio was opened in a real desktop browser. The smoke test verified three view types, a document-specific URL and offline store, all nine Blueprint theme tokens reaching the canvas, and transactional CSV failure: a normalized-id collision remained visible in the open import dialog and did not replace the current workspace.
 
 ## Known limits
 

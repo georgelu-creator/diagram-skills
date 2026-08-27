@@ -69,9 +69,9 @@ export const DiagramSchema = z.object({
   edges: z.array(DiagramEdgeSchema).default([]),
 }).strict();
 
-export const VisualSpecViewSchema = DiagramSchema.extend({
+export const DiagramSpecViewSchema = DiagramSchema.extend({
   id,
-  format: z.literal("visualspec"),
+  format: z.literal("diagramspec"),
 });
 
 export const MermaidViewSchema = z.object({
@@ -86,7 +86,7 @@ export const WorkspaceSchema = z.object({
   schema_version: z.literal("3.0"),
   title: z.string().min(1),
   entry_view: id,
-  views: z.array(z.discriminatedUnion("format", [VisualSpecViewSchema, MermaidViewSchema])).min(1),
+  views: z.array(z.discriminatedUnion("format", [DiagramSpecViewSchema, MermaidViewSchema])).min(1),
 }).strict().superRefine((workspace, context) => {
   const ids = new Set<string>();
   workspace.views.forEach((view, index) => {
@@ -99,7 +99,7 @@ export const WorkspaceSchema = z.object({
     context.addIssue({ code: "custom", path: ["entry_view"], message: "entry_view must reference an existing view" });
   }
   workspace.views.forEach((view, viewIndex) => {
-    if (view.format !== "visualspec") return;
+    if (view.format !== "diagramspec") return;
     const nodeIds = collectUniqueIds(view.nodes, "node", viewIndex, context);
     const groupIds = collectUniqueIds(view.groups, "group", viewIndex, context);
     const laneIds = collectUniqueIds(view.lanes, "lane", viewIndex, context);
@@ -151,7 +151,7 @@ export const WorkspaceSchema = z.object({
 type RefinementContext = Parameters<NonNullable<Parameters<typeof WorkspaceSchema.superRefine>[0]>>[1];
 
 function validateDiagramContract(
-  view: z.infer<typeof VisualSpecViewSchema>,
+  view: z.infer<typeof DiagramSpecViewSchema>,
   viewIndex: number,
   context: RefinementContext,
 ): void {
@@ -271,7 +271,7 @@ export function isSafeLink(link: string): boolean {
   }
 }
 
-function findNonFeedbackCycle(view: VisualSpecView): string[] {
+function findNonFeedbackCycle(view: DiagramSpecView): string[] {
   const ids = [...new Set(view.nodes.map((node) => node.id))];
   const nodeIds = new Set(ids);
   const indegree = new Map(ids.map((nodeId) => [nodeId, 0]));
@@ -296,7 +296,7 @@ function findNonFeedbackCycle(view: VisualSpecView): string[] {
 export type Brand = z.infer<typeof BrandSchema>;
 export type DiagramNode = z.infer<typeof DiagramNodeSchema>;
 export type DiagramEdge = z.infer<typeof DiagramEdgeSchema>;
-export type VisualSpecView = z.infer<typeof VisualSpecViewSchema>;
+export type DiagramSpecView = z.infer<typeof DiagramSpecViewSchema>;
 export type MermaidView = z.infer<typeof MermaidViewSchema>;
 export type Workspace = z.infer<typeof WorkspaceSchema>;
 export type WorkspaceView = Workspace["views"][number];
@@ -335,10 +335,10 @@ export function appendWorkspaceView(workspace: Workspace, view: WorkspaceView): 
 }
 
 export type ViewUpdateResult =
-  | { ok: true; view: VisualSpecView }
+  | { ok: true; view: DiagramSpecView }
   | { ok: false; error: string };
 
-export function removeDiagramNodes(view: VisualSpecView, nodeIds: Iterable<string>): ViewUpdateResult {
+export function removeDiagramNodes(view: DiagramSpecView, nodeIds: Iterable<string>): ViewUpdateResult {
   const deleted = new Set(nodeIds);
   const nodes = view.nodes.filter((node) => !deleted.has(node.id));
   if (!nodes.length) return { ok: false, error: "A visual view must keep at least one node" };

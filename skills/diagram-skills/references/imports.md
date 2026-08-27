@@ -1,6 +1,6 @@
 # Mermaid and CSV imports
 
-This is an optional VisualSkills Studio workflow from the full repository checkout; it is not bundled as an executable importer in a standalone Skill installation. Read it when the repository's `editor/` package is present and the user wants to convert existing text or table sources into a DiagramSpec workspace.
+This is an optional DiagramSkills Studio workflow from the full repository checkout; it is not bundled as an executable importer in a standalone Skill installation. Read it when the repository's `editor/` package is present and the user wants to convert existing text or table sources into a DiagramSpec workspace.
 
 ## Mermaid
 
@@ -15,7 +15,7 @@ Do not claim that arbitrary Mermaid diagrams were converted to native DiagramSpe
 
 ## CSV
 
-CSV import creates a native `visualspec` view with Papa Parse. Supported columns:
+CSV import creates a native `diagramspec` view with Papa Parse. Supported columns:
 
 | Column | Meaning |
 |---|---|

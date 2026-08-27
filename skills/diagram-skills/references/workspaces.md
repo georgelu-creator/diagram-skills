@@ -12,7 +12,7 @@ A workspace is the optional repository Studio's source of truth for overview-to-
   "views": [
     {
       "id": "overview",
-      "format": "visualspec",
+      "format": "diagramspec",
       "title": "平台总览",
       "diagram_type": "system-architecture",
       "direction": "LR",
@@ -39,7 +39,7 @@ A workspace is the optional repository Studio's source of truth for overview-to-
 
 ## View formats
 
-- `visualspec`: native editable graph. It adds `id`, `format`, and `layout_mode` to the single-diagram contract. Nodes may also store editor `position` values.
+- `diagramspec`: native editable graph. It adds `id`, `format`, and `layout_mode` to the single-diagram contract. Nodes may also store editor `position` values.
 - `mermaid`: original Mermaid source with live validation and preview.
 
 ## Drill-down rules
@@ -55,13 +55,13 @@ A workspace is the optional repository Studio's source of truth for overview-to-
 From a full repository checkout:
 
 ```bash
-python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
+python3 skills/diagram-skills/scripts/diagram_skills.py workspace-validate examples/enterprise-ai-workspace.json --strict
 ```
 
 From an installed Skill folder, validate any user-supplied workspace with a path that exists locally:
 
 ```bash
-python3 scripts/abi_flow.py workspace-validate /path/to/workspace.json --strict
+python3 scripts/diagram_skills.py workspace-validate /path/to/workspace.json --strict
 ```
 
 Mermaid syntax is validated in the browser editor by the official Mermaid engine; the dependency-free Python validator checks that Mermaid views contain non-empty source.

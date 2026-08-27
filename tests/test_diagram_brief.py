@@ -6,9 +6,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROFILES = ROOT / "skills" / "abi-flow" / "references" / "diagram-thinking-profiles.json"
-TEMPLATE = ROOT / "skills" / "abi-flow" / "templates" / "briefs" / "diagram-brief.json"
-MODULE = ROOT / "skills" / "abi-flow" / "scripts" / "diagram_brief.py"
+PROFILES = ROOT / "skills" / "diagram-skills" / "references" / "diagram-thinking-profiles.json"
+TEMPLATE = ROOT / "skills" / "diagram-skills" / "templates" / "briefs" / "diagram-brief.json"
+MODULE = ROOT / "skills" / "diagram-skills" / "scripts" / "diagram_brief.py"
 EXAMPLES = ROOT / "examples" / "briefs"
 EXPECTED_TYPES = {
     "system-architecture", "agent-workflow", "data-flow", "capability-map", "user-flow",

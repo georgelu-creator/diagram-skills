@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "8d51a7e709c5e45ffb3892395d685a7883c1f4c3432f9bfa30f652f9cf95fff6",
+      "sha256": "7a847f60931ef9a5a78902543073a673bf543c545cbee93381f2680993175b75",
       "path": "agent-workflow.svg"
     },
     "html": {
-      "sha256": "05edd4512bc4b42b41111bf4e86c1dee12c198359415e0f3c14c46a15a7e191b",
+      "sha256": "ab9ea3229ffbfeb8d83e07dfde7b20c65c3fcb357f48cf1a1ebbe0f57f00cfe9",
       "path": "agent-workflow.html"
     },
     "png": {

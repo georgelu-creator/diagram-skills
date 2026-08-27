@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" width="100%" role="img" aria-labelledby="title desc">
-  <title id="title">VisualSkills — beautiful visual thinking skills for AI agents</title>
-  <desc id="desc">GitHub social preview with the VisualSkills brand, DiagramSpec pipeline and a generated enterprise Agent architecture example.</desc>
+  <title id="title">DiagramSkills — beautiful visual thinking skills for AI agents</title>
+  <desc id="desc">GitHub social preview with the DiagramSkills brand, DiagramSpec pipeline and a generated enterprise Agent architecture example.</desc>
   <defs/>
   <polygon points="0,0 680,0 680,340 0,340" fill="#ffffff"/>
   <path d="M14 1H666Q679 1 679 14V326Q679 339 666 339H14Q1 339 1 326V14Q1 1 14 1Z" fill="none" stroke="#D3D1C7" stroke-width="1"/>
@@ -8,7 +8,7 @@
   <rect x="50" y="45" width="13" height="11" rx="3" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1"/>
   <rect x="65" y="54" width="13" height="11" rx="3" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/>
   <rect x="50" y="63" width="13" height="11" rx="3" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="1"/>
-  <text x="40" y="104" dominant-baseline="central" font-family="sans-serif" font-size="30" font-weight="500" letter-spacing="-1" fill="#171717">VisualSkills</text>
+  <text x="40" y="104" dominant-baseline="central" font-family="sans-serif" font-size="30" font-weight="500" letter-spacing="-1" fill="#171717">DiagramSkills</text>
   <text x="40" y="134" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="500" fill="#26215C">Beautiful visual thinking</text>
   <text x="40" y="154" dominant-baseline="central" font-family="sans-serif" font-size="16" font-weight="500" fill="#26215C">skills for AI agents.</text>
   <text x="40" y="181" dominant-baseline="central" font-family="sans-serif" font-size="11" font-weight="400" fill="#444441">Turn complex systems and workflows</text>

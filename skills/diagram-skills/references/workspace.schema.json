@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/georgelu-creator/abi-flow/blob/main/skills/abi-flow/references/workspace.schema.json",
+  "$id": "https://github.com/georgelu-creator/diagram-skills/blob/main/skills/diagram-skills/references/workspace.schema.json",
   "title": "DiagramSpec multi-view workspace",
   "type": "object",
   "additionalProperties": false,
@@ -13,7 +13,7 @@
     "views": {
       "type": "array",
       "minItems": 1,
-      "items": {"oneOf": [{"$ref": "#/$defs/visualspecView"}, {"$ref": "#/$defs/mermaidView"}]}
+      "items": {"oneOf": [{"$ref": "#/$defs/diagramspecView"}, {"$ref": "#/$defs/mermaidView"}]}
     }
   },
   "$defs": {
@@ -69,13 +69,13 @@
         "kind": {"enum": ["primary", "control", "feedback", "async", "success", "error"]}
       }
     },
-    "visualspecView": {
+    "diagramspecView": {
       "type": "object",
       "additionalProperties": false,
       "required": ["id", "format", "title", "nodes", "edges"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
-        "format": {"const": "visualspec"},
+        "format": {"const": "diagramspec"},
         "title": {"type": "string", "minLength": 1},
         "subtitle": {"type": "string"},
         "diagram_type": {"enum": ["system-architecture", "agent-workflow", "data-flow", "capability-map", "user-flow", "system-topology", "decision-tree", "roadmap", "strategy-map", "process-flow"]},

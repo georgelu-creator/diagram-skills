@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "d5a138016a918f253bc13a0e37568567cec6657264772412bb711bb2aafa253e",
+      "sha256": "bace414a65ec7b9408b63852b5cbbd0ea74850ca226b7e3ec40eeb0b7d927085",
       "path": "aurora-resilience-network.svg"
     },
     "html": {
-      "sha256": "1a1b6a53bc2b6b7c837d106d7f25e38cac95d323984e7e241df48bc1a577c5b4",
+      "sha256": "a3f00043186ec185d5479bf9a468d1f0eb7958e6d86f5c90909b6ffce0d741a5",
       "path": "aurora-resilience-network.html"
     },
     "png": {

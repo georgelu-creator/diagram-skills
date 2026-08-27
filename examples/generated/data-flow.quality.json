@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "bf3e8c3d7068cd15959672b7c4259cf416b39915b55346206bd2a5bc2393c344",
+      "sha256": "a5baab5e46343ee8262d8dcbe9084c074687596a3cba8ad22bef087001fd8edf",
       "path": "data-flow.svg"
     },
     "html": {
-      "sha256": "23c47dbc19a55c28fa51f2a19b72175f19dfb26f83ee5e9e38fd56922c7136ce",
+      "sha256": "16c10d325c7be25b99049f19d602079c280bd0e0cc2c3af97cdfe7dedc48b38c",
       "path": "data-flow.html"
     },
     "png": {

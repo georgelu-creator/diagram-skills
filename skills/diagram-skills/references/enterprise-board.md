@@ -53,7 +53,7 @@ Use only documented icon names from [`spec.schema.json`](spec.schema.json). Do n
 ## Generation prompt
 
 ```text
-Use $abi-flow to create a high-density enterprise architecture board.
+Use $diagram-skills to create a high-density enterprise architecture board.
 Audience: product and engineering leadership.
 Organize the facts into users/Agents, access/control, core capabilities,
 integrations, and sources of truth. Add a right-side guardrail or example list

@@ -63,7 +63,7 @@ python3 scripts/diagram_brief.py work/example.brief.json --spec work/example.jso
 
 `--reviewed` fails when any question is missing, failed, not reviewed, or lacks evidence. `--spec` also blocks a mismatch between the brief's diagram type/composition and the rendered source. Fix the brief, source, or renderer and repeat; do not edit generated SVG by hand.
 
-Finally, bind the reviewed brief to the exact source and inspected artifact with `abi_flow.py review`; see [quality-contract.md](quality-contract.md).
+Finally, bind the reviewed brief to the exact source and inspected artifact with `diagram_skills.py review`; see [quality-contract.md](quality-contract.md).
 
 ## Type-specific distinctions
 

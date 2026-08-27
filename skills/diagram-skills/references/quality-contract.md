@@ -16,7 +16,7 @@ Run `diagram_brief.py <brief> --strict` before authoring and `diagram_brief.py <
 Then finalize the render receipt:
 
 ```bash
-python3 scripts/abi_flow.py review source.json \
+python3 scripts/diagram_skills.py review source.json \
   --quality output/diagram.quality.json \
   --brief source.brief.json \
   --artifact output/diagram.svg

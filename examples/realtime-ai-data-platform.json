@@ -4,7 +4,7 @@
   "diagram_type": "data-flow",
   "layout": "board",
   "theme": "paper",
-  "brand": {"name": "VisualSkills", "primary": "#0D7D75", "accent": "#4F66D5"},
+  "brand": {"name": "DiagramSkills", "primary": "#0D7D75", "accent": "#4F66D5"},
   "sections": [
     {
       "id": "sources",

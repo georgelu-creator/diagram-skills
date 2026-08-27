@@ -9,7 +9,7 @@ const SOURCE_KEY = "source";
 
 export function realtimeChannel(documentId: string): string {
   if (!DOCUMENT_ID.test(documentId)) throw new Error("document id must contain only letters, numbers, dot, underscore, or hyphen");
-  return `visualskills-studio-v4-${documentId}`;
+  return `diagramskills-studio-v4-${documentId}`;
 }
 
 export function ensureDocumentId(): string {

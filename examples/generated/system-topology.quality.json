@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "149633c5d14247cc7b1963263a045ea04fb466de54e654d1a6091b1feff6e147",
+      "sha256": "22204a63f674469829c936c25e2f4932cd7915d792724667249770aad04b8e9b",
       "path": "system-topology.svg"
     },
     "html": {
-      "sha256": "e8e3262cb715b1afe1fac0bcae846578c590b6e3acf770ab7fb516927d0d0d5f",
+      "sha256": "3c11ebeb9b4e09b7aa3e5dfef259b7a7d1a69c48fb3d371aa283de45575b37e1",
       "path": "system-topology.html"
     },
     "png": {

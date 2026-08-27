@@ -44,7 +44,7 @@ The high-density board composition was derived from recurring patterns in author
 
 These observations became reusable board primitives: horizontal scan bands, left label rails, grid/banner/list blocks, semantic tones, built-in line icons, id-based cross-band connections, a numbered flow strip, and a principle strip. The renderer computes these primitives from JSON; gallery images are not hand-positioned SVGs.
 
-The lane layout is a bounded adapter for explicit `lane` and `rank` fields. It does not attempt to replace a graph optimizer. In VisualSkills Studio, diagrams without explicit lanes use ELK.
+The lane layout is a bounded adapter for explicit `lane` and `rank` fields. It does not attempt to replace a graph optimizer. In DiagramSkills Studio, diagrams without explicit lanes use ELK.
 
 ## Alternatives considered
 
@@ -57,4 +57,4 @@ The lane layout is a bounded adapter for explicit `lane` and `rank` fields. It d
 - Mermaid import preserves and renders source; arbitrary diagrams are not silently converted into a partial native graph.
 - The default editor is offline-first and does not require a backend. Network collaboration activates only when a trusted Yjs-compatible WebSocket URL is configured.
 - The Python CLI keeps zero required third-party runtime dependencies. Browser capabilities live in the separate `editor` package.
-- VisualSkills is not a BPMN execution engine, quantitative charting system, or unlimited whiteboard.
+- DiagramSkills is not a BPMN execution engine, quantitative charting system, or unlimited whiteboard.

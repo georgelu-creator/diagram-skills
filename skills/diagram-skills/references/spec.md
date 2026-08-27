@@ -157,4 +157,4 @@ This file describes one renderable diagram. For overview-to-detail projects, wra
 }
 ```
 
-Use `python3 scripts/abi_flow.py new <diagram_type> --output <file>` to start from a production-shaped source instead of a blank object.
+Use `python3 scripts/diagram_skills.py new <diagram_type> --output <file>` to start from a production-shaped source instead of a blank object.

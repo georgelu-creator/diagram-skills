@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { edgeKinds, nodeTypes, type MermaidView, type VisualSpecView } from "./model";
+import { edgeKinds, nodeTypes, type MermaidView, type DiagramSpecView } from "./model";
 
 type CsvRow = Record<string, string | undefined>;
 
@@ -32,12 +32,12 @@ function uniqueViewId(prefix: string): string {
   return uuid ? `${prefix}-${uuid}` : `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1_000_000)}`;
 }
 
-export function importCsv(source: string, title = "CSV 导入视图"): VisualSpecView {
+export function importCsv(source: string, title = "CSV 导入视图"): DiagramSpecView {
   const result = Papa.parse<CsvRow>(source, { header: true, skipEmptyLines: "greedy", transformHeader: (header) => header.trim() });
   if (result.errors.length) throw new Error(result.errors[0].message);
-  const nodes = new Map<string, VisualSpecView["nodes"][number]>();
-  const lanes = new Map<string, VisualSpecView["lanes"][number]>();
-  const edges: VisualSpecView["edges"] = [];
+  const nodes = new Map<string, DiagramSpecView["nodes"][number]>();
+  const lanes = new Map<string, DiagramSpecView["lanes"][number]>();
+  const edges: DiagramSpecView["edges"] = [];
   const nodeOrigins = new Map<string, string>();
   const laneOrigins = new Map<string, string>();
   const explicitNodeRows = new Set<string>();
@@ -100,7 +100,7 @@ export function importCsv(source: string, title = "CSV 导入视图"): VisualSpe
   if (!nodes.size) throw new Error("CSV must contain node_id/id or source/target columns");
   return {
     id: uniqueViewId("csv"),
-    format: "visualspec",
+    format: "diagramspec",
     title,
     diagram_type: "process-flow",
     direction: "LR",

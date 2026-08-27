@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="skills/abi-flow/assets/icon.svg" width="88" alt="VisualSkills 标志">
+  <img src="skills/diagram-skills/assets/icon.svg" width="88" alt="DiagramSkills 标志">
 </p>
 
 <p align="center"><strong>简体中文</strong> · <a href="README.md">English</a></p>
 
-<h1 align="center">VisualSkills</h1>
+<h1 align="center">DiagramSkills</h1>
 
 <p align="center"><strong>让 AI Agent 直接交付真正能用的漂亮图。</strong></p>
 
@@ -14,14 +14,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/georgelu-creator/abi-flow/actions/workflows/ci.yml"><img src="https://github.com/georgelu-creator/abi-flow/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/georgelu-creator/diagram-skills/actions/workflows/ci.yml"><img src="https://github.com/georgelu-creator/diagram-skills/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-171717" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Agent%20Skill-abi--flow-4F46E5" alt="Agent Skill abi-flow">
+  <img src="https://img.shields.io/badge/Agent%20Skill-diagram--skills-4F46E5" alt="Agent Skill diagram-skills">
   <img src="https://img.shields.io/badge/engine-DiagramSpec-0A72EF" alt="DiagramSpec engine">
 </p>
 
 ```bash
-npx skills add georgelu-creator/abi-flow --skill abi-flow
+npx skills add georgelu-creator/diagram-skills --skill diagram-skills
 ```
 
 <p align="center">
@@ -32,11 +32,11 @@ npx skills add georgelu-creator/abi-flow --skill abi-flow
 
 > **安装后可以直接这样说**
 >
-> 使用 `$abi-flow` 为产品和研发负责人画一张 AI 工作系统全景架构图。展示用户与 Agent、统一接入网关、记忆与上下文、外部工具、工程与文件事实源、端到端任务流，以及系统设计原则。中文为主，保留稳定的英文技术词；直接交付完成的图和可修改源文件。
+> 使用 `$diagram-skills` 为产品和研发负责人画一张 AI 工作系统全景架构图。展示用户与 Agent、统一接入网关、记忆与上下文、外部工具、工程与文件事实源、端到端任务流，以及系统设计原则。中文为主，保留稳定的英文技术词；直接交付完成的图和可修改源文件。
 
 ## 它不是又一个通用流程图工具
 
-VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先厘清故事与边界，再选择视觉语法，生成可维护的 DiagramSpec JSON，经过约束布局、结构检查和视觉复核，最后交付 SVG、独立 HTML、质量证据，以及本机支持时的 PNG。
+DiagramSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先厘清故事与边界，再选择视觉语法，生成可维护的 DiagramSpec JSON，经过约束布局、结构检查和视觉复核，最后交付 SVG、独立 HTML、质量证据，以及本机支持时的 PNG。
 
 浏览器 Studio 是附加工具，不是使用门槛。日常修改应优先让 Agent 更新语义源并重新生成，人不需要拖拽像素才能得到成品。
 
@@ -54,7 +54,7 @@ VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先
       <a href="examples/generated/agent-workflow.svg"><img src="examples/generated/agent-workflow.png" alt="Agent 执行工作流"></a><br>
       <strong>Agent 执行工作流</strong><br>
       <sub>把规划、上下文、工具调用、验证、补充信息与学习反馈讲清楚。</sub><br>
-      <a href="skills/abi-flow/templates/agent-workflow.json">源文件</a> · <a href="examples/generated/agent-workflow.html">交互 HTML</a> · <a href="examples/generated/agent-workflow.quality.json">质量报告</a>
+      <a href="skills/diagram-skills/templates/agent-workflow.json">源文件</a> · <a href="examples/generated/agent-workflow.html">交互 HTML</a> · <a href="examples/generated/agent-workflow.quality.json">质量报告</a>
     </td>
   </tr>
   <tr>
@@ -62,13 +62,13 @@ VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先
       <a href="examples/generated/data-flow.svg"><img src="examples/generated/data-flow.png" alt="实时 AI 数据流"></a><br>
       <strong>实时 AI 数据流</strong><br>
       <sub>追踪来源、采集、治理、计算、存储、模型服务与反馈。</sub><br>
-      <a href="skills/abi-flow/templates/data-flow.json">源文件</a> · <a href="examples/generated/data-flow.html">交互 HTML</a> · <a href="examples/generated/data-flow.quality.json">质量报告</a>
+      <a href="skills/diagram-skills/templates/data-flow.json">源文件</a> · <a href="examples/generated/data-flow.html">交互 HTML</a> · <a href="examples/generated/data-flow.quality.json">质量报告</a>
     </td>
     <td width="50%" valign="top">
       <a href="examples/generated/capability-map.svg"><img src="examples/generated/capability-map.png" alt="AI 产品能力地图"></a><br>
       <strong>AI 产品能力地图</strong><br>
       <sub>连接产品北极星、平台能力、治理能力与价值结果。</sub><br>
-      <a href="skills/abi-flow/templates/capability-map.json">源文件</a> · <a href="examples/generated/capability-map.html">交互 HTML</a> · <a href="examples/generated/capability-map.quality.json">质量报告</a>
+      <a href="skills/diagram-skills/templates/capability-map.json">源文件</a> · <a href="examples/generated/capability-map.html">交互 HTML</a> · <a href="examples/generated/capability-map.quality.json">质量报告</a>
     </td>
   </tr>
   <tr>
@@ -82,7 +82,7 @@ VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先
       <a href="examples/generated/system-topology.svg"><img src="examples/generated/system-topology.png" alt="高可用 AI 服务拓扑"></a><br>
       <strong>高可用 AI 服务拓扑</strong><br>
       <sub>区分边缘、服务、数据与可观测平面，以及同步和异步路径。</sub><br>
-      <a href="skills/abi-flow/templates/system-topology.json">源文件</a> · <a href="examples/generated/system-topology.html">交互 HTML</a> · <a href="examples/generated/system-topology.quality.json">质量报告</a>
+      <a href="skills/diagram-skills/templates/system-topology.json">源文件</a> · <a href="examples/generated/system-topology.html">交互 HTML</a> · <a href="examples/generated/system-topology.quality.json">质量报告</a>
     </td>
   </tr>
   <tr>
@@ -90,7 +90,7 @@ VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先
       <a href="examples/generated/user-flow.svg"><img src="examples/generated/user-flow.png" width="52%" alt="AI 助手首次激活用户流程"></a><br>
       <strong>AI 助手首次激活用户流程</strong><br>
       <sub>展示发现、价值理解、开始决策、授权连接、首次成功、持续使用和不确定性恢复。</sub><br>
-      <a href="skills/abi-flow/templates/user-flow.json">源文件</a> · <a href="examples/generated/user-flow.html">交互 HTML</a> · <a href="examples/generated/user-flow.quality.json">质量报告</a>
+      <a href="skills/diagram-skills/templates/user-flow.json">源文件</a> · <a href="examples/generated/user-flow.html">交互 HTML</a> · <a href="examples/generated/user-flow.quality.json">质量报告</a>
     </td>
   </tr>
 </table>
@@ -121,15 +121,15 @@ VisualSkills 的主产品是安装后由 Agent 自动完成的出图闭环：先
 ### 安装 Skill
 
 ```bash
-npx skills add georgelu-creator/abi-flow --skill abi-flow
+npx skills add georgelu-creator/diagram-skills --skill diagram-skills
 ```
 
-也可以把 [`skills/abi-flow`](skills/abi-flow) 复制到兼容 Agent 的 Skills 目录。安装包内已经包含模板、渲染器、类型说明和质量规则，不依赖仓库 Studio。
+也可以把 [`skills/diagram-skills`](skills/diagram-skills) 复制到兼容 Agent 的 Skills 目录。安装包内已经包含模板、渲染器、类型说明和质量规则，不依赖仓库 Studio。
 
 ### 让 Agent 直接交付
 
 ```text
-使用 $abi-flow 解释这个代码仓库。
+使用 $diagram-skills 解释这个代码仓库。
 
 读者：刚加入的研发同学
 目标：看懂入口、服务、数据存储、外部依赖、信任边界、失败路径和各层负责人。
@@ -141,16 +141,16 @@ npx skills add georgelu-creator/abi-flow --skill abi-flow
 ### 直接使用 CLI
 
 ```bash
-python3 skills/abi-flow/scripts/abi_flow.py types
-python3 skills/abi-flow/scripts/abi_flow.py new system-architecture --output work/architecture.json
-python3 skills/abi-flow/scripts/abi_flow.py validate work/architecture.json --strict
-python3 skills/abi-flow/scripts/abi_flow.py render work/architecture.json \
+python3 skills/diagram-skills/scripts/diagram_skills.py types
+python3 skills/diagram-skills/scripts/diagram_skills.py new system-architecture --output work/architecture.json
+python3 skills/diagram-skills/scripts/diagram_skills.py validate work/architecture.json --strict
+python3 skills/diagram-skills/scripts/diagram_skills.py render work/architecture.json \
   --output-dir output --name architecture --strict
 ```
 
 SVG、HTML 和质量报告只需要 Python 标准库。PNG 是本机可选集成；先运行渲染器的环境检查或安装兼容的 SVG rasterizer，再使用 `--png`。
 
-## VisualSkills Studio（附加能力）
+## DiagramSkills Studio（附加能力）
 
 完整仓库提供本地浏览器 Studio，用于直接编辑、泳道与手动层级、品牌预览、Mermaid/CSV 导入、多视图钻取和离线恢复：
 
@@ -165,10 +165,10 @@ Studio 复用 React Flow、ELK、Monaco、Mermaid、Papa Parse、Zod 和 Yjs，�
 ## 项目结构
 
 ```text
-skills/abi-flow/     可独立安装的 Agent Skill、模板、渲染器和规则
+skills/diagram-skills/     可独立安装的 Agent Skill、模板、渲染器和规则
 examples/            示例源文件、Brief 与生成产物
 gallery/             首页图库清单
-editor/              可选 VisualSkills Studio
+editor/              可选 DiagramSkills Studio
 tests/               核心、证据链与安装包回归测试
 .github/              CI、Issue/PR 模板和社交预览资产
 ```

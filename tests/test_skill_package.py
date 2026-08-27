@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILL = ROOT / "skills" / "abi-flow"
+SKILL = ROOT / "skills" / "diagram-skills"
 MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
 
@@ -31,17 +31,17 @@ class StandaloneSkillPackageTests(unittest.TestCase):
 
     def test_copied_skill_can_scaffold_validate_and_render_without_repo_files(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            installed = Path(temp_dir) / "abi-flow"
+            installed = Path(temp_dir) / "diagram-skills"
             shutil.copytree(SKILL, installed)
             source = Path(temp_dir) / "architecture.json"
             output = Path(temp_dir) / "output"
             commands = [
-                [sys.executable, "scripts/abi_flow.py", "types"],
-                [sys.executable, "scripts/abi_flow.py", "new", "system-architecture", "--output", str(source)],
-                [sys.executable, "scripts/abi_flow.py", "validate", str(source), "--strict"],
+                [sys.executable, "scripts/diagram_skills.py", "types"],
+                [sys.executable, "scripts/diagram_skills.py", "new", "system-architecture", "--output", str(source)],
+                [sys.executable, "scripts/diagram_skills.py", "validate", str(source), "--strict"],
                 [
                     sys.executable,
-                    "scripts/abi_flow.py",
+                    "scripts/diagram_skills.py",
                     "render",
                     str(source),
                     "--output-dir",

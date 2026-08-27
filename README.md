@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="skills/abi-flow/assets/icon.svg" width="88" alt="VisualSkills mark">
+  <img src="skills/diagram-skills/assets/icon.svg" width="88" alt="DiagramSkills mark">
 </p>
 
 <p align="center"><a href="README.zh-CN.md">简体中文</a> · <strong>English</strong></p>
 
-<h1 align="center">VisualSkills</h1>
+<h1 align="center">DiagramSkills</h1>
 
 <p align="center"><strong>Beautiful visual thinking skills for AI agents.</strong></p>
 
@@ -18,14 +18,14 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/georgelu-creator/abi-flow/actions/workflows/ci.yml"><img src="https://github.com/georgelu-creator/abi-flow/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/georgelu-creator/diagram-skills/actions/workflows/ci.yml"><img src="https://github.com/georgelu-creator/diagram-skills/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-171717" alt="MIT License"></a>
-  <img src="https://img.shields.io/badge/Agent%20Skill-abi--flow-4F46E5" alt="Agent Skill abi-flow">
+  <img src="https://img.shields.io/badge/Agent%20Skill-diagram--skills-4F46E5" alt="Agent Skill diagram-skills">
   <img src="https://img.shields.io/badge/engine-DiagramSpec-0A72EF" alt="Powered by DiagramSpec">
 </p>
 
 ```bash
-npx skills add georgelu-creator/abi-flow --skill abi-flow
+npx skills add georgelu-creator/diagram-skills --skill diagram-skills
 ```
 
 <p align="center">
@@ -36,7 +36,7 @@ npx skills add georgelu-creator/abi-flow --skill abi-flow
 
 > **Copy this prompt**
 >
-> Use `$abi-flow` to visualize our AI workspace for product and engineering leadership. Show users and Agents, the access gateway, memory and context capabilities, external tools, sources of truth, the end-to-end task flow, and the governing principles. Use Chinese-first labels, preserve established English technical terms, and deliver the finished visual with its editable source.
+> Use `$diagram-skills` to visualize our AI workspace for product and engineering leadership. Show users and Agents, the access gateway, memory and context capabilities, external tools, sources of truth, the end-to-end task flow, and the governing principles. Use Chinese-first labels, preserve established English technical terms, and deliver the finished visual with its editable source.
 
 <p align="center"><sub>Powered by <strong>DiagramSpec</strong> — typed source · constrained layout · structural checks · SVG / HTML · optional PNG</sub></p>
 
@@ -56,7 +56,7 @@ Seven different communication goals, seven different visual structures. Every ex
       <a href="examples/generated/agent-workflow.svg"><img src="examples/generated/agent-workflow.png" alt="Agent task execution workflow"></a><br>
       <strong>Multi-Agent Execution Loop</strong><br>
       <sub>Explain planning, context, missing-information recovery, tool use, verification and learning feedback.</sub><br>
-      <a href="skills/abi-flow/templates/agent-workflow.json">Source</a> · <a href="examples/generated/agent-workflow.html">Interactive HTML</a> · <a href="examples/generated/agent-workflow.quality.json">Quality report</a>
+      <a href="skills/diagram-skills/templates/agent-workflow.json">Source</a> · <a href="examples/generated/agent-workflow.html">Interactive HTML</a> · <a href="examples/generated/agent-workflow.quality.json">Quality report</a>
     </td>
   </tr>
   <tr>
@@ -64,13 +64,13 @@ Seven different communication goals, seven different visual structures. Every ex
       <a href="examples/generated/data-flow.svg"><img src="examples/generated/data-flow.png" alt="Real-time intelligent data flow"></a><br>
       <strong>RAG &amp; Real-time Data Flow</strong><br>
       <sub>Trace data from sources through ingestion, governance, compute, storage, model serving and feedback.</sub><br>
-      <a href="skills/abi-flow/templates/data-flow.json">Source</a> · <a href="examples/generated/data-flow.html">Interactive HTML</a> · <a href="examples/generated/data-flow.quality.json">Quality report</a>
+      <a href="skills/diagram-skills/templates/data-flow.json">Source</a> · <a href="examples/generated/data-flow.html">Interactive HTML</a> · <a href="examples/generated/data-flow.quality.json">Quality report</a>
     </td>
     <td width="50%" valign="top">
       <a href="examples/generated/capability-map.svg"><img src="examples/generated/capability-map.png" alt="AI product capability map"></a><br>
       <strong>AI Product Capability Map</strong><br>
       <sub>Connect a north star to platform capabilities, governance and measurable product outcomes.</sub><br>
-      <a href="skills/abi-flow/templates/capability-map.json">Source</a> · <a href="examples/generated/capability-map.html">Interactive HTML</a> · <a href="examples/generated/capability-map.quality.json">Quality report</a>
+      <a href="skills/diagram-skills/templates/capability-map.json">Source</a> · <a href="examples/generated/capability-map.html">Interactive HTML</a> · <a href="examples/generated/capability-map.quality.json">Quality report</a>
     </td>
   </tr>
   <tr>
@@ -84,7 +84,7 @@ Seven different communication goals, seven different visual structures. Every ex
       <a href="examples/generated/system-topology.svg"><img src="examples/generated/system-topology.png" alt="Highly available AI service topology"></a><br>
       <strong>Highly Available AI Service Topology</strong><br>
       <sub>Show edge, service, data and observability planes with synchronous and asynchronous paths.</sub><br>
-      <a href="skills/abi-flow/templates/system-topology.json">Source</a> · <a href="examples/generated/system-topology.html">Interactive HTML</a> · <a href="examples/generated/system-topology.quality.json">Quality report</a>
+      <a href="skills/diagram-skills/templates/system-topology.json">Source</a> · <a href="examples/generated/system-topology.html">Interactive HTML</a> · <a href="examples/generated/system-topology.quality.json">Quality report</a>
     </td>
   </tr>
   <tr>
@@ -92,7 +92,7 @@ Seven different communication goals, seven different visual structures. Every ex
       <a href="examples/generated/user-flow.svg"><img src="examples/generated/user-flow.png" width="52%" alt="AI assistant first-activation user flow"></a><br>
       <strong>AI Assistant First-Activation User Flow</strong><br>
       <sub>Follow discovery, value understanding, readiness, scoped connection, first success, repeat use and an uncertainty recovery path.</sub><br>
-      <a href="skills/abi-flow/templates/user-flow.json">Source</a> · <a href="examples/generated/user-flow.html">Interactive HTML</a> · <a href="examples/generated/user-flow.quality.json">Quality report</a>
+      <a href="skills/diagram-skills/templates/user-flow.json">Source</a> · <a href="examples/generated/user-flow.html">Interactive HTML</a> · <a href="examples/generated/user-flow.quality.json">Quality report</a>
     </td>
   </tr>
 </table>
@@ -130,7 +130,7 @@ Intent
 
 ## Why DiagramSpec
 
-**Built to survive AI revisions.** DiagramSpec is the technical engine beneath VisualSkills.
+**Built to survive AI revisions.** DiagramSpec is the technical engine beneath DiagramSkills.
 
 - **Meaning is separate from pixels.** Nodes, sections, relationships, lanes and ranks remain editable source data.
 - **Source and artifacts travel together.** JSON, SVG, HTML and quality diagnostics can be reviewed in version control.
@@ -139,11 +139,11 @@ Intent
 - **The core is portable.** SVG and HTML rendering use the Python standard library; PNG is an optional system integration.
 - **Mature tools are reused.** The optional Studio builds on React Flow, ELK, Monaco, Mermaid, Papa Parse, Zod and Yjs.
 
-Mermaid remains excellent for diagrams-as-text. VisualSkills is aimed at communication-ready explanatory visuals that also need a semantic source, a visual system, an editing surface and inspectable diagnostics.
+Mermaid remains excellent for diagrams-as-text. DiagramSkills is aimed at communication-ready explanatory visuals that also need a semantic source, a visual system, an editing surface and inspectable diagnostics.
 
 ## Same idea, stronger handoff
 
-| A one-off generated picture | A VisualSkills handoff |
+| A one-off generated picture | A DiagramSkills handoff |
 |---|---|
 | The layout is the only source of truth | The semantic JSON remains the source |
 | Revisions often restart the picture | Agents revise content and rerender |
@@ -156,7 +156,7 @@ Mermaid remains excellent for diagrams-as-text. VisualSkills is aimed at communi
 | Status | What belongs here |
 |---|---|
 | **Available** | 10 enforced visual grammars; graph and enterprise-board compositions; Chinese-first labels; five renderer themes; deterministic SVG/HTML; optional PNG; text-bound diagnostics; hash-bound review receipts |
-| **Preview** | Local VisualSkills Studio; native workspace editing; complete theme tokens; manual rank; swimlanes; strict Mermaid/CSV import; document-isolated offline and Yjs workspaces; overview-to-detail files |
+| **Preview** | Local DiagramSkills Studio; native workspace editing; complete theme tokens; manual rank; swimlanes; strict Mermaid/CSV import; document-isolated offline and Yjs workspaces; overview-to-detail files |
 | **Next** | Generated Gallery site; visual diff; portable multi-view export; browser bundle optimization |
 | **Exploring** | diagrams.net interoperability; extension API; authenticated collaboration deployment |
 
@@ -167,15 +167,15 @@ Mermaid remains excellent for diagrams-as-text. VisualSkills is aimed at communi
 ### 1. Install the Agent Skill
 
 ```bash
-npx skills add georgelu-creator/abi-flow --skill abi-flow
+npx skills add georgelu-creator/diagram-skills --skill diagram-skills
 ```
 
-Or copy [`skills/abi-flow`](skills/abi-flow) into a compatible Agent's skills directory.
+Or copy [`skills/diagram-skills`](skills/diagram-skills) into a compatible Agent's skills directory.
 
 ### 2. Ask for the outcome
 
 ```text
-Use $abi-flow to explain this repository to a new engineer.
+Use $diagram-skills to explain this repository to a new engineer.
 
 Audience: engineering onboarding
 Goal: understand entry points, services, data stores, external dependencies,
@@ -196,21 +196,21 @@ and asynchronous paths, and create a second detail view for the retrieval pipeli
 <summary><strong>Use the DiagramSpec CLI directly</strong></summary>
 
 ```bash
-python3 skills/abi-flow/scripts/abi_flow.py types
-python3 skills/abi-flow/scripts/abi_flow.py png-backend
-python3 skills/abi-flow/scripts/abi_flow.py new system-architecture --output work/architecture.json
-python3 skills/abi-flow/scripts/abi_flow.py validate work/architecture.json --strict
-python3 skills/abi-flow/scripts/abi_flow.py render work/architecture.json \
+python3 skills/diagram-skills/scripts/diagram_skills.py types
+python3 skills/diagram-skills/scripts/diagram_skills.py png-backend
+python3 skills/diagram-skills/scripts/diagram_skills.py new system-architecture --output work/architecture.json
+python3 skills/diagram-skills/scripts/diagram_skills.py validate work/architecture.json --strict
+python3 skills/diagram-skills/scripts/diagram_skills.py render work/architecture.json \
   --output-dir output --name architecture --strict
 ```
 
 `render` always writes SVG, standalone HTML and a hash-bound quality receipt. A valid render remains `pending-review` until the Agent inspects the SVG or PNG and runs the documented `review` command with its reviewed Diagram Brief. PNG supports the backends reported by `png-backend`; if none is present, review and deliver the SVG directly.
 
-See [`spec.md`](skills/abi-flow/references/spec.md), [`prompt-system.md`](skills/abi-flow/references/prompt-system.md) and [`quality-contract.md`](skills/abi-flow/references/quality-contract.md).
+See [`spec.md`](skills/diagram-skills/references/spec.md), [`prompt-system.md`](skills/diagram-skills/references/prompt-system.md) and [`quality-contract.md`](skills/diagram-skills/references/quality-contract.md).
 
 </details>
 
-## VisualSkills Studio
+## DiagramSkills Studio
 
 Studio is an optional local inspection and editing surface. It is not required for the normal Agent-generated-diagram workflow.
 
@@ -222,23 +222,23 @@ npm run dev
 
 Use it locally for graph/workspace inspection, manual positioning, ranks, swimlanes, Mermaid preview, CSV import and overview-to-detail navigation. The current supported posture is **local/offline-first**. Networked Yjs synchronization uses conflict-safe workspace values and document-scoped room/storage ids, but remains experimental because the repository does not bundle an authenticated collaboration service; configure only a trusted endpoint with application-level authorization and retention controls.
 
-See [`editor.md`](skills/abi-flow/references/editor.md), [`imports.md`](skills/abi-flow/references/imports.md) and [`workspaces.md`](skills/abi-flow/references/workspaces.md).
+See [`editor.md`](skills/diagram-skills/references/editor.md), [`imports.md`](skills/diagram-skills/references/imports.md) and [`workspaces.md`](skills/diagram-skills/references/workspaces.md).
 
 ## Project map
 
 ```text
-VisualSkills                     User-facing visual thinking brand
-├── $abi-flow                    Current compatible Agent Skill id
+DiagramSkills                     User-facing visual thinking brand
+├── $diagram-skills               Installable Agent Skill id
 ├── examples + gallery manifest  Reusable visual outcomes and artifacts
-├── VisualSkills Studio          Optional local browser workbench
+├── DiagramSkills Studio          Optional local browser workbench
 └── DiagramSpec                  JSON model, layout, renderer and diagnostics
 ```
 
-The repository and public Skill id remain `abi-flow` today. `VisualSpec` was an earlier product name. No repository rename, schema change or CLI break is implied by this presentation update; see [`MIGRATION.md`](MIGRATION.md).
+The public repository, Agent Skill id and CLI entry point now share the same searchable name: `diagram-skills`. The former ABI Flow and VisualSkills names are retired; the completed rename is documented in [`MIGRATION.md`](MIGRATION.md).
 
 ## Scope
 
-VisualSkills currently focuses on explanatory diagrams: architecture, workflows, data movement, capability structures, topology, decisions, roadmaps, strategy and processes. It is not a quantitative charting library, BPMN execution engine, infinite whiteboard or unrestricted illustration generator.
+DiagramSkills currently focuses on explanatory diagrams: architecture, workflows, data movement, capability structures, topology, decisions, roadmaps, strategy and processes. It is not a quantitative charting library, BPMN execution engine, infinite whiteboard or unrestricted illustration generator.
 
 ## Roadmap
 
@@ -252,7 +252,7 @@ VisualSkills currently focuses on explanatory diagrams: architecture, workflows,
 - [ ] Add a generated Gallery site from [`gallery/manifest.json`](gallery/manifest.json)
 - [ ] Add visual diff and portable multi-view export
 - [ ] Publish an authenticated, isolated collaboration recipe
-- [ ] Prepare a versioned migration preview before any repository rename
+- [x] Unify the repository, Skill, CLI and Studio format under the DiagramSkills name
 
 ## Contributing
 

@@ -1,8 +1,8 @@
 {
-  "name": "@visualspec/editor",
+  "name": "@diagramskills/studio",
   "private": true,
   "version": "0.1.0",
-  "description": "VisualSkills Studio browser workbench for enterprise diagrams and multi-view workspaces",
+  "description": "DiagramSkills Studio browser workbench for enterprise diagrams and multi-view workspaces",
   "license": "MIT",
   "type": "module",
   "engines": {

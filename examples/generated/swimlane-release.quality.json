@@ -12,7 +12,7 @@
     "lanes": 3,
     "direction": "LR",
     "theme": "paper",
-    "brand": "VisualSkills"
+    "brand": "DiagramSkills"
   },
   "canvas": {
     "width": 2072.2,
@@ -30,15 +30,15 @@
   "issues": [],
   "artifacts": {
     "source": {
-      "sha256": "3cd32e0ebcbcf7aac13dba84c48e8e808bd12a73453d90b107b56e0bbd352722",
+      "sha256": "95cd9ca9784118b0d109a75bed211f17877b040a1d1cf2f74cfd1f7d2d2f4bf0",
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "f2fe5514cc4ccf265c4ee3b83431f9762061f2e4baf7644b05f7d1c3a1810046",
+      "sha256": "473171e6669a2ac1ff59a4fb1c2db21a8ec795346dc80afa70849b215fca9f18",
       "path": "swimlane-release.svg"
     },
     "html": {
-      "sha256": "2f90133d1458d27f50514d1c07b53a8aa84565c2676bc706530128d0dd351e19",
+      "sha256": "29fb1f692f5f7364200ef122dc4463680d1b0a7efee5e3981f6bcb08d904fee8",
       "path": "swimlane-release.html"
     },
     "png": {
@@ -55,7 +55,7 @@
     "artifact": "png",
     "artifact_sha256": "d5f0fe56cdc40f22f8213b913d7a3a903f4befd8d4ea99735e369a8e05a7cbaf",
     "brief_sha256": "f5a958ce50f5cc037bbafb2aee2c275ed6fe3cf9999894bee3a492dced436ce6",
-    "source_sha256": "3cd32e0ebcbcf7aac13dba84c48e8e808bd12a73453d90b107b56e0bbd352722",
+    "source_sha256": "95cd9ca9784118b0d109a75bed211f17877b040a1d1cf2f74cfd1f7d2d2f4bf0",
     "evidence": "review_answers"
   }
 }

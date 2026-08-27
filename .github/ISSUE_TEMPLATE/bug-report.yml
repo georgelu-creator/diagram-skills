@@ -14,7 +14,7 @@ body:
         - Installed Agent Skill
         - DiagramSpec CLI
         - Generated SVG / HTML / PNG
-        - VisualSkills Studio
+        - DiagramSkills Studio
         - Examples or documentation
     validations:
       required: true

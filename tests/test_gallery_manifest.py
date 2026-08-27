@@ -9,19 +9,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "gallery" / "manifest.json"
-RENDERER = ROOT / "skills" / "abi-flow" / "scripts" / "abi_flow.py"
+RENDERER = ROOT / "skills" / "diagram-skills" / "scripts" / "diagram_skills.py"
 CHECKED_IN_RENDERS = {
-    "agent-workflow": "skills/abi-flow/templates/agent-workflow.json",
+    "agent-workflow": "skills/diagram-skills/templates/agent-workflow.json",
     "aurora-resilience-network": "examples/aurora-resilience-network.json",
-    "capability-map": "skills/abi-flow/templates/capability-map.json",
-    "data-flow": "skills/abi-flow/templates/data-flow.json",
+    "capability-map": "skills/diagram-skills/templates/capability-map.json",
+    "data-flow": "skills/diagram-skills/templates/data-flow.json",
     "enterprise-agent-office": "examples/enterprise-agent-office.json",
     "multi-agent-delivery-control-plane": "examples/multi-agent-delivery-control-plane.json",
     "realtime-ai-data-platform": "examples/realtime-ai-data-platform.json",
     "swimlane-release": "examples/swimlane-release.json",
-    "system-architecture": "skills/abi-flow/templates/system-architecture.json",
-    "system-topology": "skills/abi-flow/templates/system-topology.json",
-    "user-flow": "skills/abi-flow/templates/user-flow.json",
+    "system-architecture": "skills/diagram-skills/templates/system-architecture.json",
+    "system-topology": "skills/diagram-skills/templates/system-topology.json",
+    "user-flow": "skills/diagram-skills/templates/user-flow.json",
 }
 
 

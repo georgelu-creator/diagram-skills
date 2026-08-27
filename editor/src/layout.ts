@@ -1,6 +1,6 @@
 import type { ElkExtendedEdge, ElkNode } from "elkjs/lib/elk.bundled.js";
 import { MarkerType, type Edge, type Node } from "@xyflow/react";
-import type { DiagramNode, VisualSpecView } from "./model";
+import type { DiagramNode, DiagramSpecView } from "./model";
 
 export type CanvasNodeData = {
   label: string;
@@ -31,7 +31,7 @@ function nodeData(node: DiagramNode): CanvasNodeData {
   };
 }
 
-function canvasEdge(view: VisualSpecView, index: number): CanvasEdge {
+function canvasEdge(view: DiagramSpecView, index: number): CanvasEdge {
   const edge = view.edges[index];
   return {
     id: edge.id ?? `${edge.source}-${edge.target}-${index}`,
@@ -46,7 +46,7 @@ function canvasEdge(view: VisualSpecView, index: number): CanvasEdge {
   };
 }
 
-function computeRanks(view: VisualSpecView): Map<string, number> {
+function computeRanks(view: DiagramSpecView): Map<string, number> {
   const ranks = new Map(view.nodes.map((node) => [node.id, node.rank ?? 0]));
   const outgoing = new Map(view.nodes.map((node) => [node.id, [] as string[]]));
   const indegree = new Map(view.nodes.map((node) => [node.id, 0]));
@@ -68,7 +68,7 @@ function computeRanks(view: VisualSpecView): Map<string, number> {
   return ranks;
 }
 
-function rankedNodes(view: VisualSpecView): CanvasNode[] {
+function rankedNodes(view: DiagramSpecView): CanvasNode[] {
   const ranks = computeRanks(view);
   const counters = new Map<number, number>();
   return view.nodes.map((node) => {
@@ -82,7 +82,7 @@ function rankedNodes(view: VisualSpecView): CanvasNode[] {
   });
 }
 
-function swimlaneNodes(view: VisualSpecView): CanvasNode[] {
+function swimlaneNodes(view: DiagramSpecView): CanvasNode[] {
   const ranks = computeRanks(view);
   const lanes = [...view.lanes].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   const maxRank = Math.max(0, ...view.nodes.map((node) => ranks.get(node.id) ?? 0));
@@ -132,7 +132,7 @@ function swimlaneNodes(view: VisualSpecView): CanvasNode[] {
   return result;
 }
 
-async function elkNodes(view: VisualSpecView): Promise<CanvasNode[]> {
+async function elkNodes(view: DiagramSpecView): Promise<CanvasNode[]> {
   const elk = await getElk();
   const direction = view.direction === "LR" ? "RIGHT" : "DOWN";
   const graph: ElkNode = {
@@ -170,7 +170,7 @@ async function elkNodes(view: VisualSpecView): Promise<CanvasNode[]> {
   }));
 }
 
-export function assertUniqueLayoutIds(view: VisualSpecView): void {
+export function assertUniqueLayoutIds(view: DiagramSpecView): void {
   const seen = new Set<string>();
   for (const node of view.nodes) {
     if (seen.has(node.id)) throw new Error(`Cannot layout duplicate node id: ${node.id}`);
@@ -178,7 +178,7 @@ export function assertUniqueLayoutIds(view: VisualSpecView): void {
   }
 }
 
-export async function layoutView(view: VisualSpecView): Promise<{ nodes: CanvasNode[]; edges: CanvasEdge[] }> {
+export async function layoutView(view: DiagramSpecView): Promise<{ nodes: CanvasNode[]; edges: CanvasEdge[] }> {
   assertUniqueLayoutIds(view);
   const nodes = view.lanes.length
     ? swimlaneNodes(view)

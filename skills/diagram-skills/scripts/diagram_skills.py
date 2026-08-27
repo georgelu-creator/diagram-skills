@@ -487,7 +487,7 @@ def validate_workspace(workspace: Dict[str, Any]) -> List[Issue]:
             continue
         view_id = view.get("id", f"views[{index}]")
         view_format = view.get("format")
-        if view_format == "visualspec":
+        if view_format == "diagramspec":
             diagram = {key: value for key, value in view.items() if key not in {"id", "format", "layout_mode"}}
             diagram["nodes"] = [
                 {key: value for key, value in node.items() if key != "position"}
@@ -508,7 +508,7 @@ def validate_workspace(workspace: Dict[str, Any]) -> List[Issue]:
             if not isinstance(view.get("source"), str) or not view.get("source", "").strip():
                 issues.append(Issue("error", "missing-mermaid-source", f"Mermaid view {view_id!r} source must be non-empty"))
         else:
-            issues.append(Issue("error", "invalid-view-format", f"View {view_id!r} format must be visualspec or mermaid"))
+            issues.append(Issue("error", "invalid-view-format", f"View {view_id!r} format must be diagramspec or mermaid"))
     return issues
 
 
@@ -1402,16 +1402,16 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     type_label = esc(DIAGRAM_TYPES[diagram_type])
     desc = esc(f"{DIAGRAM_TYPES[diagram_type]} with {len(spec['nodes'])} nodes and {len(spec['edges'])} edges")
     lines: List[str] = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
-        f'<title id="abi-title">{title}</title><desc id="abi-desc">{desc}</desc>',
+        f'<svg xmlns="http://www.w3.org/2000/svg" class="diagram-skills" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="diagram-title diagram-desc">',
+        f'<title id="diagram-title">{title}</title><desc id="diagram-desc">{desc}</desc>',
         '<defs>',
         '<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="var(--shadow)"/></filter>',
     ]
     for kind in EDGE_KINDS:
         lines.append(f'<marker id="arrow-{kind}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-{kind})"/></marker>')
     lines.extend(['</defs>', '<style>'])
-    lines.append(f'.abi-flow{{{css_variables(visual_tokens)};' + ";".join(f"--edge-{kind}:{color}" for kind, color in edge_colors.items()) + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}')
-    lines.append(f'.abi-flow[data-theme="dark"]{{{css_variables(DARK_TOKENS)}}}')
+    lines.append(f'.diagram-skills{{{css_variables(visual_tokens)};' + ";".join(f"--edge-{kind}:{color}" for kind, color in edge_colors.items()) + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}')
+    lines.append(f'.diagram-skills[data-theme="dark"]{{{css_variables(DARK_TOKENS)}}}')
     lines.append('text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}.type-badge{font-size:10px;font-weight:800;fill:var(--muted);letter-spacing:.4px}.type-badge-bg{fill:var(--surface);stroke:var(--hair)}')
     lines.append('.lane-box{fill:var(--surface);stroke:var(--hair);stroke-width:1.1}.lane:nth-child(even) .lane-box{fill:var(--group)}.lane-title{font-size:12px;font-weight:850;fill:var(--muted);letter-spacing:.45px}.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}')
     lines.append('.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}')
@@ -1771,8 +1771,8 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
     subtitle = esc(spec.get("subtitle", ""))
     desc = esc(f"High-density {DIAGRAM_TYPES[spec.get('diagram_type', 'system-architecture')]} with {len(spec.get('sections', []))} sections")
     lines = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
-        f'<title id="abi-title">{title}</title><desc id="abi-desc">{desc}</desc>',
+        f'<svg xmlns="http://www.w3.org/2000/svg" class="diagram-skills board" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="diagram-title diagram-desc">',
+        f'<title id="diagram-title">{title}</title><desc id="diagram-desc">{desc}</desc>',
         '<defs>',
     ]
     for kind in EDGE_KINDS:
@@ -1918,7 +1918,7 @@ HTML_STYLE = """
 HTML_SCRIPT = r"""
 (() => {
   const root = document.documentElement;
-  const svg = document.querySelector('.abi-flow');
+  const svg = document.querySelector('.diagram-skills');
   const viewport = document.querySelector('.viewport');
   const original = svg.viewBox.baseVal;
   const base = {x: original.x, y: original.y, w: original.width, h: original.height};
@@ -2177,7 +2177,7 @@ def command_png_backend(_: argparse.Namespace) -> int:
 
 def load_brief_validator() -> Any:
     module_path = Path(__file__).resolve().with_name("diagram_brief.py")
-    module_spec = importlib.util.spec_from_file_location("abi_flow_diagram_brief", module_path)
+    module_spec = importlib.util.spec_from_file_location("diagram_skills_diagram_brief", module_path)
     if module_spec is None or module_spec.loader is None:
         raise RuntimeError(f"cannot load Diagram Brief validator: {module_path}")
     module = importlib.util.module_from_spec(module_spec)

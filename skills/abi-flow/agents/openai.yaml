@@ -1,9 +1,0 @@
-interface:
-  display_name: "VisualSkills"
-  short_description: "Beautiful visual thinking for AI agents"
-  icon_small: "./assets/icon.svg"
-  icon_large: "./assets/icon.svg"
-  brand_color: "#4F46E5"
-  default_prompt: "Use $abi-flow to choose the right visual structure for this goal, create a Diagram Brief, generate a polished diagram with DiagramSpec, inspect the rendered SVG or PNG, and keep the editable source beside it."
-policy:
-  allow_implicit_invocation: true

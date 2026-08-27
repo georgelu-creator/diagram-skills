@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "53a577dd4fb6ab650a66b5360704c929572b331900b11d9da619019de940570d",
+      "sha256": "d8bb5ae1716d48de1924713ceb9e4d5b98ac600b88155ec883e7c7e925664dfd",
       "path": "system-architecture.svg"
     },
     "html": {
-      "sha256": "048102409c82efa8f4a9391323e044e7d21ab4d8bf0ddbc69dbe89ed6c53131e",
+      "sha256": "54eadefe8015ea944602385828fc44583c4573642919bebb74f012aac5217287",
       "path": "system-architecture.html"
     },
     "png": {

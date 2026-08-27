@@ -4,8 +4,8 @@
 :root[data-ui-theme="dark"]{--shell:#080d14;--panel:#111821;--text:#f8fafc;--muted:#a8b3c2;--border:#334155}
 *{box-sizing:border-box}body{margin:0;background:var(--shell);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC",sans-serif}
 .shell{max-width:1480px;margin:0 auto;padding:20px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.brand{font-weight:800;margin-right:auto}.hint{font-size:12px;color:var(--muted)}button{font:inherit;font-size:12px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:7px 11px;cursor:pointer}button:hover,button:focus-visible{border-color:#2563eb;outline:2px solid transparent}.viewport{overflow:hidden;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 8px 28px #0f172a14;touch-action:none}.viewport svg{display:block;width:100%;height:auto;min-height:520px;user-select:none}.viewport.dragging{cursor:grabbing}@media(max-width:720px){.shell{padding:8px}.hint{display:none}.viewport svg{min-height:72vh}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head>
-<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">DiagramSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport"><svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 1800 1261" role="img" aria-labelledby="abi-title abi-desc">
-<title id="abi-title">企业 AI 工作系统架构全景图</title><desc id="abi-desc">High-density 系统架构图 / System Architecture with 5 sections</desc>
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">DiagramSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport"><svg xmlns="http://www.w3.org/2000/svg" class="diagram-skills board" data-theme="light" viewBox="0 0 1800 1261" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">企业 AI 工作系统架构全景图</title><desc id="diagram-desc">High-density 系统架构图 / System Architecture with 5 sections</desc>
 <defs>
 <marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#246BCE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
 <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
@@ -283,7 +283,7 @@
 </g>
 </svg></div></main><script>(() => {
   const root = document.documentElement;
-  const svg = document.querySelector('.abi-flow');
+  const svg = document.querySelector('.diagram-skills');
   const viewport = document.querySelector('.viewport');
   const original = svg.viewBox.baseVal;
   const base = {x: original.x, y: original.y, w: original.width, h: original.height};

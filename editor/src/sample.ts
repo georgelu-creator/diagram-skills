@@ -7,14 +7,14 @@ export const sampleWorkspace: Workspace = {
   views: [
     {
       id: "overview",
-      format: "visualspec",
+      format: "diagramspec",
       title: "企业 AI 交付闭环",
       subtitle: "从业务意图到可验证交付 · Overview → Drill-down",
       diagram_type: "system-architecture",
       direction: "LR",
       theme: "spectrum",
       layout_mode: "ranked",
-      brand: { name: "VisualSkills", primary: "#4F46E5", accent: "#14B8A6" },
+      brand: { name: "DiagramSkills", primary: "#4F46E5", accent: "#14B8A6" },
       groups: [],
       lanes: [
         { id: "business", label: "业务与产品 / BUSINESS", order: 0 },
@@ -42,7 +42,7 @@ export const sampleWorkspace: Workspace = {
     },
     {
       id: "brief-detail",
-      format: "visualspec",
+      format: "diagramspec",
       title: "结构化简报",
       subtitle: "把模糊需求固定成可审查输入",
       diagram_type: "process-flow",

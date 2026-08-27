@@ -25,7 +25,7 @@ import {
   serializeWorkspace,
   themeNames,
   type DiagramNode,
-  type VisualSpecView,
+  type DiagramSpecView,
   type Workspace,
   type WorkspaceUpdateResult,
   type WorkspaceView,
@@ -69,8 +69,8 @@ function DiagramCanvas({
   onSelectNode,
   onOpenView,
 }: {
-  view: VisualSpecView;
-  onChange: (view: VisualSpecView) => void;
+  view: DiagramSpecView;
+  onChange: (view: DiagramSpecView) => void;
   onSelectNode: (nodeId?: string) => void;
   onOpenView: (viewId: string) => void;
 }) {
@@ -87,8 +87,8 @@ function DiagramCanvasInner({
   onSelectNode,
   onOpenView,
 }: {
-  view: VisualSpecView;
-  onChange: (view: VisualSpecView) => void;
+  view: DiagramSpecView;
+  onChange: (view: DiagramSpecView) => void;
   onSelectNode: (nodeId?: string) => void;
   onOpenView: (viewId: string) => void;
 }) {
@@ -186,7 +186,7 @@ function MermaidCanvas({ view, onChange }: { view: Extract<WorkspaceView, { form
         const { default: mermaid } = await import("mermaid");
         mermaid.initialize({ startOnLoad: false, securityLevel: "strict", theme: "base" });
         await mermaid.parse(view.source);
-        const result = await mermaid.render(`visualspec-mermaid-${++renderId.current}`, view.source);
+        const result = await mermaid.render(`diagramspec-mermaid-${++renderId.current}`, view.source);
         if (active) {
           setSvg(result.svg);
           setError(undefined);
@@ -252,10 +252,10 @@ function Inspector({
       ) : (
         <>
           <Field label="视图标题"><input value={view.title} onChange={(event) => onChange({ ...view, title: event.target.value })} /></Field>
-          <Field label="图类型"><select value={view.diagram_type} onChange={(event) => onChange({ ...view, diagram_type: event.target.value as VisualSpecView["diagram_type"] })}>{diagramTypes.map((type) => <option key={type}>{type}</option>)}</select></Field>
+          <Field label="图类型"><select value={view.diagram_type} onChange={(event) => onChange({ ...view, diagram_type: event.target.value as DiagramSpecView["diagram_type"] })}>{diagramTypes.map((type) => <option key={type}>{type}</option>)}</select></Field>
           <Field label="方向"><select value={view.direction} onChange={(event) => onChange({ ...view, direction: event.target.value as "LR" | "TB" })}><option value="LR">左 → 右</option><option value="TB">上 → 下</option></select></Field>
-          <Field label="布局"><select value={view.layout_mode} onChange={(event) => onChange({ ...view, layout_mode: event.target.value as VisualSpecView["layout_mode"] })}><option value="auto">ELK 自动布局</option><option value="ranked">手动 Rank</option><option value="manual">手动坐标</option></select></Field>
-          <Field label="主题"><select value={view.theme} onChange={(event) => onChange({ ...view, theme: event.target.value as VisualSpecView["theme"] })}>{themeNames.map((theme) => <option key={theme}>{theme}</option>)}</select></Field>
+          <Field label="布局"><select value={view.layout_mode} onChange={(event) => onChange({ ...view, layout_mode: event.target.value as DiagramSpecView["layout_mode"] })}><option value="auto">ELK 自动布局</option><option value="ranked">手动 Rank</option><option value="manual">手动坐标</option></select></Field>
+          <Field label="主题"><select value={view.theme} onChange={(event) => onChange({ ...view, theme: event.target.value as DiagramSpecView["theme"] })}>{themeNames.map((theme) => <option key={theme}>{theme}</option>)}</select></Field>
           <div className="color-grid">
             {([
               ["primary", "品牌主色"], ["accent", "强调色"], ["page", "画布"], ["surface", "卡片"],
@@ -294,7 +294,7 @@ function ImportDialog({ onClose, onImport }: { onClose: () => void; onImport: (m
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
       <section className="modal" role="dialog" aria-modal="true" aria-label="Import" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="modal__header"><div><strong>导入到 VisualSkills</strong><span>JSON Workspace · CSV · Mermaid</span></div><button onClick={onClose}>×</button></div>
+        <div className="modal__header"><div><strong>导入到 DiagramSkills</strong><span>JSON Workspace · CSV · Mermaid</span></div><button onClick={onClose}>×</button></div>
         <div className="segmented">{(["csv", "mermaid", "json"] as const).map((item) => <button key={item} className={mode === item ? "active" : ""} onClick={() => setMode(item)}>{item.toUpperCase()}</button>)}</div>
         {mode !== "json" && <Field label="视图标题"><input value={title} onChange={(event) => setTitle(event.target.value)} /></Field>}
         <textarea value={source} onChange={(event) => setSource(event.target.value)} spellCheck={false} />
@@ -311,7 +311,7 @@ function downloadJson(workspace: Workspace) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `${workspace.title.replace(/[^A-Za-z0-9\u4e00-\u9fff-]+/g, "-") || "visualskills"}.json`;
+  anchor.download = `${workspace.title.replace(/[^A-Za-z0-9\u4e00-\u9fff-]+/g, "-") || "diagramskills"}.json`;
   anchor.click();
   window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
@@ -384,7 +384,7 @@ export default function App() {
   });
 
   const addNode = () => {
-    if (activeView.format !== "visualspec") return;
+    if (activeView.format !== "diagramspec") return;
     const id = nextId("node", activeView.nodes.map((node) => node.id));
     const lane = activeView.lanes[0]?.id;
     updateView({ ...activeView, nodes: [...activeView.nodes, { id, label: "新节点", type: "process", lane }] });
@@ -392,7 +392,7 @@ export default function App() {
   };
 
   const addLane = () => {
-    if (activeView.format !== "visualspec") return;
+    if (activeView.format !== "diagramspec") return;
     const id = nextId("lane", activeView.lanes.map((lane) => lane.id));
     const starterId = nextId("node", activeView.nodes.map((node) => node.id));
     const firstLane = activeView.lanes.length === 0;
@@ -408,7 +408,7 @@ export default function App() {
 
   const addView = () => {
     const id = nextId("view", workspace.views.map((view) => view.id));
-    const next: VisualSpecView = { id, format: "visualspec", title: "新视图", diagram_type: "process-flow", direction: "LR", theme: "paper", layout_mode: "auto", groups: [], lanes: [], nodes: [{ id: "start", label: "开始", type: "input" }], edges: [] };
+    const next: DiagramSpecView = { id, format: "diagramspec", title: "新视图", diagram_type: "process-flow", direction: "LR", theme: "paper", layout_mode: "auto", groups: [], lanes: [], nodes: [{ id: "start", label: "开始", type: "input" }], edges: [] };
     updateWorkspace({ ...workspace, views: [...workspace.views, next] });
     setActiveViewId(id);
   };
@@ -435,7 +435,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <div className="product"><span className="product__mark">V</span><div><strong>VisualSkills Studio</strong><span>Visual thinking workbench</span></div></div>
+        <div className="product"><span className="product__mark">V</span><div><strong>DiagramSkills Studio</strong><span>Visual thinking workbench</span></div></div>
         <div className="breadcrumbs">{history.length > 0 && <button onClick={goBack}>← 返回</button>}<span>{workspace.title}</span><b>/</b><strong>{activeView.title}</strong></div>
         <div className="topbar__actions"><span className={`sync-status sync-status--${status}`}>{statusText}</span><button onClick={() => setShowImport(true)}>导入</button><button onClick={() => downloadJson(workspace)}>导出 JSON</button></div>
       </header>
@@ -445,9 +445,9 @@ export default function App() {
           <nav>{workspace.views.map((view) => <button key={view.id} className={view.id === activeView.id ? "active" : ""} onClick={() => { setActiveViewId(view.id); setHistory([]); }}><span className={`format-dot format-dot--${view.format}`} /> <span>{view.title}</span><small>{view.format}</small></button>)}</nav>
           <div className="rail-note"><strong>多视图下钻</strong><span>在节点属性中选择 child_view，双击节点即可进入子视图。</span></div>
         </aside>
-        <main className="canvas-area" style={activeView.format === "visualspec" ? themeStyle(activeView) : undefined}>
-          {activeView.format === "visualspec"
-            ? <DiagramCanvas view={activeView} onChange={updateView as (view: VisualSpecView) => void} onSelectNode={setSelectedNode} onOpenView={openView} />
+        <main className="canvas-area" style={activeView.format === "diagramspec" ? themeStyle(activeView) : undefined}>
+          {activeView.format === "diagramspec"
+            ? <DiagramCanvas view={activeView} onChange={updateView as (view: DiagramSpecView) => void} onSelectNode={setSelectedNode} onOpenView={openView} />
             : <MermaidCanvas view={activeView} onChange={updateView} />}
         </main>
         <aside className="right-panel">

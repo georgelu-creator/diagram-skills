@@ -1,6 +1,6 @@
 # Browser editor
 
-VisualSkills Studio is a repository companion, not part of a standalone `$abi-flow` Skill installation. Use it only when a full repository checkout is present and the task needs direct graph manipulation, live source validation, swimlanes, manual hierarchy, imports, brand preview, or multi-view drill-down. The bundled Python CLI remains the complete generation and export path. High-density `layout: board` sources use their generated zoomable HTML for inspection and are not edited in Studio.
+DiagramSkills Studio is a repository companion, not part of a standalone `$diagram-skills` Skill installation. Use it only when a full repository checkout is present and the task needs direct graph manipulation, live source validation, swimlanes, manual hierarchy, imports, brand preview, or multi-view drill-down. The bundled Python CLI remains the complete generation and export path. High-density `layout: board` sources use their generated zoomable HTML for inspection and are not edited in Studio.
 
 ## Start locally
 

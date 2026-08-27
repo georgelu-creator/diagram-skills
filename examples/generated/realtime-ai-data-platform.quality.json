@@ -12,7 +12,7 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSkills"
+    "brand": "DiagramSkills"
   },
   "canvas": {
     "width": 1800.0,
@@ -30,15 +30,15 @@
   "issues": [],
   "artifacts": {
     "source": {
-      "sha256": "55b1edeab5d9478781a1a908f6a515438ed26434c287bd8ed0635284e8cf94cf",
+      "sha256": "5df5ddc161b9f6aeddda801ce26948d18aa2bacb9ca30ab216cc7bbe53f2e52c",
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "711892729e6b147a5f0cab8b2ed20a6aad1a39035263e9d269e5a6225ff04ee6",
+      "sha256": "f73967cc1ed061d84320d3cc843c89d6e02b792a5ee679f8bfc421bb11c86b2c",
       "path": "realtime-ai-data-platform.svg"
     },
     "html": {
-      "sha256": "929032735a2958c87237a799a005126714dcde986863d97cc6cc9adc96d1ea06",
+      "sha256": "f3e7ca781b2f6a409c07d948d6eccbaf99c0e4ceeb65b0fd8ad842957f4e21bf",
       "path": "realtime-ai-data-platform.html"
     },
     "png": {

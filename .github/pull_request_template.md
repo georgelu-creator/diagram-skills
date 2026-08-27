@@ -12,4 +12,4 @@ Describe the communication or product outcome, not only the files changed.
 
 ## Compatibility
 
-Note any change to the public `$abi-flow` Skill id, DiagramSpec JSON, CLI behavior, or workspace format. Write `None` when there is no compatibility change.
+Note any change to the public `$diagram-skills` Skill id, DiagramSpec JSON, CLI behavior, or workspace format. Write `None` when there is no compatibility change.

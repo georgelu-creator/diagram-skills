@@ -12,7 +12,7 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSkills"
+    "brand": "DiagramSkills"
   },
   "canvas": {
     "width": 1800.0,
@@ -30,15 +30,15 @@
   "issues": [],
   "artifacts": {
     "source": {
-      "sha256": "1d2378c8b341eb70def42bca24ffe9b98588d374077279db5308f01b1314bd7c",
+      "sha256": "4efad468b41050dfba624bf308ac405f95f34c375552c38641c123c2fd9c1159",
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "acb8a32299e0147c7979636b02c86ee694f08f8384fe85910f400a1c6f58d4d1",
+      "sha256": "444056e69c806378d31f32fb153c92f47eb2a905890ed32983dc9bae2473d502",
       "path": "enterprise-agent-office.svg"
     },
     "html": {
-      "sha256": "33f09a42c98f2eb11695714c08471f1fe87946dce226c8cc7f4c5df68bc84bd0",
+      "sha256": "315481c70d70a3ff48b70d153a07929684f1f801fa33ec7f5a135d9ab65a6e86",
       "path": "enterprise-agent-office.html"
     },
     "png": {
@@ -55,7 +55,7 @@
     "artifact": "png",
     "artifact_sha256": "89e3252f708ea58b0fa2de949c0729ae6c06846bced3dd786a50ab0e0773a0f5",
     "brief_sha256": "e8b026b46b4b36bf862430d3ccc2b669e1cc7c3f47d5b1165f277d8460514fdc",
-    "source_sha256": "1d2378c8b341eb70def42bca24ffe9b98588d374077279db5308f01b1314bd7c",
+    "source_sha256": "4efad468b41050dfba624bf308ac405f95f34c375552c38641c123c2fd9c1159",
     "evidence": "review_answers"
   }
 }

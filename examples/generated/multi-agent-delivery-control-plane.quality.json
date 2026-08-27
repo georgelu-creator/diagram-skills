@@ -12,7 +12,7 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSkills"
+    "brand": "DiagramSkills"
   },
   "canvas": {
     "width": 1800.0,
@@ -30,15 +30,15 @@
   "issues": [],
   "artifacts": {
     "source": {
-      "sha256": "0f121d9b517478b97321d1e9ef9a6b457472e7d792834bd42510c8b4a9dc7117",
+      "sha256": "ea0d6b4a5f4443fed32438feeb172aacb074e56cba31a45d1445032e15eabc51",
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "1b32487572561ac7806800c8db5c4de1f9eafe0f81d518d2ff899a375b5fd3fe",
+      "sha256": "58a7216e9a5a5ea75c86b665bbeb9679b363922bea61d7f339dfbaae21ec79e3",
       "path": "multi-agent-delivery-control-plane.svg"
     },
     "html": {
-      "sha256": "b4d722acb783a28a1f0d83acade721140a4480abe6859a39e34fe994708c4130",
+      "sha256": "77e9a0a9b510c1a0f9378b61856e17420757d6708013870cdbebbd8980decf98",
       "path": "multi-agent-delivery-control-plane.html"
     },
     "png": {

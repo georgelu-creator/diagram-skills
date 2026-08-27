@@ -1,5 +1,5 @@
 import type React from "react";
-import type { VisualSpecView } from "./model";
+import type { DiagramSpecView } from "./model";
 
 export type ThemeTokens = {
   primary: string;
@@ -15,7 +15,7 @@ export type ThemeTokens = {
 
 const BASE_ACCENTS = { primary: "#4F46E5", accent: "#14B8A6" };
 
-export const themeTokens: Record<VisualSpecView["theme"], ThemeTokens> = {
+export const themeTokens: Record<DiagramSpecView["theme"], ThemeTokens> = {
   paper: {
     ...BASE_ACCENTS,
     page: "#F8F7F3",
@@ -70,7 +70,7 @@ export const themeTokens: Record<VisualSpecView["theme"], ThemeTokens> = {
   },
 };
 
-export function resolveThemeTokens(view: Pick<VisualSpecView, "theme" | "brand">): ThemeTokens {
+export function resolveThemeTokens(view: Pick<DiagramSpecView, "theme" | "brand">): ThemeTokens {
   const base = themeTokens[view.theme];
   const brand = view.brand ?? {};
   return {
@@ -86,7 +86,7 @@ export function resolveThemeTokens(view: Pick<VisualSpecView, "theme" | "brand">
   };
 }
 
-export function themeStyle(view: Pick<VisualSpecView, "theme" | "brand">): React.CSSProperties {
+export function themeStyle(view: Pick<DiagramSpecView, "theme" | "brand">): React.CSSProperties {
   const tokens = resolveThemeTokens(view);
   return {
     "--brand-primary": tokens.primary,

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/georgelu-creator/abi-flow/blob/main/skills/abi-flow/references/spec.schema.json",
+  "$id": "https://github.com/georgelu-creator/diagram-skills/blob/main/skills/diagram-skills/references/spec.schema.json",
   "title": "DiagramSpec diagram",
   "type": "object",
   "additionalProperties": false,

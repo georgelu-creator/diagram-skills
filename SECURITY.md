@@ -6,7 +6,7 @@ Security fixes are applied to the current default branch.
 
 ## Reporting
 
-Do not publish suspected vulnerabilities or sensitive diagram data in a public issue. Use GitHub's enabled [private vulnerability reporting form](https://github.com/georgelu-creator/abi-flow/security/advisories/new). If that form is unavailable, open a public issue containing only a request for a private contact channel—do not include vulnerability details or sensitive data.
+Do not publish suspected vulnerabilities or sensitive diagram data in a public issue. Use GitHub's enabled [private vulnerability reporting form](https://github.com/georgelu-creator/diagram-skills/security/advisories/new). If that form is unavailable, open a public issue containing only a request for a private contact channel—do not include vulnerability details or sensitive data.
 
 ## Threat model
 
@@ -18,7 +18,7 @@ The DiagramSpec renderer treats diagram JSON as untrusted input:
 - the renderer does not execute content from the diagram specification;
 - output paths are supplied explicitly by the caller.
 
-VisualSkills Studio adds browser-side controls:
+DiagramSkills Studio adds browser-side controls:
 
 - Workspace JSON is parsed through a strict Zod model with reference checks.
 - Mermaid uses the official renderer with `securityLevel: strict`.

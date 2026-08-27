@@ -91,7 +91,7 @@ Stage C — Render and review
 1. Render JSON, SVG, HTML, and a pending hash-bound quality receipt with strict validation; add PNG only when `png-backend` succeeds.
 2. Inspect the SVG or 1920-pixel PNG and answer every profile-grounded brief quality question with concrete, distinct evidence.
 3. Append review_answers and run diagram_brief.py --spec <source.json> --strict --reviewed.
-4. Run `abi_flow.py review` with the source, pending quality receipt, reviewed brief, and inspected artifact; never hand-edit a receipt to passed.
+4. Run `diagram_skills.py review` with the source, pending quality receipt, reviewed brief, and inspected artifact; never hand-edit a receipt to passed.
 5. If any answer fails, fix the brief, source, or renderer and rerender. Do not patch generated SVG.
 ```
 

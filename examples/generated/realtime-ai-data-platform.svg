@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 1800 1359" role="img" aria-labelledby="abi-title abi-desc">
-<title id="abi-title">实时 AI 数据平台端到端架构全景图</title><desc id="abi-desc">High-density 数据流图 / Data Flow with 5 sections</desc>
+<svg xmlns="http://www.w3.org/2000/svg" class="diagram-skills board" data-theme="light" viewBox="0 0 1800 1359" role="img" aria-labelledby="diagram-title diagram-desc">
+<title id="diagram-title">实时 AI 数据平台端到端架构全景图</title><desc id="diagram-desc">High-density 数据流图 / Data Flow with 5 sections</desc>
 <defs>
 <marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0D7D75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
 <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>

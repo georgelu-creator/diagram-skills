@@ -34,11 +34,11 @@
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "8fe771f9da92ee2ca91146300095bc5f47b8a16cd1fa774d01be901ef57d9a8e",
+      "sha256": "d780b6c1fdaf2951f2bffe5bc43881e56fd8dcb22cca6bd2b20452d52edf7402",
       "path": "capability-map.svg"
     },
     "html": {
-      "sha256": "349e86669c1a9e84251764362ab7d5351efb0b221f1209868b5c9f74dc69a6d3",
+      "sha256": "c27cf28a163d87ea0b30a1901e18d8518a821c258f759911c0bf4e958435ae64",
       "path": "capability-map.html"
     },
     "png": {
