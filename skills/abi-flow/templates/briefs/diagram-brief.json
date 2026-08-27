@@ -1,0 +1,21 @@
+{
+  "goal": "Describe the decision or understanding this diagram should support.",
+  "audience": "Product and engineering leadership",
+  "narrative": "State the one-sentence story a viewer should understand after scanning the diagram.",
+  "scope": "State what is inside the diagram and what is intentionally outside it.",
+  "diagram_type": "system-architecture",
+  "composition": "board",
+  "must_show": ["Replace with facts that cannot disappear"],
+  "emphasize": ["Replace with the visual center of gravity"],
+  "deemphasize": [],
+  "relationships": ["Replace with meaningful relationship semantics"],
+  "uncertainties": [],
+  "assumptions": [],
+  "density": "medium",
+  "content_risks": ["Replace with the easiest way this diagram could mislead"],
+  "quality_questions": [
+    "Can the viewer identify the main story in five seconds?",
+    "Are must-show facts visible and correctly related?",
+    "Does the visual avoid unsupported claims?"
+  ]
+}

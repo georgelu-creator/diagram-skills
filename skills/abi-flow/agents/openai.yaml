@@ -4,6 +4,6 @@ interface:
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
   brand_color: "#4F46E5"
-  default_prompt: "Use $abi-flow to generate a polished enterprise diagram from this description. Deliver and inspect the rendered PNG/SVG, and keep the reproducible source and quality report beside it."
+  default_prompt: "Use $abi-flow to turn this description into a validated Diagram Brief, generate a polished enterprise diagram, inspect the rendered PNG/SVG, answer the quality questions, and keep the reproducible sources beside it."
 policy:
   allow_implicit_invocation: true

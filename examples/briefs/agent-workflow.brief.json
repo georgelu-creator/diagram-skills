@@ -1,0 +1,24 @@
+{
+  "goal": "Explain a reliable Agent execution loop from user intent through planning, context sufficiency, tool use, verification, and learning.",
+  "audience": "Product, Agent engineering, and operations teams",
+  "narrative": "The Agent plans from user intent, retrieves context until it is sufficient, executes a tool, verifies the result, and then delivers and learns.",
+  "scope": "A generic execution lifecycle including context clarification, verification, feedback, and learning; authorization policy, vendor models, and retry counts are outside scope.",
+  "diagram_type": "agent-workflow",
+  "composition": "graph",
+  "must_show": ["User or system trigger", "Relevant context retrieval", "Planning or routing", "Context sufficiency gate", "External tool execution", "Verification", "Clarification loop", "Delivery and learning write-back"],
+  "emphasize": ["Verification follows side effects", "Context sufficiency is checked before tool execution", "Learning returns only after delivery"],
+  "deemphasize": ["Model vendor details", "Prompt wording", "Tool-specific API parameters"],
+  "relationships": ["Trigger starts planning", "Planning requests relevant context", "Insufficient context triggers clarification and retrieval", "Tool results go to verification", "Verified output proceeds to delivery and write-back", "Delivered learning informs the next planning cycle"],
+  "uncertainties": ["Authorization policy for external actions is unspecified", "Clarification and feedback loop counts are unspecified"],
+  "assumptions": ["The decision node represents context sufficiency only, not authorization", "Feedback loops are semantic and have no fixed count"],
+  "density": "medium",
+  "content_risks": ["Do not present the context sufficiency gate as an authorization decision", "Do not collapse verification into execution", "Do not confuse retrieved context with learned write-back", "Do not hide clarification behind a linear happy path"],
+  "quality_questions": ["Can a viewer distinguish planning from external action?", "Are context sufficiency and result verification shown as different gates?", "Can the viewer see where context is retrieved and learning is written back?", "Is the clarification loop distinct from the happy path?", "Does every external tool call have a clear purpose?"],
+  "review_answers": [
+    {"question": "Can a viewer distinguish planning from external action?", "status": "pass", "evidence": "任务规划 and 调用工具执行 are separate typed nodes with context retrieval and a sufficiency decision between them."},
+    {"question": "Are context sufficiency and result verification shown as different gates?", "status": "pass", "evidence": "The flow uses 信息充分？ before execution and a separate 验证结果 node after execution."},
+    {"question": "Can the viewer see where context is retrieved and learning is written back?", "status": "pass", "evidence": "构建上下文 appears before the sufficiency gate, while 交付与回写 appears only after result verification."},
+    {"question": "Is the clarification loop distinct from the happy path?", "status": "pass", "evidence": "The 否 branch goes to 请求补充信息 and returns to 构建上下文, while the 是 branch continues to tool execution."},
+    {"question": "Does every external tool call have a clear purpose?", "status": "pass", "evidence": "The tool node is labelled as execution and is connected to the subsequent result verification stage."}
+  ]
+}

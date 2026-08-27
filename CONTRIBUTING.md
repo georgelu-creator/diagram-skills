@@ -14,6 +14,8 @@ VisualSpec accepts focused contributions that improve diagram meaning, determini
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
+python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/agent-workflow.brief.json --spec skills/abi-flow/templates/agent-workflow.json --strict --reviewed
 for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done
@@ -39,7 +41,8 @@ For editor changes, test a desktop viewport, overview-to-detail navigation, one 
 2. Add it to the `diagram_type` enum in `references/spec.schema.json`.
 3. Add `templates/<slug>.json`; it must pass strict validation.
 4. Add `references/diagram-types/<slug>.md` with use cases, input fields, fixed layout, visual rules, and an example prompt.
-5. Add or update tests that prove the type is discoverable and its template is valid.
+5. Add the type's focus, distinctions, failure modes, and review questions to `references/diagram-thinking-profiles.json`.
+6. Add or update tests that prove the type, template, and thinking profile are valid.
 
 ## Pull requests
 

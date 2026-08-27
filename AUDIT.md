@@ -9,7 +9,7 @@ Audit date: 2026-08-27
 ## Evidence
 
 - The Agent Skill structure passes the `skill-creator` quick validator.
-- The Python suite has 19 passing tests covering rendering, strict geometry, all 10 diagram-type templates, scaffolding, cycles, link safety, text escaping, schema parsing, themes, directions, swimlanes, manual ranks, brand tokens, workspaces, enterprise boards, and primary CLI artifacts.
+- The Python suite has 26 passing tests covering rendering, strict geometry, all 10 diagram-type templates and thinking profiles, Diagram Brief validation/review, brief-to-source alignment, scaffolding, cycles, link safety, text escaping, schema parsing, themes, directions, swimlanes, manual ranks, brand tokens, workspaces, enterprise boards, and primary CLI artifacts.
 - The browser package has 5 passing tests for workspace references, CSV mappings, and lane-parent layout; TypeScript checking and the Vite production build pass.
 - `npm audit` reports zero known vulnerabilities after pinning the patched DOMPurify transitive version.
 - All 10 checked-in templates pass strict validation with zero structural errors, node overlaps, edge/node collisions, group overlaps, or group intrusions.
@@ -20,6 +20,7 @@ Audit date: 2026-08-27
 - SVG is valid XML and generated HTML remains dependency-free with its existing restrictive Content Security Policy.
 - Executable URL schemes remain rejected and all text entering SVG/HTML is escaped.
 - The renderer and scaffolder use only the Python standard library; optional PNG export uses `rsvg-convert` when available.
+- Two checked-in Diagram Briefs pass the completed-review gate: every question has passing evidence, and each brief's type/composition matches the rendered source.
 
 ## Upgrade scope
 
@@ -34,6 +35,7 @@ Audit date: 2026-08-27
 9. Added VisualSpec Studio using React Flow, ELK, Monaco, Papa Parse, Mermaid, Zod, and Yjs instead of project-local canvas, optimizer, editor, CSV parser, renderer, or CRDT implementations.
 10. Added offline IndexedDB persistence, optional Yjs WebSocket sync, Web CI, dependency auditing, and primary-source architecture research.
 11. Replaced the weak homepage gallery with three reproducible complex examples: a cross-device Agent workspace, a multi-Agent delivery control plane, and a real-time AI data platform.
+12. Added a backward-compatible Diagram Brief thinking layer with 10 type-specific profiles, strict content validation, density-aware graph/board limits, brief-to-source alignment, and an evidence-backed post-render review gate.
 
 ## Residual limitations
 
@@ -43,12 +45,19 @@ Audit date: 2026-08-27
 - Mermaid imports remain source views instead of lossy conversion to native VisualSpec nodes.
 - ELK and Mermaid are lazy browser chunks; first use may be noticeably heavier than the base editor bundle.
 - PNG export requires `rsvg-convert`; SVG, HTML, JSON scaffolding, validation, and quality reports require no third-party runtime dependency.
+- Diagram Brief validation proves contract completeness, type/composition alignment, and review coverage. Whether written evidence is substantively true still depends on an Agent or human inspecting the rendered visual; it is not presented as automated semantic vision.
 - Quantitative charts, BPMN semantics, arbitrary whiteboards, and free-form illustration are outside project scope.
 
 ## Reproduction
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 skills/abi-flow/scripts/diagram_brief.py \
+  examples/briefs/enterprise-agent-office.brief.json \
+  --spec examples/enterprise-agent-office.json --strict --reviewed
+python3 skills/abi-flow/scripts/diagram_brief.py \
+  examples/briefs/agent-workflow.brief.json \
+  --spec skills/abi-flow/templates/agent-workflow.json --strict --reviewed
 for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done

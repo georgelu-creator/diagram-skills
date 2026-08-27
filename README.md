@@ -20,7 +20,7 @@
 
 [![跨设备云端 Agent 办公系统架构全景图](examples/generated/enterprise-agent-office.png)](examples/generated/enterprise-agent-office.svg)
 
-**VisualSpec is an Agent Skill first.** Install `$abi-flow`, describe the system, and the Agent produces the finished PNG/SVG/HTML—not a Mermaid snippet that you still have to redesign. The Skill selects a diagram contract, authors reproducible JSON, renders it with deterministic layout and built-in icons, validates geometry, inspects the 1920-pixel PNG, and corrects weak output before delivery.
+**VisualSpec is an Agent Skill first.** Install `$abi-flow`, describe the system, and the Agent produces the finished PNG/SVG/HTML—not a Mermaid snippet that you still have to redesign. Before drawing, the Skill creates a concise Diagram Brief that fixes the narrative, scope, priorities, uncertainty, failure risks, and review questions. It then renders deterministic JSON, inspects the 1920-pixel PNG, answers every review question with evidence, and corrects weak output before delivery.
 
 For dense enterprise overviews, the `board` composition generates layered color bands, bilingual module grids, side explanations, semantic cross-layer arrows, numbered data flows, and principle cards. **VisualSpec Studio is an optional inspection/editing surface**, not a prerequisite for getting a good diagram.
 
@@ -29,6 +29,7 @@ The repository and public Skill id remain `abi-flow` for compatibility; the proj
 ## Why VisualSpec
 
 - **Finished visual, not diagram source** — PNG/SVG is the default deliverable; JSON and quality evidence keep it reproducible.
+- **Content quality before layout** — a validated Diagram Brief prevents polished diagrams from hiding scope errors, unsupported claims, or the wrong narrative.
 - **Quality advantage through constraints** — type contracts, board composition, icon vocabulary, text measurement, semantic routing, strict validation, and mandatory visual review outperform one-shot freehand SVG/Mermaid.
 - **Meaning before pixels** — capture actors, boundaries, relationships, branches, and feedback before layout.
 - **10 diagram contracts** — each type has a use case, input schema, fixed layout rules, visual rules, a starter source, and an example prompt.
@@ -60,14 +61,14 @@ Every type has a dedicated guide under [`references/diagram-types`](skills/abi-f
 
 ## How it works
 
-`Intent → diagram contract → graph or enterprise board → deterministic render → strict checks → 1920 px visual review → finished image`
+`Intent → Diagram Brief → type profile → graph or board → deterministic render → strict checks → evidence-backed review → finished image`
 
-1. **Choose the information model.** The Skill routes the request to one primary diagram type.
-2. **Normalize the content.** Audience, scope, actors, relationships, boundaries, language, theme, and outputs become an explicit brief.
+1. **Fix the story.** The brief records audience, narrative, scope, must-show facts, emphasis, uncertainty, assumptions, and content risks.
+2. **Choose the information model.** One of 10 profiles supplies type-specific distinctions, failure modes, and review questions.
 3. **Choose composition.** Small relationship diagrams use graph layout; layered overviews use a high-density enterprise board.
-4. **Author the source of truth.** JSON records meaning independently of generated pixels.
+4. **Validate meaning.** The brief must pass before the Agent authors diagram source.
 5. **Render.** The standard-library engine computes bands, grids, nodes, icons, semantic routes, and portable artifacts.
-6. **Gate quality.** Strict validation plus full-size PNG inspection catches structural, geometry, text, accessibility, and hierarchy problems before delivery.
+6. **Close the loop.** Structural checks and full-size PNG inspection are followed by evidence for every quality question; a failed or unanswered question blocks delivery.
 
 The implementation deliberately reuses [React Flow](https://reactflow.dev/learn/layouting/sub-flows), [ELK](https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html), [Mermaid](https://mermaid.js.org/config/usage.html), [Papa Parse](https://www.papaparse.com/docs), [Monaco](https://microsoft.github.io/monaco-editor/), and [Yjs](https://docs.yjs.dev/). The research and boundaries are recorded in [`docs/research-and-architecture.md`](docs/research-and-architecture.md).
 
@@ -98,6 +99,10 @@ The expected result is a rendered image like the hero above. Opening a browser e
 # See every supported contract
 python3 skills/abi-flow/scripts/abi_flow.py types
 
+# Start and validate the content brief
+cp skills/abi-flow/templates/briefs/diagram-brief.json work/my-architecture.brief.json
+python3 skills/abi-flow/scripts/diagram_brief.py work/my-architecture.brief.json --strict
+
 # Create an editable architecture source
 python3 skills/abi-flow/scripts/abi_flow.py new system-architecture \
   --output work/my-architecture.json
@@ -109,10 +114,15 @@ python3 skills/abi-flow/scripts/abi_flow.py render work/my-architecture.json \
   --name my-architecture \
   --png \
   --strict
+
+# After PNG inspection, record review_answers and close the content gate
+python3 skills/abi-flow/scripts/diagram_brief.py \
+  work/my-architecture.brief.json --spec work/my-architecture.json --strict --reviewed
 ```
 
 Outputs:
 
+- `my-architecture.brief.json` — narrative, scope, priorities, uncertainty, risks, questions, and review evidence
 - `my-architecture.svg` — editable, source-control-friendly vector
 - `my-architecture.html` — dependency-free viewer with pan/zoom and downloads; graph views also include light/dark switching
 - `my-architecture.png` — 1920 px preview when `rsvg-convert` is available
@@ -179,6 +189,10 @@ The Skill accepts prose or these structured parameters:
 | `goal` | Decision or understanding the diagram should support |
 | `diagram_type` | One of the 10 supported slugs |
 | `audience` | Executive, product, engineering, customer, etc. |
+| `narrative` / `scope` | Five-second story and explicit in/out boundary |
+| `must_show` / `emphasize` / `deemphasize` | Content priority before layout |
+| `uncertainties` / `assumptions` | Missing facts and disclosed low-risk interpretations |
+| `content_risks` / `quality_questions` | Ways the diagram could mislead and checks that must pass |
 | `content` | Actors, systems, steps, capabilities, milestones, or questions |
 | `relationships` | Primary, control, async, success, error, and feedback links |
 | `boundaries` | Layers, owners, stages, domains, or trust zones |
@@ -191,7 +205,7 @@ The Skill accepts prose or these structured parameters:
 | `imports` | Mermaid source or CSV node/edge table |
 | `outputs` | JSON plus SVG, HTML, PNG, and/or quality report |
 
-See the reusable [`prompt-system.md`](skills/abi-flow/references/prompt-system.md) for the normalized brief and copy/paste generation contract.
+See [`diagram-thinking.md`](skills/abi-flow/references/diagram-thinking.md) and [`prompt-system.md`](skills/abi-flow/references/prompt-system.md) for the thinking contract and copy/paste generation prompt.
 
 ## Example gallery
 
@@ -201,7 +215,7 @@ These are not hand-designed screenshots. Every image below is generated by the b
 
 [![跨设备云端 Agent 办公系统架构全景图](examples/generated/enterprise-agent-office.png)](examples/generated/enterprise-agent-office.svg)
 
-41 visible elements · five architecture layers · memory capability grid · tool and asset boundaries · six-step task flow · five principles. [Source JSON](examples/enterprise-agent-office.json) · [HTML](examples/generated/enterprise-agent-office.html) · [quality](examples/generated/enterprise-agent-office.quality.json)
+41 visible elements · five architecture layers · memory capability grid · tool and asset boundaries · six-step task flow · five principles. [Reviewed Brief](examples/briefs/enterprise-agent-office.brief.json) · [Source JSON](examples/enterprise-agent-office.json) · [HTML](examples/generated/enterprise-agent-office.html) · [quality](examples/generated/enterprise-agent-office.quality.json)
 
 ### Multi-Agent software delivery control plane
 
@@ -221,7 +235,7 @@ The same Skill also generates [swimlane release flows](examples/generated/swimla
 
 ## Design principles
 
-1. **Structure first.** Information architecture is fixed before visual treatment.
+1. **Meaning before pixels.** Goal, narrative, scope, priority, uncertainty, and failure risks are explicit before layout.
 2. **One canvas, one message.** Split overloaded diagrams instead of shrinking text.
 3. **Semantics over decoration.** Shapes and arrows carry consistent meaning across themes.
 4. **Chinese-first, globally legible.** Chinese primary labels pair with stable English technical vocabulary.
@@ -246,6 +260,8 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 │   ├── agents/openai.yaml           # Skill UI metadata
 │   ├── assets/icon.svg              # VisualSpec brand mark
 │   ├── references/
+│   │   ├── diagram-thinking.md       # Content reasoning and review contract
+│   │   ├── diagram-thinking-profiles.json # 10 type-specific quality profiles
 │   │   ├── prompt-system.md         # Stable prompt and input contract
 │   │   ├── enterprise-board.md      # High-density architecture composition
 │   │   ├── diagram-types/*.md       # 10 type-specific contracts
@@ -257,9 +273,11 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 │   │   ├── workspaces.md            # Drill-down model
 │   │   ├── visual-language.md       # Themes and semantics
 │   │   └── quality-contract.md      # Delivery gates
-│   ├── templates/*.json             # 10 validated starter sources
-│   └── scripts/abi_flow.py          # Renderer, scaffolder, validator
+│   ├── templates/*.json             # 10 validated diagram starter sources
+│   ├── templates/briefs/*.json      # Diagram Brief starter contract
+│   └── scripts/                     # Brief validator + renderer
 ├── examples/                         # Complex board + graph source JSON
+├── examples/briefs/                  # Reviewed content-quality sidecars
 ├── examples/generated/              # Reproducible SVG, HTML, PNG, reports
 ├── editor/                           # Optional React/TypeScript Studio
 │   ├── src/                          # React Flow, ELK, import and realtime adapters
@@ -285,6 +303,7 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 - [x] Multi-view projects with overview → drill-down links
 - [x] Browser editor with live JSON/Mermaid validation and offline persistence
 - [x] High-density enterprise board renderer with section grids, side lists, built-in icons, data-flow and principle strips
+- [x] Validated Diagram Briefs, 10 thinking profiles, and evidence-backed post-render content review
 - [ ] Authenticated shared rooms, presence cursors, and deployable collaboration server recipe
 - [ ] diagrams.net import/export adapter and portable workspace HTML export
 - [ ] Command palette, undo history UI, and plugin API for custom nodes
@@ -297,6 +316,8 @@ Contributions are welcome for new diagram contracts, layout improvements, themes
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
+python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/agent-workflow.brief.json --spec skills/abi-flow/templates/agent-workflow.json --strict --reviewed
 for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done

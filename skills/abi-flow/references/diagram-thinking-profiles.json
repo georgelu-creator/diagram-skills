@@ -1,0 +1,72 @@
+{
+  "system-architecture": {
+    "question": "What are the major layers, boundaries, sources of truth, and interfaces that explain how the system works as a whole?",
+    "focus": ["system boundary and scope", "layer hierarchy", "responsibility separation", "sources of truth", "integration direction", "critical end-to-end path"],
+    "must_distinguish": ["control plane vs data/content plane when relevant", "memory/context vs durable artifacts", "owned systems vs external integrations", "logical responsibility vs concrete implementation detail"],
+    "failure_modes": ["turning every component into the same visual weight", "inventing protocols, security boundaries, or ownership not supplied", "mixing runtime topology with conceptual layers on one canvas", "drawing arrows everywhere without a primary narrative"],
+    "quality_questions": ["Can a viewer identify the system's center of gravity in five seconds?", "Are sources of truth visually distinguishable from orchestration and memory?", "Does each layer have a single responsibility story?", "Are external systems and trust boundaries represented only when supported by facts?", "Is the main request/data path obvious without reading every label?"]
+  },
+  "agent-workflow": {
+    "question": "How does an Agent move from intent to context, planning, tool use, verification, and learning or memory?",
+    "focus": ["trigger and goal", "context acquisition", "planning or routing", "tool/action execution", "human or policy gates", "verification", "feedback and memory update"],
+    "must_distinguish": ["reasoning/planning vs external action", "read context vs write memory", "automatic step vs human approval", "success path vs retry/recovery loop"],
+    "failure_modes": ["showing a linear happy path when the workflow is iterative", "hiding tool side effects behind a generic Agent box", "confusing model inference with durable memory", "inventing autonomous actions the user did not authorize"],
+    "quality_questions": ["Is the Agent's objective clear before any tool call?", "Can the viewer see where context enters and where durable memory is written?", "Are human approval and verification gates explicit?", "Are retry, fallback, and failure loops separated from the happy path?", "Does each tool call have a visible purpose rather than being decorative?"]
+  },
+  "data-flow": {
+    "question": "Where does data originate, how is it transformed, where is it stored, and who consumes it?",
+    "focus": ["data provenance", "ingestion", "transformations", "stores and indexes", "batch vs realtime movement", "consumers and feedback"],
+    "must_distinguish": ["data at rest vs data in motion", "raw vs transformed vs derived data", "authoritative store vs cache/index", "sync vs async movement when known"],
+    "failure_modes": ["drawing system dependencies instead of data transformations", "omitting provenance or final consumer", "implying realtime guarantees without evidence", "treating every database as the same semantic role"],
+    "quality_questions": ["Can every important output be traced back to a source?", "Are transformations named by what changes, not by vague service labels?", "Are authoritative stores distinguishable from indexes, caches, or queues?", "Is timing semantics shown only when supported?", "Are sensitive or trust-boundary crossings visible when provided?"]
+  },
+  "capability-map": {
+    "question": "What capabilities make up the product or platform, how are they grouped, and what outcomes do they enable?",
+    "focus": ["north-star outcome", "capability domains", "foundation capabilities", "differentiating capabilities", "user/business outcomes", "coverage and gaps"],
+    "must_distinguish": ["capability vs feature", "foundation vs user-facing value", "domain grouping vs execution sequence", "current capability vs aspirational capability when stated"],
+    "failure_modes": ["turning the map into a feature backlog", "using arrows that falsely imply sequence or causality", "mixing organization ownership with capability taxonomy", "giving every capability equal strategic importance"],
+    "quality_questions": ["Does the map answer what the product/platform can do, not how it executes?", "Are capabilities grouped by durable domains rather than temporary projects?", "Can foundational enablers be separated from differentiated value?", "Are outcomes visible without inventing metrics?", "Is the taxonomy mutually understandable and reasonably non-overlapping?"]
+  },
+  "user-flow": {
+    "question": "How does a user move from a clear intent and entry point to success, including important decisions and recovery paths?",
+    "focus": ["user goal", "entry point", "happy path", "decision points", "system feedback", "recovery paths", "success/exit state"],
+    "must_distinguish": ["user action vs system response", "decision vs screen/state", "happy path vs exception/recovery", "completion vs abandonment"],
+    "failure_modes": ["mapping screens without a user goal", "overloading the flow with every UI detail", "omitting recovery after a failed decision or validation", "inventing user motivations or conversion metrics"],
+    "quality_questions": ["Is the user's goal explicit before the first step?", "Can the happy path be followed without crossing exception branches?", "Does every decision change the subsequent path?", "Are system responses shown where they matter to user understanding?", "Is the success state unambiguous?"]
+  },
+  "system-topology": {
+    "question": "Which runtime components exist in which zones, how do they depend on one another, and what traffic or failover relationships matter?",
+    "focus": ["runtime units", "zones/regions/trust boundaries", "network/service dependencies", "traffic direction", "replication or failover", "observability"],
+    "must_distinguish": ["logical architecture vs deployed topology", "primary traffic vs replication/failover", "service dependency vs data dependency", "owned runtime vs managed/external service"],
+    "failure_modes": ["using conceptual layers as if they were deployment zones", "inventing HA, replication, or region behavior", "showing every dependency with equal weight", "omitting the runtime boundary that makes the topology meaningful"],
+    "quality_questions": ["Can the viewer identify deployment or trust zones immediately?", "Are primary traffic and failover/replication visually distinct?", "Are only runtime-relevant dependencies shown?", "Is observability placed as a cross-cutting concern only when supported?", "Does the diagram avoid implying redundancy that was not specified?"]
+  },
+  "decision-tree": {
+    "question": "Which ordered questions lead to which mutually understandable outcomes, including unknown or fallback states?",
+    "focus": ["root decision", "ordered questions", "branch criteria", "terminal outcomes", "unknown/insufficient-information path", "fallback or escalation"],
+    "must_distinguish": ["question vs action", "evidence/condition vs outcome", "terminal state vs intermediate decision", "known negative vs unknown"],
+    "failure_modes": ["branches that are not mutually understandable", "hiding a required fallback path", "mixing chronological process steps into the decision tree", "inventing thresholds or policy rules"],
+    "quality_questions": ["Can each branch be answered from the information available at that point?", "Do all branches eventually terminate or explicitly escalate?", "Are unknown and negative outcomes distinguished when relevant?", "Are criteria stated without inventing thresholds?", "Would two readers reach the same branch from the same facts?"]
+  },
+  "roadmap": {
+    "question": "What sequence of outcomes, milestones, dependencies, and readiness gates explains how the initiative progresses over time?",
+    "focus": ["phases", "outcomes", "milestones", "dependencies", "readiness gates", "confidence/unknowns"],
+    "must_distinguish": ["outcome vs task", "dependency vs mere chronology", "committed milestone vs aspiration", "time sequence vs causal dependency"],
+    "failure_modes": ["turning the roadmap into a backlog", "inventing dates or certainty", "showing parallel work as strictly sequential", "using dependencies that are only assumptions"],
+    "quality_questions": ["Does each phase describe an outcome rather than a list of tasks?", "Are dependencies explicit only where they constrain progression?", "Are uncertain dates or milestones represented honestly?", "Can parallel tracks be recognized without forcing a false sequence?", "Is the end state tied back to the roadmap's goal?"]
+  },
+  "strategy-map": {
+    "question": "How do the north star, strategic pillars, initiatives, and measurable outcomes connect into one coherent strategy?",
+    "focus": ["north star", "strategic pillars", "initiatives or bets", "enablers", "outcomes", "metrics only when supplied"],
+    "must_distinguish": ["objective vs initiative", "pillar vs capability", "causal hypothesis vs reporting hierarchy", "metric vs target when provided"],
+    "failure_modes": ["mixing org chart, capability map, and strategy on one canvas", "inventing metrics or causal certainty", "showing initiatives without the objective they serve", "using decorative arrows that imply unsupported causality"],
+    "quality_questions": ["Can every initiative be traced to a strategic objective?", "Are pillars meaningfully distinct rather than restatements?", "Are causal links presented as hypotheses unless proven?", "Are metrics shown only when supplied?", "Can a leader identify the strategy's few priorities at a glance?"]
+  },
+  "process-flow": {
+    "question": "What repeatable sequence of actions, handoffs, decisions, artifacts, and exceptions produces the intended operational outcome?",
+    "focus": ["trigger", "ordered actions", "owners/handoffs", "artifacts", "decision gates", "exceptions/rework", "end state"],
+    "must_distinguish": ["action vs decision", "owner vs system", "artifact vs activity", "normal flow vs exception/rework"],
+    "failure_modes": ["hiding ownership at critical handoffs", "drawing a happy path with no exception path when one is supplied", "mixing capability taxonomy into a process sequence", "inventing approvals or SLAs"],
+    "quality_questions": ["Is the trigger and final operational outcome clear?", "Are handoffs visible where responsibility changes?", "Do decisions have meaningful branches rather than decorative diamonds?", "Are artifacts shown only where they affect the process?", "Are rework and exception loops explicit and intentional?"]
+  }
+}

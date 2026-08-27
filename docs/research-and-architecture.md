@@ -23,7 +23,14 @@ VisualSpec supplies the pieces that are product-specific rather than generic inf
 - lane, rank, group, edge-kind, brand-token, and child-view mappings;
 - CSV column mapping into the VisualSpec model;
 - strict deterministic Python export and quality evidence;
+- Diagram Brief sidecars, type-specific content-risk profiles, and evidence-backed post-render review;
 - Agent Skill routing and prompt contracts.
+
+## Content-quality architecture
+
+Diagram meaning remains separate from render geometry. A `.brief.json` sidecar records the audience, five-second narrative, scope, priorities, uncertainty, assumptions, content risks, and review questions without exposing private chain-of-thought. This keeps existing render JSON backward compatible and lets one brief govern graph, board, or later multi-view source.
+
+The standard-library validator applies three gates: brief completeness before authoring, diagram type/composition alignment against the source, and complete passing evidence for every review question after visual inspection. The final gate verifies coverage and consistency; it does not claim to automate semantic visual judgment.
 
 ## Enterprise diagram research
 

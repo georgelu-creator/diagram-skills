@@ -1,31 +1,36 @@
 # Prompt and template system
 
-Use this contract to turn prose into a stable diagram brief before authoring JSON. The goal is repeatability: information structure first, visual language second.
+Use this contract to turn prose into a validated **Diagram Brief** before authoring JSON. The goal is repeatability: content intent first, information structure second, visual language third.
 
-## 1. Normalized brief
+## 1. Diagram Brief
 
-Collect or infer these fields:
+Collect or infer these content fields. Do not infer business facts, performance numbers, ownership, dates, security boundaries, protocols, or causal relationships. Ask only when their absence materially changes the diagram.
 
 | Field | Question | Default |
 |---|---|---|
 | `goal` | What decision or understanding should the diagram enable? | Explain the supplied system accurately |
-| `diagram_type` | Which information model fits the content? | Infer from the type router |
-| `composition` | Small relationship graph or high-density enterprise board? | Board for layered architecture overviews; graph otherwise |
 | `audience` | Who must understand it? | Product + engineering leadership |
-| `scope` | What is inside/outside the canvas? | Only facts provided or clearly implied |
-| `content` | Which actors, steps, systems, capabilities, or milestones exist? | Preserve source wording |
-| `relationships` | What flows, controls, branches, stores, or feeds back? | Primary only unless evidence supports more |
-| `boundaries` | Which layers, owners, stages, domains, or trust zones matter? | None |
-| `lanes` | Do owners/roles need explicit swimlanes? | None |
-| `rank_hints` | Which nodes must stay at a specified hierarchy/stage? | Compute from relationships |
-| `language` | Which language and technical vocabulary? | Chinese-first, English technical terms retained |
-| `theme` | Which presentation context? | `spectrum` |
-| `brand` | Are approved brand colors required? | Theme defaults |
-| `views` | Does the overview need focused drill-downs? | One view unless density requires splitting |
-| `imports` | Is Mermaid or CSV an input source? | None |
-| `outputs` | Which deliverables are needed? | JSON + SVG + HTML + PNG + quality report |
+| `narrative` | What one sentence remains after a five-second scan? | Derive only from supplied facts |
+| `scope` | What is explicitly inside and outside? | Supplied or clearly implied scope only |
+| `diagram_type` | Which information model fits the content? | Infer from the type router |
+| `composition` | Small relationship graph or high-density board? | Board for layered overviews; graph otherwise |
+| `must_show` | Which facts cannot disappear without changing meaning? | Critical supplied entities and relationships |
+| `emphasize` | What deserves visual priority? | Main narrative and differentiating boundaries |
+| `deemphasize` | What should be grouped or moved to detail? | Low-level detail outside the goal |
+| `relationships` | Which sequence, control, data, hierarchy, ownership, dependency, source-of-truth, or feedback semantics matter? | Supported relationships only |
+| `uncertainties` | What does the source not establish? | Record it; never silently guess |
+| `assumptions` | Which low-risk interpretation choices are made? | Conventional layout choices only |
+| `density` | How much information belongs on one canvas? | `medium` |
+| `content_risks` | How could the diagram mislead? | Tailor selected profile failure modes |
+| `quality_questions` | What must be verified after rendering? | At least three tailored questions |
 
-Do not infer business facts, performance numbers, ownership, or security boundaries. Ask only when their absence materially changes the diagram.
+Keep language, theme, brand, views/imports, lanes/rank hints, and output format as authoring parameters after the content brief.
+
+A brief is ready when it has one coherent narrative, real prioritization, explicit uncertainty, at least one content risk, and three answerable quality questions. Validate it before authoring source:
+
+```bash
+python3 scripts/diagram_brief.py work/example.brief.json --strict
+```
 
 ## 2. Type router
 
@@ -42,6 +47,8 @@ Do not infer business facts, performance numbers, ownership, or security boundar
 
 If two types are both useful, choose one primary overview and recommend a linked drill-down rather than mixing layouts.
 
+Read only the selected entry in `diagram-thinking-profiles.json`, then read its guide under `diagram-types/`.
+
 For a system/data/Agent overview with three or more layers and more than 14 visible concepts, prefer the reusable `layout: board` composition in [enterprise-board.md](enterprise-board.md). It is intentionally designed for a single dense executive/technical overview; do not split it merely because it exceeds the small-graph node guideline.
 
 ## 3. Copy/paste generation prompt
@@ -49,32 +56,45 @@ For a system/data/Agent overview with three or more layers and more than 14 visi
 ```text
 You are designing an enterprise-grade diagram from structured business and technical information.
 
-Goal: {goal}
-Diagram type: {diagram_type}
-Composition: {graph_or_board}
-Audience: {audience}
-Scope: {scope}
-Content: {content}
-Relationships: {relationships}
-Boundaries: {boundaries}
-Swimlanes: {lanes}
-Manual rank hints: {rank_hints}
+Source request:
+{source_request}
+
+Authoring context:
+Audience hint: {audience}
+Scope hint: {scope}
 Language: Chinese-first; retain established English technical terms
 Theme: {theme}
 Brand tokens: {brand}
 Views/imports: {views_and_imports}
 
-Requirements:
-1. Preserve facts and relationships. Do not invent components, metrics, ownership, or sequence.
-2. Apply the fixed layout contract for {diagram_type}; use one dominant reading direction.
-3. Use concise Chinese primary labels and English technical subtitles where useful.
-4. Use semantic node types and edge kinds; mark intentional cycles as feedback.
-5. For graph composition, target 4–10 nodes and split views above 14 nodes. For board composition, use 3–6 scan bands and 20–45 concise cards with one visual center.
-6. Output valid VisualSpec JSON. Use graph nodes/edges or board sections/blocks/connections/flow/principles; never mix the two structures.
-7. Render JSON, SVG, HTML, PNG, and quality evidence. Inspect the 1920-pixel PNG, fix source/layout issues, and rerender before delivery.
+Stage A — Diagram Brief
+Output goal, audience, narrative, scope, diagram_type, composition, must_show,
+emphasize, deemphasize, relationships, uncertainties, assumptions, density,
+content_risks, and at least three quality_questions.
+
+1. Preserve facts. Do not invent components, metrics, ownership, sequence, dates, protocols, boundaries, or causal claims.
+2. Select one type and composition. Use a linked detail instead of mixing incompatible information models.
+3. Make must_show and deemphasize force real prioritization.
+4. Record missing facts under uncertainties rather than guessing.
+5. Tailor risks and questions from the selected thinking profile.
+6. Validate the sidecar with diagram_brief.py --strict.
+
+Stage B — VisualSpec source
+1. Apply the selected type and composition contract with one dominant reading direction.
+2. Use concise Chinese labels and useful English technical subtitles.
+3. Use semantic node/edge kinds and mark intentional cycles as feedback.
+4. Graphs target 4–10 nodes and split above 14. Boards use 3–6 scan bands and 20–45 concise concepts.
+5. A must_show fact may not silently disappear; deemphasized facts may be grouped or moved to a child view.
+6. Output valid graph nodes/edges or board sections/blocks/connections/flow/principles; never mix them.
+
+Stage C — Render and review
+1. Render JSON, SVG, HTML, PNG, and quality evidence with strict validation.
+2. Inspect the 1920-pixel PNG and answer every brief quality question with concrete evidence.
+3. Append review_answers and run diagram_brief.py --spec <source.json> --strict --reviewed.
+4. If any answer fails, fix the brief, source, or renderer and rerender. Do not patch generated SVG.
 ```
 
-Append the selected type guide's input fields and fixed layout rules. Do not copy all type guides into one prompt.
+Load only the selected profile and type guide; do not copy every guide into one prompt.
 
 ## 4. Stable visual contract
 
@@ -83,8 +103,8 @@ Append the selected type guide's input fields and fixed layout rules. Do not cop
 - High information density through hierarchy, grouping, and concise subtitles—not smaller type.
 - The title states the subject; subtitle states scope, time, or system promise; diagram-type badge records intent.
 - Major groups use layer/domain labels; arrows encode meaning, not decoration.
-- Source JSON, SVG, HTML, quality report, and optional PNG stay together.
+- Diagram Brief, source JSON, SVG, HTML, quality report, and optional PNG stay together.
 
 ## 5. Revision protocol
 
-When revising a diagram, change meaning first in the JSON, rerender, then compare node/edge/group counts and quality evidence. Never patch a generated SVG to hide a layout issue. If the third evidence-based layout attempt still fails, simplify or split the diagram.
+When revising a diagram, reread the brief and original request. Update narrative, scope, prioritization, uncertainty, or risks when meaning changes; then change source, rerender, compare quality evidence, and answer the review questions again. Never patch generated SVG. If the third evidence-based attempt still fails, simplify or split the diagram.

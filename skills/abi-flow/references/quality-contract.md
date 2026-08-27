@@ -2,6 +2,17 @@
 
 A render is deliverable only when every required check passes.
 
+## Content gate
+
+- A nontrivial prose request has a validated `.brief.json` sidecar.
+- The brief states one goal, audience, narrative, scope, type, composition, and real content priorities.
+- Uncertainties remain absent from the diagram unless later resolved; assumptions are explicit and low risk.
+- `must_show` facts remain visible; `deemphasize` facts are intentionally grouped, omitted, or moved to a detail view.
+- Content risks are tailored to the selected diagram type rather than copied mechanically.
+- After PNG inspection, every quality question has a passing `review_answers` entry with concrete evidence.
+
+Run `diagram_brief.py <brief> --strict` before authoring and `diagram_brief.py <brief> --spec <source> --strict --reviewed` before delivery. The latter also proves that type and composition agree with the rendered source.
+
 ## Structural gate
 
 - JSON parses and matches the supported field vocabulary.
