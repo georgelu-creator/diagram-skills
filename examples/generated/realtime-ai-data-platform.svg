@@ -1,0 +1,337 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 1800 1305" role="img" aria-labelledby="abi-title abi-desc">
+<title id="abi-title">实时 AI 数据平台端到端架构全景图</title><desc id="abi-desc">High-density 数据流图 / Data Flow with 5 sections</desc>
+<defs>
+<marker id="arrow-success" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-feedback" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#0D7D75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-error" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>
+.board{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff}.board text{fill:#192132}.board-title{font-size:28px;font-weight:700;text-anchor:middle}.board-subtitle{font-size:12px;fill:#667085;text-anchor:middle;letter-spacing:.2px}.section-label{font-size:16px;font-weight:700}.section-subtitle{font-size:11px;font-weight:500}.block-title{font-size:15px;font-weight:700;text-anchor:middle}.block-subtitle{font-size:10.5px;fill:#667085;text-anchor:middle}.card-title{font-size:12.2px;font-weight:650}.card-subtitle{font-size:9.6px;fill:#536174}.list-title{font-size:13px;font-weight:700}.list-item{font-size:10.6px}.footer-text{font-size:10.5px;font-weight:650;text-anchor:middle}.flow-title,.principles-title{font-size:15px;font-weight:700}.step-title{font-size:11.4px;font-weight:650}.step-subtitle{font-size:9.2px;fill:#667085}.connection{fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.connection-label{font-size:9.5px;font-weight:650;text-anchor:middle;fill:#536174}
+</style>
+<rect width="1800" height="1305" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1800" height="84" fill="#FBFCFE"/>
+<rect x="866" y="77" width="68" height="3" rx="1.5" fill="#0D7D75"/>
+<text class="board-title" x="900" y="39">实时 AI 数据平台端到端架构全景图</text>
+<text class="board-subtitle" x="900" y="64">批流一体 · Lakehouse · RAG · 模型服务 · 数据治理 · 业务闭环</text>
+<g class="board-section"><rect x="20" y="96" width="1760" height="140" rx="12" fill="#F4F8FF" stroke="#7FB2F5" stroke-width="1"/>
+<text class="section-label" x="40" y="166" fill="#0B4F93">数据源</text>
+<text class="section-subtitle" x="40" y="189" fill="#0B4F93">PRODUCERS</text>
+<path d="M 206 108 V 224" fill="none" stroke="#7FB2F5" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="108" width="1552" height="116" rx="11" fill="#FFFFFF" stroke="#7FB2F5" stroke-width="1"/>
+<text class="block-title" x="992" y="133" fill="#0B4F93">企业实时与离线数据源</text>
+<g class="board-card"><rect x="228" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(239 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="3" width="18" height="13" rx="1.5"/><path fill="none" d="M12 16v5M8 21h8"/></g>
+<text class="card-title" x="270" y="180" fill="#0B4F93">业务应用</text>
+<text class="card-subtitle" x="270" y="198">Web / Mobile / SaaS</text>
+</g>
+<g class="board-card"><rect x="484" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(495 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M3 7h12a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 17h8"/></g>
+<text class="card-title" x="526" y="180" fill="#0B4F93">行为事件</text>
+<text class="card-subtitle" x="526" y="198">Click / Event</text>
+</g>
+<g class="board-card"><rect x="740" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(751 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
+<text class="card-title" x="782" y="180" fill="#0B4F93">交易数据库</text>
+<text class="card-subtitle" x="782" y="198">OLTP / CDC</text>
+</g>
+<g class="board-card"><rect x="996" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(1007 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="1038" y="180" fill="#0B4F93">文档与知识</text>
+<text class="card-subtitle" x="1038" y="198">PDF / Wiki / Drive</text>
+</g>
+<g class="board-card"><rect x="1252" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(1263 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="card-title" x="1294" y="180" fill="#0B4F93">设备与日志</text>
+<text class="card-subtitle" x="1294" y="198">IoT / Log / Trace</text>
+</g>
+<g class="board-card"><rect x="1508" y="158" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(1519 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 8h16M4 16h16M8 4v16M16 4v16"/></g>
+<text class="card-title" x="1550" y="180" fill="#0B4F93">外部数据</text>
+<text class="card-subtitle" x="1550" y="198">API / Partner</text>
+</g>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="248" width="1760" height="198" rx="12" fill="#FFF9F3" stroke="#F2B36F" stroke-width="1"/>
+<text class="section-label" x="40" y="347" fill="#783A05">采集与处理</text>
+<text class="section-subtitle" x="40" y="370" fill="#783A05">INGEST / PROCESS</text>
+<path d="M 206 260 V 434" fill="none" stroke="#F2B36F" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="289" width="611.2" height="116" rx="11" fill="#FFFFFF" stroke="#F2B36F" stroke-width="1"/>
+<text class="block-title" x="521.6" y="314" fill="#783A05">实时通道</text>
+<g class="board-card"><rect x="228" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(239 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M3 7h12a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 17h8"/></g>
+<text class="card-title" x="270" y="361" fill="#783A05">事件总线</text>
+<text class="card-subtitle" x="270" y="379">Kafka / Pulsar</text>
+</g>
+<g class="board-card"><rect x="426.4" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(437.4 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></g>
+<text class="card-title" x="468.4" y="361" fill="#783A05">流式计算</text>
+<text class="card-subtitle" x="468.4" y="379">Window / Join</text>
+</g>
+<g class="board-card"><rect x="624.8" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(635.8 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="card-title" x="666.8" y="361" fill="#783A05">实时质量</text>
+<text class="card-subtitle" x="666.8" y="379">Schema / DQ</text>
+</g>
+</g>
+<g class="board-block"><rect x="839.2" y="289" width="611.2" height="116" rx="11" fill="#FFFFFF" stroke="#F2B36F" stroke-width="1"/>
+<text class="block-title" x="1144.8" y="314" fill="#783A05">离线与文档通道</text>
+<g class="board-card"><rect x="851.2" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(862.2 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 18H6a4 4 0 0 1 0-8h1M15 6h3a4 4 0 0 1 0 8h-1M8 12h8"/></g>
+<text class="card-title" x="893.2" y="361" fill="#783A05">连接器</text>
+<text class="card-subtitle" x="893.2" y="379">CDC / API / File</text>
+</g>
+<g class="board-card"><rect x="1049.6" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(1060.6 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="5" cy="12" r="2"/><circle fill="none" cx="18" cy="5" r="2"/><circle fill="none" cx="19" cy="18" r="2"/><path fill="none" d="m7 11 9-5M7 13l10 4M18 7v9"/></g>
+<text class="card-title" x="1091.6" y="361" fill="#783A05">任务编排</text>
+<text class="card-subtitle" x="1091.6" y="379">Schedule / DAG</text>
+</g>
+<g class="board-card"><rect x="1248" y="339" width="190.4" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(1259 354) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="1290" y="361" fill="#783A05">文档处理</text>
+<text class="card-subtitle" x="1290" y="379">Parse / Chunk / OCR</text>
+</g>
+</g>
+<g class="board-block"><rect x="1462.4" y="260" width="305.6" height="174" rx="11" fill="#FFFFFF" stroke="#F2B36F" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1476.4" y="284" fill="#783A05">入口门禁</text>
+<g transform="translate(1475.4 296) scale(0.541667)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1496.4" y="308" fill="#783A05">契约与 Schema</text>
+<g transform="translate(1475.4 318) scale(0.541667)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1496.4" y="330" fill="#783A05">敏感信息识别</text>
+<g transform="translate(1475.4 340) scale(0.541667)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1496.4" y="352" fill="#783A05">质量规则</text>
+<g transform="translate(1475.4 362) scale(0.541667)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1496.4" y="374" fill="#783A05">血缘起点</text>
+<g transform="translate(1475.4 384) scale(0.541667)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1496.4" y="396" fill="#783A05">失败隔离与重放</text>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="458" width="1760" height="233" rx="12" fill="#F2FBFA" stroke="#73C7BA" stroke-width="1"/>
+<text class="section-label" x="40" y="574.5" fill="#0D665C">统一数据底座</text>
+<text class="section-subtitle" x="40" y="597.5" fill="#0D665C">LAKEHOUSE</text>
+<path d="M 206 470 V 679" fill="none" stroke="#73C7BA" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="470" width="1232" height="209" rx="11" fill="#FFFFFF" stroke="#73C7BA" stroke-width="1"/>
+<text class="block-title" x="832" y="495" fill="#0D665C">开放 Lakehouse 与专用数据服务</text>
+<g class="board-card"><rect x="228" y="520" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(239 535) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
+<text class="card-title" x="270" y="542" fill="#0D665C">Raw / Bronze</text>
+<text class="card-subtitle" x="270" y="560">Immutable / Replay</text>
+</g>
+<g class="board-card"><rect x="532" y="520" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(543 535) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="card-title" x="574" y="542" fill="#0D665C">Clean / Silver</text>
+<text class="card-subtitle" x="574" y="560">Conformed / Trusted</text>
+</g>
+<g class="board-card"><rect x="836" y="520" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(847 535) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></g>
+<text class="card-title" x="878" y="542" fill="#0D665C">Serving / Gold</text>
+<text class="card-subtitle" x="878" y="560">Metric / Feature</text>
+</g>
+<g class="board-card"><rect x="1140" y="520" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(1151 535) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="3" width="7" height="6" rx="1"/><rect fill="none" x="14" y="15" width="7" height="6" rx="1"/><path fill="none" d="M10 6h5a3 3 0 0 1 3 3v6M7 9v6a3 3 0 0 0 3 3h4"/></g>
+<text class="card-title" x="1182" y="542" fill="#0D665C">Catalog / Lineage</text>
+<text class="card-subtitle" x="1182" y="560">Metadata / Ownership</text>
+</g>
+<g class="board-card"><rect x="228" y="582" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(239 597) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
+<text class="card-title" x="270" y="604" fill="#0D665C">数据仓库</text>
+<text class="card-subtitle" x="270" y="622">SQL / BI</text>
+</g>
+<g class="board-card"><rect x="532" y="582" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(543 597) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5"/></g>
+<text class="card-title" x="574" y="604" fill="#0D665C">Feature Store</text>
+<text class="card-subtitle" x="574" y="622">Online / Offline</text>
+</g>
+<g class="board-card"><rect x="836" y="582" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(847 597) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
+<text class="card-title" x="878" y="604" fill="#0D665C">Vector Store</text>
+<text class="card-subtitle" x="878" y="622">Embedding / Hybrid</text>
+</g>
+<g class="board-card"><rect x="1140" y="582" width="296" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(1151 597) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
+<text class="card-title" x="1182" y="604" fill="#0D665C">Operational Store</text>
+<text class="card-subtitle" x="1182" y="622">Low-latency State</text>
+</g>
+<rect x="228" y="651" width="1208" height="19" rx="5" fill="#F2FBFA" stroke="#73C7BA" stroke-width=".5"/>
+<text class="footer-text" x="832" y="664" fill="#0D665C">统一治理面：目录 · 血缘 · 权限 · 质量 · 成本 · 数据产品契约</text>
+</g>
+<g class="board-block"><rect x="1460" y="476.5" width="308" height="196" rx="11" fill="#FFFFFF" stroke="#73C7BA" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1474" y="500.5" fill="#0D665C">跨层治理</text>
+<g transform="translate(1473 512.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="524.5" fill="#0D665C">统一身份与最小权限</text>
+<g transform="translate(1473 534.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="546.5" fill="#0D665C">行列级访问控制</text>
+<g transform="translate(1473 556.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="568.5" fill="#0D665C">PII 脱敏与密钥管理</text>
+<g transform="translate(1473 578.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="590.5" fill="#0D665C">端到端血缘与审计</text>
+<g transform="translate(1473 600.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="612.5" fill="#0D665C">质量 SLO 与数据可观测</text>
+<g transform="translate(1473 622.5) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="634.5" fill="#0D665C">成本归属与保留策略</text>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="703" width="1760" height="140" rx="12" fill="#FAF7FF" stroke="#B69AE9" stroke-width="1"/>
+<text class="section-label" x="40" y="773" fill="#5226A5">智能与模型层</text>
+<text class="section-subtitle" x="40" y="796" fill="#5226A5">AI / ANALYTICS</text>
+<path d="M 206 715 V 831" fill="none" stroke="#B69AE9" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="715" width="1552" height="116" rx="11" fill="#FFFFFF" stroke="#B69AE9" stroke-width="1"/>
+<text class="block-title" x="992" y="740" fill="#5226A5">统一分析与 AI 能力</text>
+<g class="board-card"><rect x="228" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(239 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="5" cy="12" r="2"/><circle fill="none" cx="18" cy="5" r="2"/><circle fill="none" cx="19" cy="18" r="2"/><path fill="none" d="m7 11 9-5M7 13l10 4M18 7v9"/></g>
+<text class="card-title" x="270" y="787" fill="#5226A5">语义模型</text>
+<text class="card-subtitle" x="270" y="805">Metric / Entity</text>
+</g>
+<g class="board-card"><rect x="484" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(495 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="card-title" x="526" y="787" fill="#5226A5">实时分析</text>
+<text class="card-subtitle" x="526" y="805">SQL / OLAP</text>
+</g>
+<g class="board-card"><rect x="740" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(751 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 8 5-8 5-8-5zM4 12l8 5 8-5M4 17l8 5 8-5"/></g>
+<text class="card-title" x="782" y="787" fill="#5226A5">模型训练</text>
+<text class="card-subtitle" x="782" y="805">Feature / Experiment</text>
+</g>
+<g class="board-card"><rect x="996" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(1007 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
+<text class="card-title" x="1038" y="787" fill="#5226A5">RAG Pipeline</text>
+<text class="card-subtitle" x="1038" y="805">Retrieve / Ground</text>
+</g>
+<g class="board-card"><rect x="1252" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(1263 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="4" y="7" width="16" height="13" rx="3"/><path fill="none" d="M12 3v4M9 12h.1M15 12h.1M8 16h8M2 11h2M20 11h2"/></g>
+<text class="card-title" x="1294" y="787" fill="#5226A5">Agent Runtime</text>
+<text class="card-subtitle" x="1294" y="805">Plan / Tool / Memory</text>
+</g>
+<g class="board-card"><rect x="1508" y="765" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#B69AE9" stroke-width=".8"/>
+<g transform="translate(1519 780) scale(0.958333)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/></g>
+<text class="card-title" x="1550" y="787" fill="#5226A5">评测与护栏</text>
+<text class="card-subtitle" x="1550" y="805">Eval / Safety / Drift</text>
+</g>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="855" width="1760" height="198" rx="12" fill="#F5FBF5" stroke="#86C98A" stroke-width="1"/>
+<text class="section-label" x="40" y="954" fill="#176A31">消费与闭环</text>
+<text class="section-subtitle" x="40" y="977" fill="#176A31">SERVE / ACT</text>
+<path d="M 206 867 V 1041" fill="none" stroke="#86C98A" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="896" width="1232" height="116" rx="11" fill="#FFFFFF" stroke="#86C98A" stroke-width="1"/>
+<text class="block-title" x="832" y="921" fill="#176A31">面向业务的可信数据与智能服务</text>
+<g class="board-card"><rect x="228" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(239 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="card-title" x="270" y="968" fill="#176A31">BI / Dashboard</text>
+<text class="card-subtitle" x="270" y="986">Decision Support</text>
+</g>
+<g class="board-card"><rect x="430.667" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(441.667 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="9" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0M18 4l1 1 2-2"/></g>
+<text class="card-title" x="472.667" y="968" fill="#176A31">企业 Copilot</text>
+<text class="card-subtitle" x="472.667" y="986">Search / Answer</text>
+</g>
+<g class="board-card"><rect x="633.333" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(644.333 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
+<text class="card-title" x="675.333" y="968" fill="#176A31">流程自动化</text>
+<text class="card-subtitle" x="675.333" y="986">Trigger / Action</text>
+</g>
+<g class="board-card"><rect x="836" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(847 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></g>
+<text class="card-title" x="878" y="968" fill="#176A31">实时个性化</text>
+<text class="card-subtitle" x="878" y="986">Rank / Recommend</text>
+</g>
+<g class="board-card"><rect x="1038.67" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(1049.67 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 8h16M4 16h16M8 4v16M16 4v16"/></g>
+<text class="card-title" x="1080.67" y="968" fill="#176A31">数据产品 API</text>
+<text class="card-subtitle" x="1080.67" y="986">Contract / SLA</text>
+</g>
+<g class="board-card"><rect x="1241.33" y="946" width="194.667" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(1252.33 961) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 18H6a4 4 0 0 1 0-8h1M15 6h3a4 4 0 0 1 0 8h-1M8 12h8"/></g>
+<text class="card-title" x="1283.33" y="968" fill="#176A31">Reverse ETL</text>
+<text class="card-subtitle" x="1283.33" y="986">CRM / Operations</text>
+</g>
+</g>
+<g class="board-block"><rect x="1460" y="867" width="308" height="174" rx="11" fill="#FFFFFF" stroke="#86C98A" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1474" y="891" fill="#176A31">价值闭环</text>
+<g transform="translate(1473 903) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="915" fill="#176A31">洞察进入业务流程</text>
+<g transform="translate(1473 925) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="937" fill="#176A31">行动结果回写事件流</text>
+<g transform="translate(1473 947) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="959" fill="#176A31">模型与规则持续评估</text>
+<g transform="translate(1473 969) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="981" fill="#176A31">数据产品按 SLO 运营</text>
+<g transform="translate(1473 991) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="1003" fill="#176A31">成本与价值共同度量</text>
+</g>
+</g>
+<g class="board-flow"><rect x="20" y="1065" width="1760" height="98" rx="12" fill="#FFFBF0" stroke="#E8C46D"/>
+<text class="flow-title" x="40" y="1119" fill="#8A5A08">数据价值链</text>
+<rect x="216" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(226 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M3 7h12a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 17h8"/></g>
+<text class="step-title" x="257" y="1107" fill="#8A5A08">1. 采集</text>
+<text class="step-subtitle" x="257" y="1126">Batch / Stream / CDC</text>
+<path d="M 431.143 1114 H 436.143" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="439.143" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(449.143 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="step-title" x="480.143" y="1107" fill="#8A5A08">2. 校验</text>
+<text class="step-subtitle" x="480.143" y="1126">Contract / Quality</text>
+<path d="M 654.286 1114 H 659.286" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="662.286" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(672.286 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
+<text class="step-title" x="703.286" y="1107" fill="#8A5A08">3. 统一</text>
+<text class="step-subtitle" x="703.286" y="1126">Lakehouse / Catalog</text>
+<path d="M 877.429 1114 H 882.429" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="885.429" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(895.429 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></g>
+<text class="step-title" x="926.429" y="1107" fill="#8A5A08">4. 增强</text>
+<text class="step-subtitle" x="926.429" y="1126">Feature / Embedding</text>
+<path d="M 1100.57 1114 H 1105.57" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1108.57" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1118.57 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 2 8 5-8 5-8-5zM4 12l8 5 8-5M4 17l8 5 8-5"/></g>
+<text class="step-title" x="1149.57" y="1107" fill="#8A5A08">5. 推理</text>
+<text class="step-subtitle" x="1149.57" y="1126">Analytics / Model / Agent</text>
+<path d="M 1323.71 1114 H 1328.71" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1331.71" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1341.71 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 8h16M4 16h16M8 4v16M16 4v16"/></g>
+<text class="step-title" x="1372.71" y="1107" fill="#8A5A08">6. 服务</text>
+<text class="step-subtitle" x="1372.71" y="1126">API / BI / Automation</text>
+<path d="M 1546.86 1114 H 1551.86" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1554.86" y="1080" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1564.86 1101) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
+<text class="step-title" x="1595.86" y="1107" fill="#8A5A08">7. 反馈</text>
+<text class="step-subtitle" x="1595.86" y="1126">Outcome / Evaluation</text>
+</g>
+<g class="board-principles"><rect x="20" y="1175" width="1760" height="108" rx="12" fill="#F7F8FA" stroke="#B8C1CC"/>
+<text class="principles-title" x="40" y="1233" fill="#354052">核心原则</text>
+<rect x="216" y="1190" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(229 1215) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
+<text class="step-title" x="264" y="1221" fill="#354052">批流一致</text>
+<text class="step-subtitle" x="264" y="1241">同一语义与质量标准</text>
+<rect x="528.4" y="1190" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(541.4 1215) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
+<text class="step-title" x="576.4" y="1221" fill="#354052">开放格式</text>
+<text class="step-subtitle" x="576.4" y="1241">减少锁定并支持多引擎</text>
+<rect x="840.8" y="1190" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(853.8 1215) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/></g>
+<text class="step-title" x="888.8" y="1221" fill="#354052">治理内建</text>
+<text class="step-subtitle" x="888.8" y="1241">权限、血缘、质量贯穿全链路</text>
+<rect x="1153.2" y="1190" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(1166.2 1215) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="8" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0"/></g>
+<text class="step-title" x="1201.2" y="1221" fill="#354052">产品化运营</text>
+<text class="step-subtitle" x="1201.2" y="1241">数据产品拥有 Owner 与 SLO</text>
+<rect x="1465.6" y="1190" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(1478.6 1215) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="step-title" x="1513.6" y="1221" fill="#354052">价值可观测</text>
+<text class="step-subtitle" x="1513.6" y="1241">同时度量成本、质量与业务结果</text>
+</g>
+<path class="connection" d="M 352 212 L 352 289" fill="none" stroke="#0D7D75" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 608 212 L 608 289" fill="none" stroke="#0D7D75" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 864 212 L 864 289" fill="none" stroke="#64748b" marker-end="url(#arrow-async)"/>
+<path class="connection" d="M 1120 212 L 1120 289" fill="none" stroke="#64748b" marker-end="url(#arrow-async)"/>
+<path class="connection" d="M 813.2 212 L 813.2 289" fill="none" stroke="#0D7D75" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 1436.4 212 L 1436.4 289" fill="none" stroke="#ea580c" marker-end="url(#arrow-control)"/>
+<path class="connection" d="M 521.6 405 L 521.6 470" fill="none" stroke="#0D7D75" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 1144.8 405 L 1144.8 470" fill="none" stroke="#64748b" marker-end="url(#arrow-async)"/>
+<path class="connection" d="M 1448 574.5 L 1454 574.5 L 1460 574.5" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+<path class="connection" d="M 832 679 L 832 715" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+<path class="connection" d="M 992 831 L 992 896" fill="none" stroke="#7c3aed" marker-end="url(#arrow-feedback)" marker-start="url(#arrow-feedback)"/>
+<path class="connection" d="M 1448 954 L 1454 954 L 1460 954" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+</svg>

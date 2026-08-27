@@ -6,6 +6,7 @@ VisualSpec accepts focused contributions that improve diagram meaning, determini
 
 - Check whether the request belongs to an existing diagram type.
 - Add a new type only when it has a distinct information model or fixed layout contract.
+- Use the existing `board` primitives for dense layered overviews; do not hand-position showcase SVGs or add one-off renderers for a single picture.
 - Preserve existing JSON compatibility unless the change is intentionally versioned.
 - Keep the Python renderer dependency-free. In `editor`, reuse established packages, justify additions in the architecture record, and commit the lock file.
 
@@ -27,6 +28,8 @@ npm audit
 ```
 
 For visual changes, render representative `LR` and `TB` diagrams in light and dark themes. Inspect the PNG at full size for clipping, text wrapping, hierarchy, edge routes, group boundaries, and contrast.
+
+For board changes, render all three complex board examples, inspect them at 1920-pixel width, and confirm section/card ids, connection endpoints, built-in icons, flow steps, and principle strips remain deterministic.
 
 For editor changes, test a desktop viewport, overview-to-detail navigation, one CSV import, Mermaid live preview, JSON validation, and offline restore. Do not replace mature canvas, layout, editor, parser, or CRDT infrastructure with project-local equivalents.
 

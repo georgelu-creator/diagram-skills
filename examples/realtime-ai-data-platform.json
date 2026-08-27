@@ -1,0 +1,190 @@
+{
+  "title": "实时 AI 数据平台端到端架构全景图",
+  "subtitle": "批流一体 · Lakehouse · RAG · 模型服务 · 数据治理 · 业务闭环",
+  "diagram_type": "data-flow",
+  "layout": "board",
+  "theme": "paper",
+  "brand": {"name": "VisualSpec", "primary": "#0D7D75", "accent": "#4F66D5"},
+  "sections": [
+    {
+      "id": "sources",
+      "label": "数据源",
+      "subtitle": "PRODUCERS",
+      "tone": "blue",
+      "blocks": [
+        {
+          "id": "source-grid",
+          "kind": "grid",
+          "title": "企业实时与离线数据源",
+          "columns": 6,
+          "cards": [
+            {"id": "apps", "label": "业务应用", "subtitle": "Web / Mobile / SaaS", "icon": "desktop"},
+            {"id": "events", "label": "行为事件", "subtitle": "Click / Event", "icon": "stream"},
+            {"id": "transactions", "label": "交易数据库", "subtitle": "OLTP / CDC", "icon": "database"},
+            {"id": "documents", "label": "文档与知识", "subtitle": "PDF / Wiki / Drive", "icon": "document"},
+            {"id": "devices", "label": "设备与日志", "subtitle": "IoT / Log / Trace", "icon": "metrics"},
+            {"id": "partners", "label": "外部数据", "subtitle": "API / Partner", "icon": "api"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ingestion",
+      "label": "采集与处理",
+      "subtitle": "INGEST / PROCESS",
+      "tone": "orange",
+      "blocks": [
+        {
+          "id": "stream-plane",
+          "kind": "grid",
+          "title": "实时通道",
+          "columns": 3,
+          "span": 2,
+          "cards": [
+            {"id": "event-bus", "label": "事件总线", "subtitle": "Kafka / Pulsar", "icon": "stream"},
+            {"id": "stream-compute", "label": "流式计算", "subtitle": "Window / Join", "icon": "spark"},
+            {"id": "realtime-quality", "label": "实时质量", "subtitle": "Schema / DQ", "icon": "check"}
+          ]
+        },
+        {
+          "id": "batch-plane",
+          "kind": "grid",
+          "title": "离线与文档通道",
+          "columns": 3,
+          "span": 2,
+          "cards": [
+            {"id": "connectors", "label": "连接器", "subtitle": "CDC / API / File", "icon": "gateway"},
+            {"id": "orchestration", "label": "任务编排", "subtitle": "Schedule / DAG", "icon": "graph"},
+            {"id": "doc-pipeline", "label": "文档处理", "subtitle": "Parse / Chunk / OCR", "icon": "document"}
+          ]
+        },
+        {
+          "id": "ingest-guardrails",
+          "kind": "list",
+          "title": "入口门禁",
+          "span": 1,
+          "items": ["契约与 Schema", "敏感信息识别", "质量规则", "血缘起点", "失败隔离与重放"]
+        }
+      ]
+    },
+    {
+      "id": "lakehouse",
+      "label": "统一数据底座",
+      "subtitle": "LAKEHOUSE",
+      "tone": "teal",
+      "blocks": [
+        {
+          "id": "lakehouse-grid",
+          "kind": "grid",
+          "title": "开放 Lakehouse 与专用数据服务",
+          "columns": 4,
+          "span": 4,
+          "cards": [
+            {"id": "bronze", "label": "Raw / Bronze", "subtitle": "Immutable / Replay", "icon": "archive"},
+            {"id": "silver", "label": "Clean / Silver", "subtitle": "Conformed / Trusted", "icon": "check"},
+            {"id": "gold", "label": "Serving / Gold", "subtitle": "Metric / Feature", "icon": "spark"},
+            {"id": "catalog", "label": "Catalog / Lineage", "subtitle": "Metadata / Ownership", "icon": "schema"},
+            {"id": "warehouse", "label": "数据仓库", "subtitle": "SQL / BI", "icon": "database"},
+            {"id": "feature-store", "label": "Feature Store", "subtitle": "Online / Offline", "icon": "layers"},
+            {"id": "vector-store", "label": "Vector Store", "subtitle": "Embedding / Hybrid", "icon": "search"},
+            {"id": "operational-store", "label": "Operational Store", "subtitle": "Low-latency State", "icon": "database"}
+          ],
+          "footer": "统一治理面：目录 · 血缘 · 权限 · 质量 · 成本 · 数据产品契约"
+        },
+        {
+          "id": "governance",
+          "kind": "list",
+          "title": "跨层治理",
+          "span": 1,
+          "items": ["统一身份与最小权限", "行列级访问控制", "PII 脱敏与密钥管理", "端到端血缘与审计", "质量 SLO 与数据可观测", "成本归属与保留策略"]
+        }
+      ]
+    },
+    {
+      "id": "intelligence",
+      "label": "智能与模型层",
+      "subtitle": "AI / ANALYTICS",
+      "tone": "purple",
+      "blocks": [
+        {
+          "id": "intelligence-grid",
+          "kind": "grid",
+          "title": "统一分析与 AI 能力",
+          "columns": 6,
+          "cards": [
+            {"id": "semantic", "label": "语义模型", "subtitle": "Metric / Entity", "icon": "graph"},
+            {"id": "analytics", "label": "实时分析", "subtitle": "SQL / OLAP", "icon": "metrics"},
+            {"id": "training", "label": "模型训练", "subtitle": "Feature / Experiment", "icon": "model"},
+            {"id": "rag", "label": "RAG Pipeline", "subtitle": "Retrieve / Ground", "icon": "search"},
+            {"id": "agent-runtime", "label": "Agent Runtime", "subtitle": "Plan / Tool / Memory", "icon": "robot"},
+            {"id": "evaluation", "label": "评测与护栏", "subtitle": "Eval / Safety / Drift", "icon": "shield"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "serving",
+      "label": "消费与闭环",
+      "subtitle": "SERVE / ACT",
+      "tone": "green",
+      "blocks": [
+        {
+          "id": "serving-grid",
+          "kind": "grid",
+          "title": "面向业务的可信数据与智能服务",
+          "columns": 6,
+          "span": 4,
+          "cards": [
+            {"id": "bi", "label": "BI / Dashboard", "subtitle": "Decision Support", "icon": "metrics"},
+            {"id": "copilot", "label": "企业 Copilot", "subtitle": "Search / Answer", "icon": "agent"},
+            {"id": "automation", "label": "流程自动化", "subtitle": "Trigger / Action", "icon": "sync"},
+            {"id": "personalization", "label": "实时个性化", "subtitle": "Rank / Recommend", "icon": "spark"},
+            {"id": "data-products", "label": "数据产品 API", "subtitle": "Contract / SLA", "icon": "api"},
+            {"id": "reverse-etl", "label": "Reverse ETL", "subtitle": "CRM / Operations", "icon": "gateway"}
+          ]
+        },
+        {
+          "id": "business-loop",
+          "kind": "list",
+          "title": "价值闭环",
+          "span": 1,
+          "items": ["洞察进入业务流程", "行动结果回写事件流", "模型与规则持续评估", "数据产品按 SLO 运营", "成本与价值共同度量"]
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {"source": "apps", "target": "stream-plane", "kind": "primary"},
+    {"source": "events", "target": "stream-plane", "kind": "primary"},
+    {"source": "transactions", "target": "batch-plane", "kind": "async"},
+    {"source": "documents", "target": "batch-plane", "kind": "async"},
+    {"source": "devices", "target": "stream-plane", "kind": "primary"},
+    {"source": "partners", "target": "batch-plane", "kind": "control"},
+    {"source": "stream-plane", "target": "lakehouse-grid", "kind": "primary"},
+    {"source": "batch-plane", "target": "lakehouse-grid", "kind": "async"},
+    {"source": "lakehouse-grid", "target": "governance", "kind": "success"},
+    {"source": "lakehouse-grid", "target": "intelligence-grid", "kind": "success"},
+    {"source": "intelligence-grid", "target": "serving-grid", "kind": "feedback", "bidirectional": true},
+    {"source": "serving-grid", "target": "business-loop", "kind": "success"}
+  ],
+  "flow": {
+    "label": "数据价值链",
+    "tone": "amber",
+    "steps": [
+      {"label": "采集", "subtitle": "Batch / Stream / CDC", "icon": "stream"},
+      {"label": "校验", "subtitle": "Contract / Quality", "icon": "check"},
+      {"label": "统一", "subtitle": "Lakehouse / Catalog", "icon": "database"},
+      {"label": "增强", "subtitle": "Feature / Embedding", "icon": "spark"},
+      {"label": "推理", "subtitle": "Analytics / Model / Agent", "icon": "model"},
+      {"label": "服务", "subtitle": "API / BI / Automation", "icon": "api"},
+      {"label": "反馈", "subtitle": "Outcome / Evaluation", "icon": "sync"}
+    ]
+  },
+  "principles": [
+    {"label": "批流一致", "subtitle": "同一语义与质量标准", "icon": "sync"},
+    {"label": "开放格式", "subtitle": "减少锁定并支持多引擎", "icon": "archive"},
+    {"label": "治理内建", "subtitle": "权限、血缘、质量贯穿全链路", "icon": "shield"},
+    {"label": "产品化运营", "subtitle": "数据产品拥有 Owner 与 SLO", "icon": "user"},
+    {"label": "价值可观测", "subtitle": "同时度量成本、质量与业务结果", "icon": "metrics"}
+  ]
+}

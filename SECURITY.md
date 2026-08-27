@@ -25,6 +25,7 @@ VisualSpec Studio adds browser-side controls:
 - Monaco and all editor code load from installed packages; no public CDN is required.
 - CSV is parsed locally and mapped into allowlisted VisualSpec fields.
 - Brand values accept only known keys and six- or eight-digit hex colors.
+- Enterprise boards accept only known section tones, block kinds, semantic edge kinds, and built-in icon names; JSON cannot inject arbitrary SVG, CSS, scripts, or remote images.
 - Yjs data persists in local IndexedDB. Network sync is disabled unless `VITE_YJS_WEBSOCKET_URL` names a trusted compatible endpoint.
 - The dependency lock file is audited in CI.
 

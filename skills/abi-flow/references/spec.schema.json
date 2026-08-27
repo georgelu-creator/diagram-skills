@@ -4,7 +4,14 @@
   "title": "ABI Flow diagram",
   "type": "object",
   "additionalProperties": false,
-  "required": ["title", "nodes", "edges"],
+  "required": ["title"],
+  "allOf": [
+    {
+      "if": {"properties": {"layout": {"const": "board"}}, "required": ["layout"]},
+      "then": {"required": ["diagram_type", "sections"]},
+      "else": {"required": ["nodes", "edges"]}
+    }
+  ],
   "properties": {
     "title": {"type": "string", "minLength": 1},
     "subtitle": {"type": "string"},
@@ -13,6 +20,7 @@
       "default": "process-flow"
     },
     "direction": {"enum": ["LR", "TB"], "default": "LR"},
+    "layout": {"enum": ["graph", "board"], "default": "graph"},
     "theme": {"enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
     "brand": {
       "type": "object",
@@ -29,6 +37,21 @@
         "group": {"$ref": "#/$defs/color"},
         "group_stroke": {"$ref": "#/$defs/color"}
       }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/boardSection"}
+    },
+    "connections": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/boardConnection"}
+    },
+    "flow": {"$ref": "#/$defs/boardFlow"},
+    "principles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/boardItem"}
     },
     "legend": {"type": "boolean"},
     "groups": {
@@ -92,6 +115,78 @@
     }
   },
   "$defs": {
-    "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"}
+    "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+    "boardIcon": {
+      "enum": ["agent", "api", "archive", "brain", "calendar", "chat", "check", "cloud", "code", "database", "desktop", "document", "folder", "gateway", "graph", "image", "laptop", "layers", "lock", "mail", "metrics", "model", "note", "phone", "prompt", "robot", "schema", "search", "shield", "spark", "stream", "sync", "terminal", "test", "user"]
+    },
+    "boardItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "subtitle": {"type": "string"},
+        "icon": {"$ref": "#/$defs/boardIcon"}
+      }
+    },
+    "boardCard": {
+      "allOf": [
+        {"$ref": "#/$defs/boardItem"},
+        {"type": "object", "required": ["id"]}
+      ]
+    },
+    "boardBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["grid", "banner", "list"]},
+        "title": {"type": "string"},
+        "subtitle": {"type": "string"},
+        "icon": {"$ref": "#/$defs/boardIcon"},
+        "span": {"type": "integer", "minimum": 1, "maximum": 8},
+        "columns": {"type": "integer", "minimum": 1, "maximum": 7},
+        "cards": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/boardCard"}},
+        "items": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "footer": {"type": "string"}
+      }
+    },
+    "boardSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "tone", "blocks"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "subtitle": {"type": "string"},
+        "tone": {"enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
+        "blocks": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"$ref": "#/$defs/boardBlock"}}
+      }
+    },
+    "boardConnection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target"],
+      "properties": {
+        "source": {"$ref": "#/$defs/id"},
+        "target": {"$ref": "#/$defs/id"},
+        "label": {"type": "string"},
+        "kind": {"enum": ["primary", "control", "feedback", "async", "success", "error"]},
+        "bidirectional": {"type": "boolean"}
+      }
+    },
+    "boardFlow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "steps"],
+      "properties": {
+        "label": {"type": "string", "minLength": 1},
+        "tone": {"enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
+        "steps": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/boardItem"}}
+      }
+    }
   }
 }

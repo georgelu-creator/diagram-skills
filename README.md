@@ -4,7 +4,7 @@
 
 <h1 align="center">VisualSpec</h1>
 
-<p align="center"><strong>Describe the system. Ship the diagram.</strong><br>描述系统，交付图表。</p>
+<p align="center"><strong>Install the Skill. Describe the system. Get the diagram.</strong><br>安装 Skill，描述系统，直接得到漂亮的交付图。</p>
 
 <p align="center">
   Prompt-native diagram framework and Agent Skill for architecture, workflows, data flows, product maps, topology, decisions, and strategy.
@@ -18,21 +18,25 @@
   <img src="https://img.shields.io/badge/editor-React%20Flow%20%2B%20ELK-4F46E5.svg" alt="React Flow and ELK editor">
 </p>
 
-[![企业 AI 工作系统架构](examples/generated/system-architecture.svg)](examples/generated/system-architecture.svg)
+[![跨设备云端 Agent 办公系统架构全景图](examples/generated/enterprise-agent-office.png)](examples/generated/enterprise-agent-office.svg)
 
-VisualSpec turns natural-language intent, Mermaid, CSV, or structured content into a version-controlled specification, then renders polished SVG, responsive HTML, optional PNG, and machine-readable quality evidence. **VisualSpec Studio** adds a real browser editor with swimlanes, manual hierarchy, brand themes, multi-view drill-down, Mermaid live preview, and offline persistence.
+**VisualSpec is an Agent Skill first.** Install `$abi-flow`, describe the system, and the Agent produces the finished PNG/SVG/HTML—not a Mermaid snippet that you still have to redesign. The Skill selects a diagram contract, authors reproducible JSON, renders it with deterministic layout and built-in icons, validates geometry, inspects the 1920-pixel PNG, and corrects weak output before delivery.
+
+For dense enterprise overviews, the `board` composition generates layered color bands, bilingual module grids, side explanations, semantic cross-layer arrows, numbered data flows, and principle cards. **VisualSpec Studio is an optional inspection/editing surface**, not a prerequisite for getting a good diagram.
 
 The repository and public Skill id remain `abi-flow` for compatibility; the project brand and expanded framework are now **VisualSpec**.
 
 ## Why VisualSpec
 
+- **Finished visual, not diagram source** — PNG/SVG is the default deliverable; JSON and quality evidence keep it reproducible.
+- **Quality advantage through constraints** — type contracts, board composition, icon vocabulary, text measurement, semantic routing, strict validation, and mandatory visual review outperform one-shot freehand SVG/Mermaid.
 - **Meaning before pixels** — capture actors, boundaries, relationships, branches, and feedback before layout.
 - **10 diagram contracts** — each type has a use case, input schema, fixed layout rules, visual rules, a starter source, and an example prompt.
 - **Agent-native** — install and invoke the included `$abi-flow` Skill from compatible agents.
 - **Deterministic output** — the same JSON produces reviewable SVG, HTML, PNG, and a quality report.
-- **Real editing surface** — React Flow canvas, ELK automatic layout, Monaco source editing, and direct node inspection.
+- **High-density enterprise boards** — 20–45 concepts remain readable through scan bands, nested grids, side lists, process strips, and principles.
 - **Import without lock-in** — CSV becomes native VisualSpec; Mermaid source stays intact and uses the official renderer.
-- **Overview → detail** — versioned workspaces link focused views through `child_view` instead of forcing everything onto one canvas.
+- **Optional browser inspection** — React Flow, ELK, Monaco, imports, offline persistence, and drill-down are available when manual review is genuinely useful.
 - **Enterprise visual language** — Chinese-first labels, preserved English technical terms, low-saturation themes, semantic nodes and arrows.
 - **Quality gates** — cycles, references, unsafe links, overlaps, edge/node collisions, crossings, accessibility, and SVG integrity are checked.
 - **Zero required runtime dependencies** — SVG and HTML rendering use only the Python standard library; PNG export optionally uses `rsvg-convert`.
@@ -41,7 +45,7 @@ The repository and public Skill id remain `abi-flow` for compatibility; the proj
 
 | Type | Best for | Fixed layout |
 |---|---|---|
-| System architecture | Layers, boundaries, integrations, sources of truth | Top → bottom |
+| System architecture | Layers, boundaries, integrations, sources of truth | Enterprise board or TB graph |
 | Agent workflow | Plan, context, tools, verification, memory loop | Left → right |
 | Data flow | Sources, ingestion, transforms, storage, serving | Left → right |
 | Capability map | North star, capability domains, outcomes | Top → bottom |
@@ -56,13 +60,14 @@ Every type has a dedicated guide under [`references/diagram-types`](skills/abi-f
 
 ## How it works
 
-`Intent / Mermaid / CSV → typed spec or workspace → ELK / rank / lane layout → browser edit or deterministic export → quality evidence`
+`Intent → diagram contract → graph or enterprise board → deterministic render → strict checks → 1920 px visual review → finished image`
 
 1. **Choose the information model.** The Skill routes the request to one primary diagram type.
 2. **Normalize the content.** Audience, scope, actors, relationships, boundaries, language, theme, and outputs become an explicit brief.
-3. **Author the source of truth.** A small JSON graph records meaning independently of presentation.
-4. **Render.** The standard-library engine lays out nodes, routes semantic arrows, applies a theme, and creates portable artifacts.
-5. **Gate quality.** Strict validation catches structural, geometry, accessibility, and security problems before delivery.
+3. **Choose composition.** Small relationship diagrams use graph layout; layered overviews use a high-density enterprise board.
+4. **Author the source of truth.** JSON records meaning independently of generated pixels.
+5. **Render.** The standard-library engine computes bands, grids, nodes, icons, semantic routes, and portable artifacts.
+6. **Gate quality.** Strict validation plus full-size PNG inspection catches structural, geometry, text, accessibility, and hierarchy problems before delivery.
 
 The implementation deliberately reuses [React Flow](https://reactflow.dev/learn/layouting/sub-flows), [ELK](https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html), [Mermaid](https://mermaid.js.org/config/usage.html), [Papa Parse](https://www.papaparse.com/docs), [Monaco](https://microsoft.github.io/monaco-editor/), and [Yjs](https://docs.yjs.dev/). The research and boundaries are recorded in [`docs/research-and-architecture.md`](docs/research-and-architecture.md).
 
@@ -75,6 +80,17 @@ npx skills add georgelu-creator/abi-flow --skill abi-flow
 ```
 
 Or copy [`skills/abi-flow`](skills/abi-flow) into a compatible agent's skills directory.
+
+Then ask the Agent for the finished visual:
+
+```text
+Use $abi-flow to generate a Chinese-first enterprise architecture board for our
+cross-device Agent workspace. Show users/Agents, access gateway, core memory and
+context capabilities, tool integrations, sources of truth, a six-step task flow,
+and five architecture principles. Deliver and inspect PNG + SVG + HTML + JSON.
+```
+
+The expected result is a rendered image like the hero above. Opening a browser editor is not part of the normal generation workflow.
 
 ### Create a diagram from a template
 
@@ -98,11 +114,11 @@ python3 skills/abi-flow/scripts/abi_flow.py render work/my-architecture.json \
 Outputs:
 
 - `my-architecture.svg` — editable, source-control-friendly vector
-- `my-architecture.html` — dependency-free viewer with pan/zoom, light/dark mode, and downloads
+- `my-architecture.html` — dependency-free viewer with pan/zoom and downloads; graph views also include light/dark switching
 - `my-architecture.png` — 1920 px preview when `rsvg-convert` is available
 - `my-architecture.quality.json` — validation and geometry evidence
 
-### Run VisualSpec Studio
+### Optional: inspect in VisualSpec Studio
 
 Requires Node.js 20.19+ or 22.12+.
 
@@ -112,7 +128,7 @@ npm install
 npm run dev
 ```
 
-Studio runs locally and includes:
+Studio is an add-on for manual graph/workspace inspection or import workflows. High-density boards already ship with a zoomable standalone HTML viewer and do not require Studio. Studio runs locally and includes:
 
 - React Flow editing with selection, drag, connect, delete, pan, zoom, minimap, and lane parents;
 - ELK Layered automatic layout plus explicit `rank` and saved manual positions;
@@ -166,6 +182,7 @@ The Skill accepts prose or these structured parameters:
 | `content` | Actors, systems, steps, capabilities, milestones, or questions |
 | `relationships` | Primary, control, async, success, error, and feedback links |
 | `boundaries` | Layers, owners, stages, domains, or trust zones |
+| `composition` | `board` for high-density layered overviews; `graph` for smaller relationship diagrams |
 | `lanes` / `rank` | Swimlane ownership and explicit hierarchy |
 | `language` | Chinese-first by default; technical English retained |
 | `theme` | `paper`, `notion`, `spectrum`, `blueprint`, or `terminal` |
@@ -178,27 +195,29 @@ See the reusable [`prompt-system.md`](skills/abi-flow/references/prompt-system.m
 
 ## Example gallery
 
-All gallery images below are generated by this repository from checked-in JSON templates. Each has matching SVG, interactive HTML, PNG, and quality evidence in [`examples/generated`](examples/generated).
+These are not hand-designed screenshots. Every image below is generated by the bundled Skill renderer from checked-in JSON and has matching SVG, standalone HTML, PNG, and quality evidence in [`examples/generated`](examples/generated).
 
-<table>
-  <tr>
-    <td width="50%"><a href="examples/generated/agent-workflow.svg"><img src="examples/generated/agent-workflow.png" alt="Agent 任务执行闭环"></a><br><strong>Agent 工作流</strong><br>Plan → context → gate → tools → verify → memory.</td>
-    <td width="50%"><a href="examples/generated/data-flow.svg"><img src="examples/generated/data-flow.png" alt="实时智能数据流"></a><br><strong>数据流图</strong><br>Source → ingestion → compute/store → model → experience.</td>
-  </tr>
-  <tr>
-    <td width="50%"><a href="examples/generated/capability-map.svg"><img src="examples/generated/capability-map.png" alt="AI 产品能力地图"></a><br><strong>产品能力地图</strong><br>North star → capabilities → measurable outcomes.</td>
-    <td width="50%"><a href="examples/generated/user-flow.svg"><img src="examples/generated/user-flow.png" alt="AI 助手首次激活用户流程"></a><br><strong>用户流程图</strong><br>Happy path, hesitation branch, recovery, and activation.</td>
-  </tr>
-  <tr>
-    <td colspan="2"><a href="examples/generated/system-topology.svg"><img src="examples/generated/system-topology.png" alt="高可用 AI 服务拓扑"></a><br><strong>系统拓扑图</strong><br>Dark blueprint view of edge, service, data, and observability planes.</td>
-  </tr>
-</table>
+### Cross-device Agent workspace
 
-[![AI 功能发布泳道](examples/generated/swimlane-release.png)](examples/generated/swimlane-release.svg)
+[![跨设备云端 Agent 办公系统架构全景图](examples/generated/enterprise-agent-office.png)](examples/generated/enterprise-agent-office.svg)
 
-**泳道 + 手动层级 + 品牌主题** — Product / Security / Engineering ownership, explicit rank, semantic handoffs, feedback, and brand-token overrides.
+41 visible elements · five architecture layers · memory capability grid · tool and asset boundaries · six-step task flow · five principles. [Source JSON](examples/enterprise-agent-office.json) · [HTML](examples/generated/enterprise-agent-office.html) · [quality](examples/generated/enterprise-agent-office.quality.json)
 
-The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-resilience-network.svg) remains as a larger spectrum-theme stress example.
+### Multi-Agent software delivery control plane
+
+[![多 Agent 软件交付控制面全景图](examples/generated/multi-agent-delivery-control-plane.png)](examples/generated/multi-agent-delivery-control-plane.svg)
+
+Demand signals · orchestration · six specialist Agents · mandatory gates · controlled engineering runtime · auditable evidence · delivery lifecycle. [Source JSON](examples/multi-agent-delivery-control-plane.json) · [HTML](examples/generated/multi-agent-delivery-control-plane.html) · [quality](examples/generated/multi-agent-delivery-control-plane.quality.json)
+
+### Real-time AI data platform
+
+[![实时 AI 数据平台端到端架构全景图](examples/generated/realtime-ai-data-platform.png)](examples/generated/realtime-ai-data-platform.svg)
+
+Batch/stream sources · ingestion planes · governed Lakehouse · RAG and Agent runtime · business serving · feedback loop. [Source JSON](examples/realtime-ai-data-platform.json) · [HTML](examples/generated/realtime-ai-data-platform.html) · [quality](examples/generated/realtime-ai-data-platform.quality.json)
+
+### Additional graph contracts
+
+The same Skill also generates [swimlane release flows](examples/generated/swimlane-release.svg), [capability maps](examples/generated/capability-map.svg), [user flows](examples/generated/user-flow.svg), [system topology](examples/generated/system-topology.svg), decision trees, roadmaps, and strategy maps. The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-resilience-network.svg) remains a dense graph stress case.
 
 ## Design principles
 
@@ -228,6 +247,7 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 │   ├── assets/icon.svg              # VisualSpec brand mark
 │   ├── references/
 │   │   ├── prompt-system.md         # Stable prompt and input contract
+│   │   ├── enterprise-board.md      # High-density architecture composition
 │   │   ├── diagram-types/*.md       # 10 type-specific contracts
 │   │   ├── spec.md                  # JSON authoring guide
 │   │   ├── spec.schema.json         # Editor/schema support
@@ -239,8 +259,9 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 │   │   └── quality-contract.md      # Delivery gates
 │   ├── templates/*.json             # 10 validated starter sources
 │   └── scripts/abi_flow.py          # Renderer, scaffolder, validator
-├── examples/generated/              # SVG, HTML, PNG, quality reports
-├── editor/                           # React/TypeScript VisualSpec Studio
+├── examples/                         # Complex board + graph source JSON
+├── examples/generated/              # Reproducible SVG, HTML, PNG, reports
+├── editor/                           # Optional React/TypeScript Studio
 │   ├── src/                          # React Flow, ELK, import and realtime adapters
 │   ├── package.json                  # Pinned browser dependencies and checks
 │   └── vite.config.ts                # Local and production build
@@ -263,6 +284,7 @@ Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualsp
 - [x] Theme tokens and brand-kit overrides in the JSON spec
 - [x] Multi-view projects with overview → drill-down links
 - [x] Browser editor with live JSON/Mermaid validation and offline persistence
+- [x] High-density enterprise board renderer with section grids, side lists, built-in icons, data-flow and principle strips
 - [ ] Authenticated shared rooms, presence cursors, and deployable collaboration server recipe
 - [ ] diagrams.net import/export adapter and portable workspace HTML export
 - [ ] Command palette, undo history UI, and plugin API for custom nodes

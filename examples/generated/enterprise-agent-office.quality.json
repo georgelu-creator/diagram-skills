@@ -2,20 +2,20 @@
   "schema_version": 2,
   "status": "passed",
   "diagram": {
-    "title": "企业 AI 工作系统架构全景图",
+    "title": "跨设备云端 Agent 办公系统架构全景图",
     "type": "system-architecture",
     "layout": "board",
-    "nodes": 34,
-    "edges": 9,
+    "nodes": 41,
+    "edges": 10,
     "groups": 5,
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "Your Brand"
+    "brand": "VisualSpec"
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1207.0
+    "height": 1216.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,7 +23,7 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
-    "route_segment_count": 10
+    "route_segment_count": 11
   },
   "issues": [],
   "visual_review": "passed: inspected at 1920 px for bands, nested grids, icons, routes, text, contrast, and clipping"

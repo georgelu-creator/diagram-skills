@@ -2,20 +2,20 @@
   "schema_version": 2,
   "status": "passed",
   "diagram": {
-    "title": "企业 AI 工作系统架构全景图",
-    "type": "system-architecture",
+    "title": "多 Agent 软件交付控制面全景图",
+    "type": "agent-workflow",
     "layout": "board",
     "nodes": 34,
-    "edges": 9,
+    "edges": 10,
     "groups": 5,
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "Your Brand"
+    "brand": "VisualSpec"
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1207.0
+    "height": 1203.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,8 +23,8 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
-    "route_segment_count": 10
+    "route_segment_count": 12
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for bands, nested grids, icons, routes, text, contrast, and clipping"
+  "visual_review": "passed: inspected at 1920 px for bands, Agent cards, control routes, text, contrast, and clipping"
 }

@@ -16,14 +16,16 @@ Explain layered systems, platform boundaries, integration surfaces, source-of-tr
 
 ## Fixed layout
 
-Use `TB`. Order layers as users/Agents → access/orchestration → core capabilities → integrations/data → governance. Put one layer in each group. Keep cross-layer arrows vertical where possible; use `feedback` only for real learning or policy return paths.
+For a compact technical relationship graph, use `TB`: users/Agents → access/orchestration → core capabilities → integrations/data → governance.
+
+For a product, strategy, or executive architecture overview, default to [`layout: board`](../enterprise-board.md): users/Agents → access/control → core capabilities → integrations → sources of truth, followed by a numbered data-flow strip and durable principles. Use the core capability band as the visual center, a right-side list for examples or guardrails, and semantic cross-layer arrows. A board may intentionally contain 20–45 concise cards.
 
 ## Visual rules
 
-Use `spectrum` for product/leadership decks and `blueprint` for engineering reviews. Use `agent` for active AI controllers, `database` for durable state, `external` for third-party boundaries, and bilingual group headings.
+Use low-saturation category tones, white cards, consistent built-in line icons, Chinese primary labels, and compact English technical subtitles. Use a graph `spectrum` theme only when the request is explicitly a smaller relationship diagram.
 
 ## Example prompt
 
 ```text
-Create a system-architecture diagram for an enterprise AI workspace. Audience: product and engineering leadership. Include users and Agents, unified gateway, context/memory, tool orchestration, GitHub and document stores, audit and learning. Use five top-to-bottom layers, Chinese primary labels, English technical subtitles, spectrum theme, and explicit primary/control/async/feedback edges. Output valid VisualSpec JSON and validate strictly.
+Use $abi-flow to create a presentation-ready enterprise architecture board for an AI workspace. Audience: product and engineering leadership. Include users and Agents, unified gateway, context/memory, tool orchestration, external tools, GitHub and document sources of truth, a six-step task data flow, and five architecture principles. Use Chinese primary labels, retained English technical terms, low-saturation layer tones, consistent line icons, and explicit primary/control/sync/feedback links. Deliver validated JSON, SVG, HTML, PNG, and quality evidence; inspect the PNG before delivery.
 ```

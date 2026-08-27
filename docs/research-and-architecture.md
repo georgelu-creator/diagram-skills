@@ -25,7 +25,19 @@ VisualSpec supplies the pieces that are product-specific rather than generic inf
 - strict deterministic Python export and quality evidence;
 - Agent Skill routing and prompt contracts.
 
-The lane layout is a bounded adapter for explicit `lane` and `rank` fields. It does not attempt to replace a graph optimizer. Diagrams without explicit lanes use ELK.
+## Enterprise diagram research
+
+The high-density board composition was derived from recurring patterns in authoritative architecture libraries rather than copied from one picture:
+
+- [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/) uses complete reference workloads with explicit security, networking, identity, monitoring, governance, and numbered logical flows—not isolated boxes.
+- [AWS Architecture Diagrams](https://docs.aws.amazon.com/architecture-diagrams/latest/modern-data-analytics-on-aws/modern-data-analytics-on-aws.html) combines visual grouping, service-adjacent labels, annotated flow, and downloadable/editable source.
+- [AWS guidance for better architecture diagrams](https://builder.aws.com/content/3DttzYU07FWj09CqNczGbfSnYF4/how-to-design-better-aws-architecture-diagrams) emphasizes input/processing/output structure, accurate arrow direction, official/current icons, and visual grouping.
+- [C4 notation guidance](https://c4model.com/diagrams/notation) requires short element responsibilities and directional, meaningfully labelled relationships; hierarchy is expressed through separate abstraction levels.
+- [Azure icon guidance](https://learn.microsoft.com/en-us/azure/architecture/icons/) places product names near icons and prohibits distorting product marks. VisualSpec therefore uses an original, consistent line-icon vocabulary rather than pretending generic glyphs are vendor logos.
+
+These observations became reusable board primitives: horizontal scan bands, left label rails, grid/banner/list blocks, semantic tones, built-in line icons, id-based cross-band connections, a numbered flow strip, and a principle strip. The renderer computes these primitives from JSON; gallery images are not hand-positioned SVGs.
+
+The lane layout is a bounded adapter for explicit `lane` and `rank` fields. It does not attempt to replace a graph optimizer. In VisualSpec Studio, diagrams without explicit lanes use ELK.
 
 ## Alternatives considered
 

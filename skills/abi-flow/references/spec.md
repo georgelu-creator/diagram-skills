@@ -9,20 +9,37 @@ The renderer consumes UTF-8 JSON. Keep sources under version control. Editors ma
 | `title` | yes | Non-empty string |
 | `subtitle` | no | One short context line |
 | `diagram_type` | no | Supported type slug; defaults to `process-flow` |
-| `direction` | no | `LR` (default) or `TB` |
+| `layout` | no | `graph` (default) or high-density `board` |
+| `direction` | graph only | `LR` (default) or `TB` |
 | `theme` | no | `paper`, `notion`, `spectrum`, `blueprint`, or `terminal` |
 | `brand` | no | Injection-safe brand color overrides |
-| `nodes` | yes | Array of node objects |
-| `edges` | yes | Array of edge objects |
+| `nodes` | graph only | Array of node objects |
+| `edges` | graph only | Array of edge objects |
 | `groups` | no | Array of group objects |
 | `lanes` | no | Ordered horizontal or vertical swimlanes |
 | `legend` | no | Boolean; defaults to true when multiple edge kinds exist |
+| `sections` | board only | Ordered enterprise scan bands |
+| `connections` | board only | Links between section, block, or card ids |
+| `flow` | board only | Numbered lifecycle/data-flow strip |
+| `principles` | board only | Final design-principle cards |
 
 Supported `diagram_type` values:
 
 `system-architecture`, `agent-workflow`, `data-flow`, `capability-map`, `user-flow`, `system-topology`, `decision-tree`, `roadmap`, `strategy-map`, `process-flow`.
 
 The type is semantic metadata: it records intent, selects a template, appears as a diagram badge, and is included in the quality report. Direction and graph relationships still determine layout.
+
+## Enterprise board
+
+Set `layout: "board"` for a layered, presentation-ready enterprise infographic with 20–45 visible concepts. A board replaces `nodes`/`edges` with:
+
+- ordered `sections` using semantic color tones;
+- `grid`, `banner`, and `list` blocks with relative `span` widths;
+- icon-bearing bilingual cards;
+- cross-layer `connections` with the same semantic edge kinds;
+- optional numbered `flow` and final `principles` strips.
+
+The full contract, fixed composition, icon policy, and acceptance rules are in [enterprise-board.md](enterprise-board.md). [`spec.schema.json`](spec.schema.json) contains the exact fields and supported built-in icon names.
 
 ## Nodes
 

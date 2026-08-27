@@ -6,6 +6,7 @@ A render is deliverable only when every required check passes.
 
 - JSON parses and matches the supported field vocabulary.
 - Node ids are unique; all edge and group references resolve.
+- Board section, block, and card ids are unique; all board connections resolve.
 - Non-feedback edges form a DAG. Intentional cycles are explicitly `feedback`.
 - Links use an allowed scheme.
 - SVG parses as XML; every marker reference resolves.
@@ -27,6 +28,8 @@ A render is deliverable only when every required check passes.
 - The interactive HTML supports keyboard zoom/reset controls and reduced-motion preferences.
 - Minimum body text remains readable when the SVG is shown at 960 CSS pixels.
 
+For high-density boards, review at the delivered 1920-pixel width. The board is intended for full-width documentation, decks, and zoomable HTML rather than a narrow inline chat column.
+
 ## Visual review gate
 
 When a PNG renderer is available:
@@ -35,6 +38,8 @@ When a PNG renderer is available:
 2. Inspect the image rather than trusting source validation.
 3. Check hierarchy, clipping, label wrapping, whitespace, route clarity, and theme contrast.
 4. Correct the JSON or renderer, rerun validation, and reinspect. Limit correction to three evidence-based rounds; then simplify or split the diagram.
+
+The deliverable is the rendered visual, not merely source code. Present the PNG or SVG first, keep JSON beside it for reproducibility, and treat the browser editor as an optional inspection surface rather than a required generation step.
 
 When no raster renderer or image reader is available, report `visual review: skipped` and do not claim that the diagram was visually verified.
 

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en" data-ui-theme="light">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>多 Agent 软件交付控制面全景图</title><style>:root{color-scheme:light dark;--shell:#f3f4f6;--panel:#fff;--text:#111827;--muted:#667085;--border:#d0d5dd}
+:root[data-ui-theme="dark"]{--shell:#080d14;--panel:#111821;--text:#f8fafc;--muted:#a8b3c2;--border:#334155}
+*{box-sizing:border-box}body{margin:0;background:var(--shell);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC",sans-serif}
+.shell{max-width:1480px;margin:0 auto;padding:20px}.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}.brand{font-weight:800;margin-right:auto}.hint{font-size:12px;color:var(--muted)}button{font:inherit;font-size:12px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:7px 11px;cursor:pointer}button:hover,button:focus-visible{border-color:#2563eb;outline:2px solid transparent}.viewport{overflow:hidden;border:1px solid var(--border);border-radius:16px;background:var(--panel);box-shadow:0 8px 28px #0f172a14;touch-action:none}.viewport svg{display:block;width:100%;height:auto;min-height:520px;user-select:none}.viewport.dragging{cursor:grabbing}@media(max-width:720px){.shell{padding:8px}.hint{display:none}.viewport svg{min-height:72vh}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}</style></head>
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport"><svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 1800 1203" role="img" aria-labelledby="abi-title abi-desc">
+<title id="abi-title">多 Agent 软件交付控制面全景图</title><desc id="abi-desc">High-density Agent 工作流 / Agent Workflow with 5 sections</desc>
+<defs>
+<marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-error" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#5B55D6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-feedback" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-success" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arrow-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<style>
+.board{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff}.board text{fill:#192132}.board-title{font-size:28px;font-weight:700;text-anchor:middle}.board-subtitle{font-size:12px;fill:#667085;text-anchor:middle;letter-spacing:.2px}.section-label{font-size:16px;font-weight:700}.section-subtitle{font-size:11px;font-weight:500}.block-title{font-size:15px;font-weight:700;text-anchor:middle}.block-subtitle{font-size:10.5px;fill:#667085;text-anchor:middle}.card-title{font-size:12.2px;font-weight:650}.card-subtitle{font-size:9.6px;fill:#536174}.list-title{font-size:13px;font-weight:700}.list-item{font-size:10.6px}.footer-text{font-size:10.5px;font-weight:650;text-anchor:middle}.flow-title,.principles-title{font-size:15px;font-weight:700}.step-title{font-size:11.4px;font-weight:650}.step-subtitle{font-size:9.2px;fill:#667085}.connection{fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.connection-label{font-size:9.5px;font-weight:650;text-anchor:middle;fill:#536174}
+</style>
+<rect width="1800" height="1203" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1800" height="84" fill="#FBFCFE"/>
+<rect x="866" y="77" width="68" height="3" rx="1.5" fill="#5B55D6"/>
+<text class="board-title" x="900" y="39">多 Agent 软件交付控制面全景图</text>
+<text class="board-subtitle" x="900" y="64">从需求澄清到安全发布：角色协作、质量门禁、工程证据与学习闭环</text>
+<g class="board-section"><rect x="20" y="96" width="1760" height="140" rx="12" fill="#F4F8FF" stroke="#7FB2F5" stroke-width="1"/>
+<text class="section-label" x="40" y="166" fill="#0B4F93">需求与信号</text>
+<text class="section-subtitle" x="40" y="189" fill="#0B4F93">INTENT / SIGNALS</text>
+<path d="M 206 108 V 224" fill="none" stroke="#7FB2F5" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="108" width="1552" height="116" rx="11" fill="#FFFFFF" stroke="#7FB2F5" stroke-width="1"/>
+<text class="block-title" x="992" y="133" fill="#0B4F93">多源需求入口</text>
+<g class="board-card"><rect x="228" y="158" width="299.2" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(239 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="270" y="180" fill="#0B4F93">产品需求</text>
+<text class="card-subtitle" x="270" y="198">PRD / Roadmap</text>
+</g>
+<g class="board-card"><rect x="535.2" y="158" width="299.2" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(546.2 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="8" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0"/></g>
+<text class="card-title" x="577.2" y="180" fill="#0B4F93">客户反馈</text>
+<text class="card-subtitle" x="577.2" y="198">Ticket / Interview</text>
+</g>
+<g class="board-card"><rect x="842.4" y="158" width="299.2" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(853.4 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="card-title" x="884.4" y="180" fill="#0B4F93">线上事件</text>
+<text class="card-subtitle" x="884.4" y="198">Alert / Incident</text>
+</g>
+<g class="board-card"><rect x="1149.6" y="158" width="299.2" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(1160.6 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/></g>
+<text class="card-title" x="1191.6" y="180" fill="#0B4F93">技术债务</text>
+<text class="card-subtitle" x="1191.6" y="198">RFC / Refactor</text>
+</g>
+<g class="board-card"><rect x="1456.8" y="158" width="299.2" height="54" rx="8" fill="#FFFFFF" stroke="#7FB2F5" stroke-width=".8"/>
+<g transform="translate(1467.8 173) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/></g>
+<text class="card-title" x="1498.8" y="180" fill="#0B4F93">政策与安全变更</text>
+<text class="card-subtitle" x="1498.8" y="198">Policy / Compliance</text>
+</g>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="248" width="1760" height="96" rx="12" fill="#FAF7FF" stroke="#B69AE9" stroke-width="1"/>
+<text class="section-label" x="40" y="296" fill="#5226A5">交付控制面</text>
+<text class="section-subtitle" x="40" y="319" fill="#5226A5">ORCHESTRATION</text>
+<path d="M 206 260 V 332" fill="none" stroke="#B69AE9" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="260" width="1552" height="72" rx="11" fill="#FFFFFF" stroke="#B69AE9" stroke-width="1"/>
+<g transform="translate(870 282) scale(1.16667)" fill="none" stroke="#6D3BC3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 18H6a4 4 0 0 1 0-8h1M15 6h3a4 4 0 0 1 0 8h-1M8 12h8"/></g>
+<text class="block-title" x="1000" y="292" fill="#5226A5">Delivery Control Plane</text>
+<text class="block-subtitle" x="1000" y="313">任务分解 · 上下文路由 · 角色委派 · 权限边界 · 预算与超时</text>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="356" width="1760" height="233" rx="12" fill="#F5FBF5" stroke="#86C98A" stroke-width="1"/>
+<text class="section-label" x="40" y="472.5" fill="#176A31">Agent 团队</text>
+<text class="section-subtitle" x="40" y="495.5" fill="#176A31">SPECIALISTS</text>
+<path d="M 206 368 V 577" fill="none" stroke="#86C98A" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="368" width="1232" height="209" rx="11" fill="#FFFFFF" stroke="#86C98A" stroke-width="1"/>
+<text class="block-title" x="832" y="393" fill="#176A31">专业 Agent 协作工作台</text>
+<g class="board-card"><rect x="228" y="418" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(239 433) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5"/></g>
+<text class="card-title" x="270" y="440" fill="#176A31">Planner Agent</text>
+<text class="card-subtitle" x="270" y="458">范围 / 依赖 / 验收</text>
+</g>
+<g class="board-card"><rect x="633.333" y="418" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(644.333 433) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="5" cy="12" r="2"/><circle fill="none" cx="18" cy="5" r="2"/><circle fill="none" cx="19" cy="18" r="2"/><path fill="none" d="m7 11 9-5M7 13l10 4M18 7v9"/></g>
+<text class="card-title" x="675.333" y="440" fill="#176A31">Architecture Agent</text>
+<text class="card-subtitle" x="675.333" y="458">约束 / ADR / 风险</text>
+</g>
+<g class="board-card"><rect x="1038.67" y="418" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(1049.67 433) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/></g>
+<text class="card-title" x="1080.67" y="440" fill="#176A31">Engineering Agent</text>
+<text class="card-subtitle" x="1080.67" y="458">Code / Migration</text>
+</g>
+<g class="board-card"><rect x="228" y="480" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(239 495) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/></g>
+<text class="card-title" x="270" y="502" fill="#176A31">QA Agent</text>
+<text class="card-subtitle" x="270" y="520">Test / Regression</text>
+</g>
+<g class="board-card"><rect x="633.333" y="480" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(644.333 495) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/></g>
+<text class="card-title" x="675.333" y="502" fill="#176A31">Security Agent</text>
+<text class="card-subtitle" x="675.333" y="520">Threat / Permission</text>
+</g>
+<g class="board-card"><rect x="1038.67" y="480" width="397.333" height="54" rx="8" fill="#FFFFFF" stroke="#86C98A" stroke-width=".8"/>
+<g transform="translate(1049.67 495) scale(0.958333)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M7 19h11a4 4 0 0 0 .4-8 7 7 0 0 0-13.3-1.7A5 5 0 0 0 7 19z"/></g>
+<text class="card-title" x="1080.67" y="502" fill="#176A31">Release Agent</text>
+<text class="card-subtitle" x="1080.67" y="520">Deploy / Rollback</text>
+</g>
+<rect x="228" y="549" width="1208" height="19" rx="5" fill="#F5FBF5" stroke="#86C98A" stroke-width=".5"/>
+<text class="footer-text" x="832" y="562" fill="#176A31">共享任务状态 + 结构化上下文 + 可验证交接物</text>
+</g>
+<g class="board-block"><rect x="1460" y="374.5" width="308" height="196" rx="11" fill="#FFFFFF" stroke="#86C98A" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1474" y="398.5" fill="#176A31">强制门禁</text>
+<g transform="translate(1473 410.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="422.5" fill="#176A31">高风险变更需人工批准</text>
+<g transform="translate(1473 432.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="444.5" fill="#176A31">测试与静态检查不可跳过</text>
+<g transform="translate(1473 454.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="466.5" fill="#176A31">生产凭据按任务最小授权</text>
+<g transform="translate(1473 476.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="488.5" fill="#176A31">失败必须携带可复现证据</text>
+<g transform="translate(1473 498.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="510.5" fill="#176A31">发布必须具备回滚路径</text>
+<g transform="translate(1473 520.5) scale(0.541667)" fill="none" stroke="#23863B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="532.5" fill="#176A31">决策写入 ADR / PR</text>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="601" width="1760" height="140" rx="12" fill="#FFF9F3" stroke="#F2B36F" stroke-width="1"/>
+<text class="section-label" x="40" y="671" fill="#783A05">工程执行面</text>
+<text class="section-subtitle" x="40" y="694" fill="#783A05">TOOLS / RUNTIME</text>
+<path d="M 206 613 V 729" fill="none" stroke="#F2B36F" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="613" width="1552" height="116" rx="11" fill="#FFFFFF" stroke="#F2B36F" stroke-width="1"/>
+<text class="block-title" x="992" y="638" fill="#783A05">受控工程环境</text>
+<g class="board-card"><rect x="228" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(239 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/></g>
+<text class="card-title" x="270" y="685" fill="#783A05">Git 仓库</text>
+<text class="card-subtitle" x="270" y="703">Branch / PR / Review</text>
+</g>
+<g class="board-card"><rect x="484" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(495 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="3"/><path fill="none" d="m7 9 3 3-3 3M13 15h4"/></g>
+<text class="card-title" x="526" y="685" fill="#783A05">隔离工作区</text>
+<text class="card-subtitle" x="526" y="703">Worktree / Sandbox</text>
+</g>
+<g class="board-card"><rect x="740" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(751 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/></g>
+<text class="card-title" x="782" y="685" fill="#783A05">CI Pipeline</text>
+<text class="card-subtitle" x="782" y="703">Build / Test / Scan</text>
+</g>
+<g class="board-card"><rect x="996" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(1007 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
+<text class="card-title" x="1038" y="685" fill="#783A05">制品仓库</text>
+<text class="card-subtitle" x="1038" y="703">Image / Package</text>
+</g>
+<g class="board-card"><rect x="1252" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(1263 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M7 19h11a4 4 0 0 0 .4-8 7 7 0 0 0-13.3-1.7A5 5 0 0 0 7 19z"/></g>
+<text class="card-title" x="1294" y="685" fill="#783A05">交付平台</text>
+<text class="card-subtitle" x="1294" y="703">Canary / Feature Flag</text>
+</g>
+<g class="board-card"><rect x="1508" y="663" width="248" height="54" rx="8" fill="#FFFFFF" stroke="#F2B36F" stroke-width=".8"/>
+<g transform="translate(1519 678) scale(0.958333)" fill="none" stroke="#A94F08" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/></g>
+<text class="card-title" x="1550" y="685" fill="#783A05">可观测平台</text>
+<text class="card-subtitle" x="1550" y="703">Log / Trace / Metric</text>
+</g>
+</g>
+</g>
+<g class="board-section"><rect x="20" y="753" width="1760" height="198" rx="12" fill="#F2FBFA" stroke="#73C7BA" stroke-width="1"/>
+<text class="section-label" x="40" y="852" fill="#0D665C">证据与学习</text>
+<text class="section-subtitle" x="40" y="875" fill="#0D665C">EVIDENCE / MEMORY</text>
+<path d="M 206 765 V 939" fill="none" stroke="#73C7BA" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="794" width="1232" height="116" rx="11" fill="#FFFFFF" stroke="#73C7BA" stroke-width="1"/>
+<text class="block-title" x="832" y="819" fill="#0D665C">可审计交付证据</text>
+<g class="board-card"><rect x="228" y="844" width="235.2" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(239 859) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="270" y="866" fill="#0D665C">执行计划</text>
+<text class="card-subtitle" x="270" y="884">Scope / Owners</text>
+</g>
+<g class="board-card"><rect x="471.2" y="844" width="235.2" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(482.2 859) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="card-title" x="513.2" y="866" fill="#0D665C">质量结果</text>
+<text class="card-subtitle" x="513.2" y="884">Tests / Scans</text>
+</g>
+<g class="board-card"><rect x="714.4" y="844" width="235.2" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(725.4 859) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/></g>
+<text class="card-title" x="756.4" y="866" fill="#0D665C">审批记录</text>
+<text class="card-subtitle" x="756.4" y="884">Human / Policy</text>
+</g>
+<g class="board-card"><rect x="957.6" y="844" width="235.2" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(968.6 859) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M5 3h11l3 3v15H5zM16 3v4h4M8 11h8M8 15h6"/></g>
+<text class="card-title" x="999.6" y="866" fill="#0D665C">发布记录</text>
+<text class="card-subtitle" x="999.6" y="884">Version / Change</text>
+</g>
+<g class="board-card"><rect x="1200.8" y="844" width="235.2" height="54" rx="8" fill="#FFFFFF" stroke="#73C7BA" stroke-width=".8"/>
+<g transform="translate(1211.8 859) scale(0.958333)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
+<text class="card-title" x="1242.8" y="866" fill="#0D665C">复盘记忆</text>
+<text class="card-subtitle" x="1242.8" y="884">Pattern / Failure</text>
+</g>
+</g>
+<g class="board-block"><rect x="1460" y="765" width="308" height="174" rx="11" fill="#FFFFFF" stroke="#73C7BA" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1474" y="789" fill="#0D665C">业务结果</text>
+<g transform="translate(1473 801) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="813" fill="#0D665C">更短 Lead Time</text>
+<g transform="translate(1473 823) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="835" fill="#0D665C">更低变更失败率</text>
+<g transform="translate(1473 845) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="857" fill="#0D665C">更快故障恢复</text>
+<g transform="translate(1473 867) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="879" fill="#0D665C">更清晰责任边界</text>
+<g transform="translate(1473 889) scale(0.541667)" fill="none" stroke="#128579" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1494" y="901" fill="#0D665C">可复用工程知识</text>
+</g>
+</g>
+<g class="board-flow"><rect x="20" y="963" width="1760" height="98" rx="12" fill="#FFFBF0" stroke="#E8C46D"/>
+<text class="flow-title" x="40" y="1017" fill="#8A5A08">交付生命周期</text>
+<rect x="216" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(226 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
+<text class="step-title" x="257" y="1005" fill="#8A5A08">1. 澄清目标</text>
+<text class="step-subtitle" x="257" y="1024">验收与边界</text>
+<path d="M 431.143 1012 H 436.143" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="439.143" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(449.143 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5"/></g>
+<text class="step-title" x="480.143" y="1005" fill="#8A5A08">2. 规划任务</text>
+<text class="step-subtitle" x="480.143" y="1024">拆解与依赖</text>
+<path d="M 654.286 1012 H 659.286" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="662.286" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(672.286 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/></g>
+<text class="step-title" x="703.286" y="1005" fill="#8A5A08">3. 并行实现</text>
+<text class="step-subtitle" x="703.286" y="1024">代码与迁移</text>
+<path d="M 877.429 1012 H 882.429" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="885.429" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(895.429 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/></g>
+<text class="step-title" x="926.429" y="1005" fill="#8A5A08">4. 独立验证</text>
+<text class="step-subtitle" x="926.429" y="1024">测试与安全</text>
+<path d="M 1100.57 1012 H 1105.57" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1108.57" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1118.57 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="8" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0"/></g>
+<text class="step-title" x="1149.57" y="1005" fill="#8A5A08">5. 人工审批</text>
+<text class="step-subtitle" x="1149.57" y="1024">高风险门禁</text>
+<path d="M 1323.71 1012 H 1328.71" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1331.71" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1341.71 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M7 19h11a4 4 0 0 0 .4-8 7 7 0 0 0-13.3-1.7A5 5 0 0 0 7 19z"/></g>
+<text class="step-title" x="1372.71" y="1005" fill="#8A5A08">6. 渐进发布</text>
+<text class="step-subtitle" x="1372.71" y="1024">Canary / Rollback</text>
+<path d="M 1546.86 1012 H 1551.86" fill="none" stroke="#A86F0A" stroke-width="1.4" marker-end="url(#arrow-control)"/>
+<rect x="1554.86" y="978" width="213.143" height="68" rx="9" fill="#FFFFFF" stroke="#E8C46D" stroke-width=".7"/>
+<g transform="translate(1564.86 999) scale(1)" fill="none" stroke="#A86F0A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
+<text class="step-title" x="1595.86" y="1005" fill="#8A5A08">7. 复盘学习</text>
+<text class="step-subtitle" x="1595.86" y="1024">证据沉淀</text>
+</g>
+<g class="board-principles"><rect x="20" y="1073" width="1760" height="108" rx="12" fill="#F7F8FA" stroke="#B8C1CC"/>
+<text class="principles-title" x="40" y="1131" fill="#354052">核心原则</text>
+<rect x="216" y="1088" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(229 1113) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="5" y="10" width="14" height="11" rx="2"/><path fill="none" d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></g>
+<text class="step-title" x="264" y="1119" fill="#354052">最小权限</text>
+<text class="step-subtitle" x="264" y="1139">每个任务只获取必要能力</text>
+<rect x="528.4" y="1088" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(541.4 1113) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="step-title" x="576.4" y="1119" fill="#354052">证据优先</text>
+<text class="step-subtitle" x="576.4" y="1139">每个结论都有可验证产物</text>
+<rect x="840.8" y="1088" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(853.8 1113) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="8" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0"/></g>
+<text class="step-title" x="888.8" y="1119" fill="#354052">职责分离</text>
+<text class="step-subtitle" x="888.8" y="1139">实现与独立验证角色分开</text>
+<rect x="1153.2" y="1088" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(1166.2 1113) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
+<text class="step-title" x="1201.2" y="1119" fill="#354052">失败可恢复</text>
+<text class="step-subtitle" x="1201.2" y="1139">超时、重试、回滚路径明确</text>
+<rect x="1465.6" y="1088" width="302.4" height="78" rx="9" fill="#FFFFFF" stroke="#B8C1CC" stroke-width=".7"/>
+<g transform="translate(1478.6 1113) scale(1.04167)" fill="none" stroke="#536174" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
+<text class="step-title" x="1513.6" y="1119" fill="#354052">持续学习</text>
+<text class="step-subtitle" x="1513.6" y="1139">复盘转化为规则与记忆</text>
+</g>
+<path class="connection" d="M 377.6 212 L 377.6 260" fill="none" stroke="#5B55D6" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 684.8 212 L 684.8 260" fill="none" stroke="#5B55D6" marker-end="url(#arrow-primary)"/>
+<path class="connection" d="M 992 212 L 992 260" fill="none" stroke="#dc2626" marker-end="url(#arrow-error)"/>
+<path class="connection" d="M 1299.2 212 L 1299.2 260" fill="none" stroke="#64748b" marker-end="url(#arrow-async)"/>
+<path class="connection" d="M 1606.4 212 L 1606.4 260" fill="none" stroke="#ea580c" marker-end="url(#arrow-control)"/>
+<path class="connection" d="M 992 332 L 992 368" fill="none" stroke="#7c3aed" marker-end="url(#arrow-feedback)" marker-start="url(#arrow-feedback)"/>
+<path class="connection" d="M 1448 472.5 L 1454 472.5 L 1460 472.5" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+<path class="connection" d="M 832 577 L 832 613" fill="none" stroke="#ea580c" marker-end="url(#arrow-control)" marker-start="url(#arrow-control)"/>
+<path class="connection" d="M 992 729 L 992 794" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+<path class="connection" d="M 1448 852 L 1454 852 L 1460 852" fill="none" stroke="#059669" marker-end="url(#arrow-success)"/>
+</svg></div></main><script>(() => {
+  const root = document.documentElement;
+  const svg = document.querySelector('.abi-flow');
+  const viewport = document.querySelector('.viewport');
+  const original = svg.viewBox.baseVal;
+  const base = {x: original.x, y: original.y, w: original.width, h: original.height};
+  let view = {...base}; let dragging = false; let last = null;
+  const applyView = () => svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+  const zoom = (factor, cx = view.x + view.w / 2, cy = view.y + view.h / 2) => {
+    const nextW = Math.max(base.w * .25, Math.min(base.w * 4, view.w * factor));
+    const nextH = nextW * base.h / base.w;
+    const rx = (cx - view.x) / view.w, ry = (cy - view.y) / view.h;
+    view = {x: cx - nextW * rx, y: cy - nextH * ry, w: nextW, h: nextH}; applyView();
+  };
+  document.getElementById('zoomIn').onclick = () => zoom(.82);
+  document.getElementById('zoomOut').onclick = () => zoom(1.22);
+  document.getElementById('reset').onclick = () => { view = {...base}; applyView(); };
+  const themeButton = document.getElementById('theme');
+  if (themeButton) themeButton.onclick = () => {
+    const dark = root.dataset.uiTheme !== 'dark';
+    root.dataset.uiTheme = dark ? 'dark' : 'light'; svg.dataset.theme = dark ? 'dark' : 'light';
+  };
+  viewport.addEventListener('wheel', event => {
+    event.preventDefault(); const rect = svg.getBoundingClientRect();
+    const cx = view.x + (event.clientX - rect.left) / rect.width * view.w;
+    const cy = view.y + (event.clientY - rect.top) / rect.height * view.h;
+    zoom(event.deltaY > 0 ? 1.12 : .89, cx, cy);
+  }, {passive:false});
+  viewport.addEventListener('pointerdown', event => { if (event.target.closest('a')) return; dragging = true; last = event; viewport.classList.add('dragging'); viewport.setPointerCapture(event.pointerId); });
+  viewport.addEventListener('pointermove', event => { if (!dragging) return; const rect = svg.getBoundingClientRect(); view.x -= (event.clientX-last.clientX)/rect.width*view.w; view.y -= (event.clientY-last.clientY)/rect.height*view.h; last=event; applyView(); });
+  const endDrag = () => { dragging=false; viewport.classList.remove('dragging'); };
+  viewport.addEventListener('pointerup', endDrag); viewport.addEventListener('pointercancel', endDrag);
+  const basename = () => document.title.replace(/[^a-z0-9_-]+/gi,'-').replace(/^-+|-+$/g,'').toLowerCase() || 'diagram';
+  const download = (blob, filename) => { const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=filename; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 1000); };
+  document.getElementById('svgDownload').onclick = () => download(new Blob([new XMLSerializer().serializeToString(svg)], {type:'image/svg+xml'}), basename()+'.svg');
+  document.getElementById('pngDownload').onclick = () => {
+    const source = new XMLSerializer().serializeToString(svg), blob = new Blob([source], {type:'image/svg+xml'}), url=URL.createObjectURL(blob), image=new Image();
+    image.onload=()=>{const scale=2, canvas=document.createElement('canvas'); canvas.width=base.w*scale; canvas.height=base.h*scale; const ctx=canvas.getContext('2d'); ctx.drawImage(image,0,0,canvas.width,canvas.height); URL.revokeObjectURL(url); canvas.toBlob(png=>download(png,basename()+'.png'),'image/png');}; image.onerror=()=>URL.revokeObjectURL(url); image.src=url;
+  };
+})();</script></body></html>

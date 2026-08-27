@@ -1,0 +1,154 @@
+{
+  "title": "多 Agent 软件交付控制面全景图",
+  "subtitle": "从需求澄清到安全发布：角色协作、质量门禁、工程证据与学习闭环",
+  "diagram_type": "agent-workflow",
+  "layout": "board",
+  "theme": "paper",
+  "brand": {"name": "VisualSpec", "primary": "#5B55D6", "accent": "#17856F"},
+  "sections": [
+    {
+      "id": "demand",
+      "label": "需求与信号",
+      "subtitle": "INTENT / SIGNALS",
+      "tone": "blue",
+      "blocks": [
+        {
+          "id": "demand-grid",
+          "kind": "grid",
+          "title": "多源需求入口",
+          "columns": 5,
+          "cards": [
+            {"id": "product-brief", "label": "产品需求", "subtitle": "PRD / Roadmap", "icon": "document"},
+            {"id": "customer", "label": "客户反馈", "subtitle": "Ticket / Interview", "icon": "user"},
+            {"id": "incident", "label": "线上事件", "subtitle": "Alert / Incident", "icon": "metrics"},
+            {"id": "tech-debt", "label": "技术债务", "subtitle": "RFC / Refactor", "icon": "code"},
+            {"id": "policy-change", "label": "政策与安全变更", "subtitle": "Policy / Compliance", "icon": "shield"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control",
+      "label": "交付控制面",
+      "subtitle": "ORCHESTRATION",
+      "tone": "purple",
+      "blocks": [
+        {"id": "delivery-router", "kind": "banner", "title": "Delivery Control Plane", "subtitle": "任务分解 · 上下文路由 · 角色委派 · 权限边界 · 预算与超时", "icon": "gateway"}
+      ]
+    },
+    {
+      "id": "agents",
+      "label": "Agent 团队",
+      "subtitle": "SPECIALISTS",
+      "tone": "green",
+      "blocks": [
+        {
+          "id": "agent-team",
+          "kind": "grid",
+          "title": "专业 Agent 协作工作台",
+          "columns": 3,
+          "span": 4,
+          "cards": [
+            {"id": "planner", "label": "Planner Agent", "subtitle": "范围 / 依赖 / 验收", "icon": "layers"},
+            {"id": "architect", "label": "Architecture Agent", "subtitle": "约束 / ADR / 风险", "icon": "graph"},
+            {"id": "engineer", "label": "Engineering Agent", "subtitle": "Code / Migration", "icon": "code"},
+            {"id": "qa", "label": "QA Agent", "subtitle": "Test / Regression", "icon": "test"},
+            {"id": "security", "label": "Security Agent", "subtitle": "Threat / Permission", "icon": "shield"},
+            {"id": "release", "label": "Release Agent", "subtitle": "Deploy / Rollback", "icon": "cloud"}
+          ],
+          "footer": "共享任务状态 + 结构化上下文 + 可验证交接物"
+        },
+        {
+          "id": "guardrails",
+          "kind": "list",
+          "title": "强制门禁",
+          "span": 1,
+          "items": ["高风险变更需人工批准", "测试与静态检查不可跳过", "生产凭据按任务最小授权", "失败必须携带可复现证据", "发布必须具备回滚路径", "决策写入 ADR / PR"]
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "label": "工程执行面",
+      "subtitle": "TOOLS / RUNTIME",
+      "tone": "orange",
+      "blocks": [
+        {
+          "id": "execution-grid",
+          "kind": "grid",
+          "title": "受控工程环境",
+          "columns": 6,
+          "cards": [
+            {"id": "repo", "label": "Git 仓库", "subtitle": "Branch / PR / Review", "icon": "code"},
+            {"id": "sandbox", "label": "隔离工作区", "subtitle": "Worktree / Sandbox", "icon": "terminal"},
+            {"id": "ci", "label": "CI Pipeline", "subtitle": "Build / Test / Scan", "icon": "test"},
+            {"id": "registry", "label": "制品仓库", "subtitle": "Image / Package", "icon": "archive"},
+            {"id": "delivery", "label": "交付平台", "subtitle": "Canary / Feature Flag", "icon": "cloud"},
+            {"id": "observability", "label": "可观测平台", "subtitle": "Log / Trace / Metric", "icon": "metrics"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "evidence",
+      "label": "证据与学习",
+      "subtitle": "EVIDENCE / MEMORY",
+      "tone": "teal",
+      "blocks": [
+        {
+          "id": "evidence-grid",
+          "kind": "grid",
+          "title": "可审计交付证据",
+          "columns": 5,
+          "span": 4,
+          "cards": [
+            {"id": "plan", "label": "执行计划", "subtitle": "Scope / Owners", "icon": "document"},
+            {"id": "checks", "label": "质量结果", "subtitle": "Tests / Scans", "icon": "check"},
+            {"id": "review", "label": "审批记录", "subtitle": "Human / Policy", "icon": "shield"},
+            {"id": "release-note", "label": "发布记录", "subtitle": "Version / Change", "icon": "note"},
+            {"id": "learning", "label": "复盘记忆", "subtitle": "Pattern / Failure", "icon": "brain"}
+          ]
+        },
+        {
+          "id": "outcomes",
+          "kind": "list",
+          "title": "业务结果",
+          "span": 1,
+          "items": ["更短 Lead Time", "更低变更失败率", "更快故障恢复", "更清晰责任边界", "可复用工程知识"]
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {"source": "product-brief", "target": "delivery-router", "kind": "primary"},
+    {"source": "customer", "target": "delivery-router", "kind": "primary"},
+    {"source": "incident", "target": "delivery-router", "kind": "error"},
+    {"source": "tech-debt", "target": "delivery-router", "kind": "async"},
+    {"source": "policy-change", "target": "delivery-router", "kind": "control"},
+    {"source": "delivery-router", "target": "agent-team", "kind": "feedback", "bidirectional": true},
+    {"source": "agent-team", "target": "guardrails", "kind": "success"},
+    {"source": "agent-team", "target": "execution-grid", "kind": "control", "bidirectional": true},
+    {"source": "execution-grid", "target": "evidence-grid", "kind": "success"},
+    {"source": "evidence-grid", "target": "outcomes", "kind": "success"}
+  ],
+  "flow": {
+    "label": "交付生命周期",
+    "tone": "amber",
+    "steps": [
+      {"label": "澄清目标", "subtitle": "验收与边界", "icon": "search"},
+      {"label": "规划任务", "subtitle": "拆解与依赖", "icon": "layers"},
+      {"label": "并行实现", "subtitle": "代码与迁移", "icon": "code"},
+      {"label": "独立验证", "subtitle": "测试与安全", "icon": "test"},
+      {"label": "人工审批", "subtitle": "高风险门禁", "icon": "user"},
+      {"label": "渐进发布", "subtitle": "Canary / Rollback", "icon": "cloud"},
+      {"label": "复盘学习", "subtitle": "证据沉淀", "icon": "brain"}
+    ]
+  },
+  "principles": [
+    {"label": "最小权限", "subtitle": "每个任务只获取必要能力", "icon": "lock"},
+    {"label": "证据优先", "subtitle": "每个结论都有可验证产物", "icon": "check"},
+    {"label": "职责分离", "subtitle": "实现与独立验证角色分开", "icon": "user"},
+    {"label": "失败可恢复", "subtitle": "超时、重试、回滚路径明确", "icon": "sync"},
+    {"label": "持续学习", "subtitle": "复盘转化为规则与记忆", "icon": "brain"}
+  ]
+}

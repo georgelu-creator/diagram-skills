@@ -1,36 +1,91 @@
 {
-  "title": "企业 AI 工作系统架构",
-  "subtitle": "从多端接入、统一编排到长期记忆与可信资产沉淀",
+  "title": "企业 AI 工作系统架构全景图",
+  "subtitle": "多端接入 · 智能编排 · 核心能力 · 工具集成 · 可信资产",
   "diagram_type": "system-architecture",
-  "direction": "TB",
-  "theme": "spectrum",
-  "legend": true,
-  "groups": [
-    {"id": "entry", "label": "终端 / USERS & AGENTS"},
-    {"id": "access", "label": "接入与编排 / ORCHESTRATION"},
-    {"id": "core", "label": "核心能力 / CORE CAPABILITIES"},
-    {"id": "truth", "label": "可信资产 / SOURCES OF TRUTH"},
-    {"id": "governance", "label": "治理闭环 / GOVERNANCE"}
+  "layout": "board",
+  "theme": "paper",
+  "brand": {"name": "Your Brand", "primary": "#246BCE", "accent": "#6D3BC3"},
+  "sections": [
+    {
+      "id": "actors", "label": "用户与入口", "subtitle": "USERS / AGENTS", "tone": "blue",
+      "blocks": [{"id": "actor-grid", "kind": "grid", "title": "多端访问入口", "columns": 4, "cards": [
+        {"id": "business-user", "label": "业务用户", "subtitle": "Web / Mobile", "icon": "user"},
+        {"id": "desktop-agent", "label": "桌面 Agent", "subtitle": "Chat / Copilot", "icon": "desktop"},
+        {"id": "coding-agent", "label": "研发 Agent", "subtitle": "IDE / CLI", "icon": "terminal"},
+        {"id": "api-client", "label": "API Client", "subtitle": "Service / Partner", "icon": "api"}
+      ]}]
+    },
+    {
+      "id": "access", "label": "统一接入层", "subtitle": "ACCESS / CONTROL", "tone": "purple",
+      "blocks": [{"id": "gateway", "kind": "banner", "title": "AI Gateway / MCP Router", "subtitle": "身份认证 · 权限控制 · 模型路由 · 限流 · 审计日志", "icon": "gateway"}]
+    },
+    {
+      "id": "core", "label": "核心能力层", "subtitle": "AI PLATFORM", "tone": "green",
+      "blocks": [
+        {"id": "core-grid", "kind": "grid", "title": "AI 平台核心能力", "columns": 3, "span": 4, "cards": [
+          {"id": "orchestration", "label": "Agent 编排", "subtitle": "Plan / Route / Handoff", "icon": "graph"},
+          {"id": "context", "label": "上下文工程", "subtitle": "Retrieve / Compose", "icon": "brain"},
+          {"id": "tooling", "label": "工具调用", "subtitle": "MCP / API / Action", "icon": "gateway"},
+          {"id": "knowledge", "label": "知识与记忆", "subtitle": "Search / Graph / Memory", "icon": "search"},
+          {"id": "evaluation", "label": "评测与护栏", "subtitle": "Eval / Safety / Policy", "icon": "shield"},
+          {"id": "observability", "label": "可观测与成本", "subtitle": "Trace / Metric / Cost", "icon": "metrics"}
+        ], "footer": "统一运行时：模型抽象 + 会话状态 + 权限上下文 + 可追踪执行"},
+        {"id": "core-rules", "kind": "list", "title": "关键约束", "span": 1, "items": ["最小权限", "可验证输出", "人工审批边界", "失败可恢复", "全链路可审计"]}
+      ]
+    },
+    {
+      "id": "tools", "label": "业务集成层", "subtitle": "TOOLS / SYSTEMS", "tone": "orange",
+      "blocks": [{"id": "tool-grid", "kind": "grid", "title": "企业工具与业务系统", "columns": 5, "cards": [
+        {"id": "collaboration", "label": "协作工具", "subtitle": "Mail / Chat / Calendar", "icon": "chat"},
+        {"id": "product", "label": "产品研发", "subtitle": "Git / Design / Issue", "icon": "code"},
+        {"id": "business", "label": "业务系统", "subtitle": "CRM / ERP / OA", "icon": "layers"},
+        {"id": "data", "label": "数据平台", "subtitle": "Warehouse / Lakehouse", "icon": "database"},
+        {"id": "external", "label": "外部服务", "subtitle": "Search / Partner / API", "icon": "cloud"}
+      ]}]
+    },
+    {
+      "id": "truth", "label": "可信资产层", "subtitle": "SOURCE OF TRUTH", "tone": "blue",
+      "blocks": [
+        {"id": "engineering-assets", "kind": "grid", "title": "工程资产", "columns": 2, "span": 2, "cards": [
+          {"id": "repository", "label": "代码与配置", "subtitle": "Code / IaC / Script", "icon": "code"},
+          {"id": "specification", "label": "规范与决策", "subtitle": "RFC / ADR / SOP", "icon": "document"},
+          {"id": "quality-assets", "label": "测试与证据", "subtitle": "Test / Scan / Review", "icon": "test"},
+          {"id": "versions", "label": "版本历史", "subtitle": "Git / PR / Release", "icon": "archive"}
+        ]},
+        {"id": "knowledge-assets", "kind": "grid", "title": "业务与知识资产", "columns": 2, "span": 2, "cards": [
+          {"id": "documents", "label": "业务文档", "subtitle": "PRD / Contract / Wiki", "icon": "document"},
+          {"id": "datasets", "label": "数据资产", "subtitle": "Dataset / Metric", "icon": "database"},
+          {"id": "media", "label": "媒体资料", "subtitle": "Image / Audio / Video", "icon": "image"},
+          {"id": "memory", "label": "长期记忆", "subtitle": "Context / Decision", "icon": "brain"}
+        ]},
+        {"id": "truth-rules", "kind": "list", "title": "资产原则", "span": 1, "items": ["事实只维护一份", "Memory 只存高价值上下文", "工程资产必须版本化", "原始资料保留来源", "敏感数据明确边界"]}
+      ]
+    }
   ],
-  "nodes": [
-    {"id": "human", "label": "多端用户", "subtitle": "Mobile · Desktop · Web", "type": "external", "group": "entry"},
-    {"id": "agents", "label": "AI Agents", "subtitle": "ChatGPT · Codex · Claude", "type": "agent", "group": "entry"},
-    {"id": "gateway", "label": "统一接入网关", "subtitle": "Auth · Permission · Routing", "type": "process", "group": "access"},
-    {"id": "memory", "label": "记忆与上下文", "subtitle": "Search · Context · Relations", "type": "database", "group": "core"},
-    {"id": "tools", "label": "工具编排", "subtitle": "MCP · API · Actions", "type": "agent", "group": "core"},
-    {"id": "github", "label": "工程资产", "subtitle": "Code · Skill · Prompt · SOP", "type": "database", "group": "truth"},
-    {"id": "workspace", "label": "业务资料", "subtitle": "Docs · Drive · Database", "type": "document", "group": "truth"},
-    {"id": "audit", "label": "审计与学习闭环", "subtitle": "Trace · Review · Improve", "type": "process", "group": "governance"}
+  "connections": [
+    {"source": "business-user", "target": "gateway", "kind": "primary"},
+    {"source": "desktop-agent", "target": "gateway", "kind": "primary"},
+    {"source": "coding-agent", "target": "gateway", "kind": "primary"},
+    {"source": "api-client", "target": "gateway", "kind": "primary"},
+    {"source": "gateway", "target": "core-grid", "kind": "feedback", "bidirectional": true},
+    {"source": "core-grid", "target": "core-rules", "kind": "success"},
+    {"source": "core-grid", "target": "tool-grid", "kind": "success", "bidirectional": true},
+    {"source": "tool-grid", "target": "engineering-assets", "kind": "control", "bidirectional": true},
+    {"source": "tool-grid", "target": "knowledge-assets", "kind": "control", "bidirectional": true}
   ],
-  "edges": [
-    {"source": "human", "target": "gateway", "label": "request", "kind": "primary"},
-    {"source": "agents", "target": "gateway", "label": "invoke", "kind": "control"},
-    {"source": "gateway", "target": "memory", "label": "context", "kind": "primary"},
-    {"source": "gateway", "target": "tools", "label": "task", "kind": "control"},
-    {"source": "memory", "target": "github", "label": "knowledge", "kind": "primary"},
-    {"source": "tools", "target": "workspace", "label": "artifact", "kind": "async"},
-    {"source": "github", "target": "audit", "label": "version", "kind": "primary"},
-    {"source": "workspace", "target": "audit", "label": "evidence", "kind": "async"},
-    {"source": "audit", "target": "gateway", "label": "policy update", "kind": "feedback"}
+  "flow": {"label": "核心数据流", "tone": "amber", "steps": [
+    {"label": "发起请求", "subtitle": "Goal / Intent", "icon": "user"},
+    {"label": "检索上下文", "subtitle": "Memory / Data", "icon": "search"},
+    {"label": "规划与执行", "subtitle": "Agent / Tools", "icon": "agent"},
+    {"label": "验证结果", "subtitle": "Eval / Approval", "icon": "check"},
+    {"label": "交付产物", "subtitle": "Artifact / Action", "icon": "document"},
+    {"label": "沉淀学习", "subtitle": "Version / Memory", "icon": "brain"}
+  ]},
+  "principles": [
+    {"label": "结构优先", "subtitle": "先确定信息结构再做视觉", "icon": "layers"},
+    {"label": "语义连线", "subtitle": "每条关系都有方向与含义", "icon": "graph"},
+    {"label": "权限内建", "subtitle": "身份与授权贯穿所有层", "icon": "lock"},
+    {"label": "证据可追溯", "subtitle": "结论、变更、结果都可审计", "icon": "check"},
+    {"label": "持续演进", "subtitle": "通过反馈更新规则与记忆", "icon": "sync"}
   ]
 }

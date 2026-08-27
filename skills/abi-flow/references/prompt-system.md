@@ -10,6 +10,7 @@ Collect or infer these fields:
 |---|---|---|
 | `goal` | What decision or understanding should the diagram enable? | Explain the supplied system accurately |
 | `diagram_type` | Which information model fits the content? | Infer from the type router |
+| `composition` | Small relationship graph or high-density enterprise board? | Board for layered architecture overviews; graph otherwise |
 | `audience` | Who must understand it? | Product + engineering leadership |
 | `scope` | What is inside/outside the canvas? | Only facts provided or clearly implied |
 | `content` | Which actors, steps, systems, capabilities, or milestones exist? | Preserve source wording |
@@ -22,7 +23,7 @@ Collect or infer these fields:
 | `brand` | Are approved brand colors required? | Theme defaults |
 | `views` | Does the overview need focused drill-downs? | One view unless density requires splitting |
 | `imports` | Is Mermaid or CSV an input source? | None |
-| `outputs` | Which deliverables are needed? | JSON + SVG + HTML; PNG when available |
+| `outputs` | Which deliverables are needed? | JSON + SVG + HTML + PNG + quality report |
 
 Do not infer business facts, performance numbers, ownership, or security boundaries. Ask only when their absence materially changes the diagram.
 
@@ -41,6 +42,8 @@ Do not infer business facts, performance numbers, ownership, or security boundar
 
 If two types are both useful, choose one primary overview and recommend a linked drill-down rather than mixing layouts.
 
+For a system/data/Agent overview with three or more layers and more than 14 visible concepts, prefer the reusable `layout: board` composition in [enterprise-board.md](enterprise-board.md). It is intentionally designed for a single dense executive/technical overview; do not split it merely because it exceeds the small-graph node guideline.
+
 ## 3. Copy/paste generation prompt
 
 ```text
@@ -48,6 +51,7 @@ You are designing an enterprise-grade diagram from structured business and techn
 
 Goal: {goal}
 Diagram type: {diagram_type}
+Composition: {graph_or_board}
 Audience: {audience}
 Scope: {scope}
 Content: {content}
@@ -65,9 +69,9 @@ Requirements:
 2. Apply the fixed layout contract for {diagram_type}; use one dominant reading direction.
 3. Use concise Chinese primary labels and English technical subtitles where useful.
 4. Use semantic node types and edge kinds; mark intentional cycles as feedback.
-5. Target 4–10 nodes and split views above 14 nodes unless a single overview is essential.
-6. Output valid VisualSpec JSON with title, subtitle, diagram_type, direction, theme, nodes, edges, optional groups, lanes, rank hints, brand, and legend. Use a version 3.0 workspace when linked views are needed.
-7. After rendering, run strict validation and report any visual review that could not be completed.
+5. For graph composition, target 4–10 nodes and split views above 14 nodes. For board composition, use 3–6 scan bands and 20–45 concise cards with one visual center.
+6. Output valid VisualSpec JSON. Use graph nodes/edges or board sections/blocks/connections/flow/principles; never mix the two structures.
+7. Render JSON, SVG, HTML, PNG, and quality evidence. Inspect the 1920-pixel PNG, fix source/layout issues, and rerender before delivery.
 ```
 
 Append the selected type guide's input fields and fixed layout rules. Do not copy all type guides into one prompt.

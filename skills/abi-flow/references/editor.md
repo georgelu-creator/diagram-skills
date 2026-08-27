@@ -1,6 +1,6 @@
 # Browser editor
 
-Use VisualSpec Studio when the task needs direct manipulation, live source validation, swimlanes, manual hierarchy, imports, brand preview, or multi-view drill-down. The Python CLI remains the stable automation and export path; the editor is an additional workspace surface.
+Use VisualSpec Studio only when the task needs direct graph manipulation, live source validation, swimlanes, manual hierarchy, imports, brand preview, or multi-view drill-down. The Python CLI is the primary generation and export path; the editor is an additional workspace surface. High-density `layout: board` sources use their generated zoomable HTML for inspection and are not edited in Studio.
 
 ## Start locally
 

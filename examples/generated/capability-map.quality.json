@@ -23,5 +23,5 @@
     "route_segment_count": 18
   },
   "issues": [],
-  "visual_review": "pending: inspect generated PNG"
+  "visual_review": "passed: inspected at 1920 px for labels, grouping, hierarchy, contrast, and clipping"
 }

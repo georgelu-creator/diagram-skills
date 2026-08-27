@@ -13,4 +13,6 @@ VisualSpec (formerly ABI Flow) is an original implementation. The dependency-fre
 
 Earlier design research also considered Mermaid, D2, Graphviz, diagrams.net, Excalidraw, and fireworks-tech-graph. The resulting VisualSpec schemas, rendering code, lane/rank adapter, import mappings, interface, prompts, and documentation were written for this repository.
 
+The built-in enterprise-board line icons are original generic interface glyphs. They do not reproduce or claim to be AWS, Azure, Google Cloud, Google Workspace, Slack, Figma, Notion, GitHub, or other vendor product marks. Product names in fictional examples are plain text labels used to describe integrations.
+
 Refer to `editor/package-lock.json` for the resolved dependency graph and to each upstream package for its license and notices.

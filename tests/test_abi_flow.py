@@ -118,6 +118,37 @@ class AbiFlowTests(unittest.TestCase):
         schema = json.loads((ROOT / "skills" / "abi-flow" / "references" / "spec.schema.json").read_text(encoding="utf-8"))
         self.assertEqual("object", schema["type"])
 
+    def test_enterprise_board_renders_high_density_infographic(self):
+        spec = json.loads((ROOT / "examples" / "enterprise-agent-office.json").read_text(encoding="utf-8"))
+        svg, page, report, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
+        self.assertEqual([], issues)
+        self.assertEqual("board", report["diagram"]["layout"])
+        self.assertEqual(5, report["diagram"]["groups"])
+        self.assertGreaterEqual(report["diagram"]["nodes"], 35)
+        self.assertEqual(0, report["geometry"]["node_overlap_count"])
+        self.assertIn("Memory MCP / API 网关", svg)
+        self.assertIn("数据流向说明", svg)
+        self.assertIn("Interactive diagram viewport", page)
+
+    def test_enterprise_board_rejects_unknown_references_and_icons(self):
+        spec = {
+            "title": "Invalid board",
+            "diagram_type": "system-architecture",
+            "layout": "board",
+            "sections": [{
+                "id": "entry", "label": "Entry", "tone": "blue",
+                "blocks": [{
+                    "id": "grid", "kind": "grid", "title": "Grid", "columns": 1, "icon": "unknown-icon",
+                    "cards": [{"id": "card", "label": "Card", "icon": "unknown-icon"}],
+                }],
+            }],
+            "connections": [{"source": "card", "target": "missing"}],
+        }
+        codes = {issue.code for issue in abi_flow.validate_spec(spec)}
+        self.assertIn("invalid-block-icon", codes)
+        self.assertIn("invalid-card-icon", codes)
+        self.assertIn("unknown-board-target", codes)
+
     def test_swimlanes_manual_ranks_and_brand_tokens_render(self):
         spec = {
             "title": "泳道发布流程",

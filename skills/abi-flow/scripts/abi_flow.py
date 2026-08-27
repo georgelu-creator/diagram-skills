@@ -116,6 +116,24 @@ EDGE_COLORS = {
     "async": "#64748b", "success": "#059669", "error": "#dc2626",
 }
 
+BOARD_LAYOUT = "board"
+BOARD_TONES = {
+    "blue": {"bg": "#F4F8FF", "panel": "#FFFFFF", "stroke": "#7FB2F5", "ink": "#0B4F93", "icon": "#246BCE"},
+    "purple": {"bg": "#FAF7FF", "panel": "#FFFFFF", "stroke": "#B69AE9", "ink": "#5226A5", "icon": "#6D3BC3"},
+    "green": {"bg": "#F5FBF5", "panel": "#FFFFFF", "stroke": "#86C98A", "ink": "#176A31", "icon": "#23863B"},
+    "orange": {"bg": "#FFF9F3", "panel": "#FFFFFF", "stroke": "#F2B36F", "ink": "#783A05", "icon": "#A94F08"},
+    "teal": {"bg": "#F2FBFA", "panel": "#FFFFFF", "stroke": "#73C7BA", "ink": "#0D665C", "icon": "#128579"},
+    "slate": {"bg": "#F7F8FA", "panel": "#FFFFFF", "stroke": "#B8C1CC", "ink": "#354052", "icon": "#536174"},
+    "amber": {"bg": "#FFFBF0", "panel": "#FFFFFF", "stroke": "#E8C46D", "ink": "#8A5A08", "icon": "#A86F0A"},
+}
+BOARD_BLOCK_KINDS = {"grid", "banner", "list"}
+BOARD_ICON_NAMES = {
+    "agent", "api", "archive", "brain", "calendar", "chat", "check", "cloud", "code",
+    "database", "desktop", "document", "folder", "gateway", "graph", "image", "laptop",
+    "layers", "lock", "mail", "metrics", "model", "note", "phone", "prompt", "robot",
+    "schema", "search", "shield", "spark", "stream", "sync", "terminal", "test", "user",
+}
+
 
 def resolve_visual_tokens(spec: Dict[str, Any]) -> Tuple[Dict[str, str], Dict[str, str]]:
     """Resolve a preset plus a small, injection-safe brand-token override."""
@@ -326,15 +344,216 @@ def validate_workspace(workspace: Dict[str, Any]) -> List[Issue]:
     return issues
 
 
-def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
+def validate_board_spec(spec: Dict[str, Any]) -> List[Issue]:
+    """Validate the high-density enterprise infographic composition."""
     issues: List[Issue] = []
-    allowed_top = {"title", "subtitle", "diagram_type", "direction", "theme", "brand", "nodes", "edges", "groups", "lanes", "legend"}
+    allowed_top = {
+        "title", "subtitle", "diagram_type", "layout", "theme", "brand", "sections",
+        "connections", "flow", "principles",
+    }
+    for key in sorted(set(spec) - allowed_top):
+        issues.append(Issue("warning", "unknown-field", f"Unknown board field: {key}"))
+    if not isinstance(spec.get("title"), str) or not spec.get("title", "").strip():
+        issues.append(Issue("error", "missing-title", "title must be a non-empty string"))
+    if "subtitle" in spec and not isinstance(spec["subtitle"], str):
+        issues.append(Issue("error", "invalid-subtitle", "subtitle must be a string"))
+    if spec.get("layout") != BOARD_LAYOUT:
+        issues.append(Issue("error", "invalid-board-layout", "board specifications must use layout: board"))
+    if spec.get("diagram_type", "system-architecture") not in DIAGRAM_TYPES:
+        issues.append(Issue("error", "invalid-diagram-type", f"diagram_type must be one of: {', '.join(sorted(DIAGRAM_TYPES))}"))
+    if spec.get("theme", "paper") not in THEMES:
+        issues.append(Issue("error", "invalid-theme", f"theme must be one of: {', '.join(sorted(THEMES))}"))
+
+    brand = spec.get("brand")
+    if brand is not None:
+        if not isinstance(brand, dict):
+            issues.append(Issue("error", "invalid-brand", "brand must be an object"))
+        else:
+            unknown_brand = sorted(set(brand) - ({"name"} | BRAND_COLOR_FIELDS))
+            for field in unknown_brand:
+                issues.append(Issue("warning", "unknown-brand-field", f"Unknown brand field: {field}"))
+            if "name" in brand and (not isinstance(brand["name"], str) or not brand["name"].strip()):
+                issues.append(Issue("error", "invalid-brand-name", "brand.name must be a non-empty string"))
+            for field in BRAND_COLOR_FIELDS:
+                if field in brand and (not isinstance(brand[field], str) or not HEX_COLOR_RE.fullmatch(brand[field])):
+                    issues.append(Issue("error", "invalid-brand-color", f"brand.{field} must be a six- or eight-digit hex color"))
+
+    sections = spec.get("sections")
+    if not isinstance(sections, list) or not sections:
+        return issues + [Issue("error", "missing-sections", "board sections must be a non-empty array")]
+    if len(sections) > 9:
+        issues.append(Issue("warning", "too-many-sections", "A board should contain at most nine scan bands"))
+
+    ids: List[str] = []
+    for section_index, section in enumerate(sections):
+        if not isinstance(section, dict):
+            issues.append(Issue("error", "invalid-section", f"sections[{section_index}] must be an object"))
+            continue
+        section_id = section.get("id")
+        if not isinstance(section_id, str) or not ID_RE.fullmatch(section_id):
+            issues.append(Issue("error", "invalid-section-id", f"sections[{section_index}].id is invalid"))
+        elif section_id in ids:
+            issues.append(Issue("error", "duplicate-board-id", f"Duplicate board id: {section_id}"))
+        else:
+            ids.append(section_id)
+        if not isinstance(section.get("label"), str) or not section.get("label", "").strip():
+            issues.append(Issue("error", "missing-section-label", f"sections[{section_index}].label must be non-empty"))
+        elif display_units(section["label"]) > 32:
+            issues.append(Issue("warning", "long-section-label", f"sections[{section_index}].label is too long for the label rail"))
+        if "subtitle" in section and not isinstance(section["subtitle"], str):
+            issues.append(Issue("error", "invalid-section-subtitle", f"sections[{section_index}].subtitle must be a string"))
+        if section.get("tone", "blue") not in BOARD_TONES:
+            issues.append(Issue("error", "invalid-section-tone", f"sections[{section_index}].tone is unsupported"))
+        blocks = section.get("blocks")
+        if not isinstance(blocks, list) or not blocks:
+            issues.append(Issue("error", "missing-blocks", f"sections[{section_index}].blocks must be a non-empty array"))
+            continue
+        if len(blocks) > 4:
+            issues.append(Issue("warning", "too-many-blocks", f"Section {section_id!r} has more than four horizontal blocks"))
+        for block_index, block in enumerate(blocks):
+            location = f"sections[{section_index}].blocks[{block_index}]"
+            if not isinstance(block, dict):
+                issues.append(Issue("error", "invalid-block", f"{location} must be an object"))
+                continue
+            block_id = block.get("id")
+            if not isinstance(block_id, str) or not ID_RE.fullmatch(block_id):
+                issues.append(Issue("error", "invalid-block-id", f"{location}.id is invalid"))
+            elif block_id in ids:
+                issues.append(Issue("error", "duplicate-board-id", f"Duplicate board id: {block_id}"))
+            else:
+                ids.append(block_id)
+            kind = block.get("kind", "grid")
+            if kind not in BOARD_BLOCK_KINDS:
+                issues.append(Issue("error", "invalid-block-kind", f"{location}.kind must be grid, banner, or list"))
+            block_icon = block.get("icon")
+            if block_icon is not None and block_icon not in BOARD_ICON_NAMES:
+                issues.append(Issue("error", "invalid-block-icon", f"{location}.icon is unsupported"))
+            span = block.get("span", 1)
+            if not isinstance(span, int) or isinstance(span, bool) or not 1 <= span <= 8:
+                issues.append(Issue("error", "invalid-block-span", f"{location}.span must be an integer from 1 to 8"))
+            if kind in {"grid", "banner"} and (not isinstance(block.get("title"), str) or not block.get("title", "").strip()):
+                issues.append(Issue("error", "missing-block-title", f"{location}.title must be non-empty"))
+            elif isinstance(block.get("title"), str) and display_units(block["title"]) > 52:
+                issues.append(Issue("warning", "long-block-title", f"{location}.title is too long for a single-line block heading"))
+            for field in ("subtitle", "footer"):
+                if field in block and not isinstance(block[field], str):
+                    issues.append(Issue("error", f"invalid-block-{field}", f"{location}.{field} must be a string"))
+            if kind == "grid":
+                columns = block.get("columns", 3)
+                if not isinstance(columns, int) or isinstance(columns, bool) or not 1 <= columns <= 7:
+                    issues.append(Issue("error", "invalid-grid-columns", f"{location}.columns must be an integer from 1 to 7"))
+                cards = block.get("cards")
+                if not isinstance(cards, list) or not cards:
+                    issues.append(Issue("error", "missing-grid-cards", f"{location}.cards must be a non-empty array"))
+                    continue
+                for card_index, card in enumerate(cards):
+                    card_location = f"{location}.cards[{card_index}]"
+                    if not isinstance(card, dict):
+                        issues.append(Issue("error", "invalid-card", f"{card_location} must be an object"))
+                        continue
+                    card_id = card.get("id")
+                    if not isinstance(card_id, str) or not ID_RE.fullmatch(card_id):
+                        issues.append(Issue("error", "invalid-card-id", f"{card_location}.id is invalid"))
+                    elif card_id in ids:
+                        issues.append(Issue("error", "duplicate-board-id", f"Duplicate board id: {card_id}"))
+                    else:
+                        ids.append(card_id)
+                    if not isinstance(card.get("label"), str) or not card.get("label", "").strip():
+                        issues.append(Issue("error", "missing-card-label", f"{card_location}.label must be non-empty"))
+                    elif display_units(card["label"]) > 28:
+                        issues.append(Issue("warning", "long-card-label", f"{card_location}.label is too long; use subtitle or split the card"))
+                    if "subtitle" in card and not isinstance(card["subtitle"], str):
+                        issues.append(Issue("error", "invalid-card-subtitle", f"{card_location}.subtitle must be a string"))
+                    elif display_units(card.get("subtitle", "")) > 34:
+                        issues.append(Issue("warning", "long-card-subtitle", f"{card_location}.subtitle is too long for one line"))
+                    icon = card.get("icon", "layers")
+                    if icon not in BOARD_ICON_NAMES:
+                        issues.append(Issue("error", "invalid-card-icon", f"{card_location}.icon is unsupported"))
+            elif kind == "list":
+                if not isinstance(block.get("title"), str) or not block.get("title", "").strip():
+                    issues.append(Issue("error", "missing-block-title", f"{location}.title must be non-empty"))
+                items = block.get("items")
+                if not isinstance(items, list) or not items or any(not isinstance(item, str) or not item.strip() for item in items):
+                    issues.append(Issue("error", "invalid-list-items", f"{location}.items must be a non-empty array of strings"))
+                elif any(display_units(item) > 40 for item in items):
+                    issues.append(Issue("warning", "long-list-item", f"{location}.items contains text too long for the side list"))
+
+    connections = spec.get("connections", [])
+    if not isinstance(connections, list):
+        issues.append(Issue("error", "invalid-connections", "connections must be an array"))
+        connections = []
+    for index, connection in enumerate(connections):
+        if not isinstance(connection, dict):
+            issues.append(Issue("error", "invalid-connection", f"connections[{index}] must be an object"))
+            continue
+        source, target = connection.get("source"), connection.get("target")
+        if source not in ids:
+            issues.append(Issue("error", "unknown-board-source", f"connections[{index}] references unknown source {source!r}"))
+        if target not in ids:
+            issues.append(Issue("error", "unknown-board-target", f"connections[{index}] references unknown target {target!r}"))
+        if connection.get("kind", "primary") not in EDGE_KINDS:
+            issues.append(Issue("error", "invalid-edge-kind", f"connections[{index}].kind is unsupported"))
+        if "label" in connection and not isinstance(connection["label"], str):
+            issues.append(Issue("error", "invalid-connection-label", f"connections[{index}].label must be a string"))
+        elif display_units(connection.get("label", "")) > 24:
+            issues.append(Issue("warning", "long-connection-label", f"connections[{index}].label is too long for an edge label"))
+        if "bidirectional" in connection and not isinstance(connection["bidirectional"], bool):
+            issues.append(Issue("error", "invalid-bidirectional", f"connections[{index}].bidirectional must be boolean"))
+
+    flow = spec.get("flow")
+    if flow is not None:
+        if not isinstance(flow, dict) or not isinstance(flow.get("steps"), list) or len(flow.get("steps", [])) < 2:
+            issues.append(Issue("error", "invalid-board-flow", "flow must contain at least two steps"))
+        else:
+            if not isinstance(flow.get("label"), str) or not flow.get("label", "").strip():
+                issues.append(Issue("error", "invalid-flow-label", "flow.label must be a non-empty string"))
+            if flow.get("tone", "amber") not in BOARD_TONES:
+                issues.append(Issue("error", "invalid-flow-tone", "flow.tone is unsupported"))
+            for index, step in enumerate(flow["steps"]):
+                if not isinstance(step, dict) or not isinstance(step.get("label"), str) or not step.get("label", "").strip():
+                    issues.append(Issue("error", "invalid-flow-step", f"flow.steps[{index}] must contain a label"))
+                    continue
+                if display_units(step["label"]) > 24:
+                    issues.append(Issue("warning", "long-flow-label", f"flow.steps[{index}].label is too long"))
+                if "subtitle" in step and not isinstance(step["subtitle"], str):
+                    issues.append(Issue("error", "invalid-flow-subtitle", f"flow.steps[{index}].subtitle must be a string"))
+                elif display_units(step.get("subtitle", "")) > 32:
+                    issues.append(Issue("warning", "long-flow-subtitle", f"flow.steps[{index}].subtitle is too long"))
+                if step.get("icon", "check") not in BOARD_ICON_NAMES:
+                    issues.append(Issue("error", "invalid-flow-icon", f"flow.steps[{index}].icon is unsupported"))
+    principles = spec.get("principles")
+    if principles is not None:
+        if not isinstance(principles, list) or not principles:
+            issues.append(Issue("error", "invalid-principles", "principles must be a non-empty array"))
+        else:
+            for index, principle in enumerate(principles):
+                if not isinstance(principle, dict) or not isinstance(principle.get("label"), str) or not principle.get("label", "").strip():
+                    issues.append(Issue("error", "invalid-principle", f"principles[{index}] must contain a label"))
+                    continue
+                if display_units(principle["label"]) > 24:
+                    issues.append(Issue("warning", "long-principle-label", f"principles[{index}].label is too long"))
+                if "subtitle" in principle and not isinstance(principle["subtitle"], str):
+                    issues.append(Issue("error", "invalid-principle-subtitle", f"principles[{index}].subtitle must be a string"))
+                elif display_units(principle.get("subtitle", "")) > 32:
+                    issues.append(Issue("warning", "long-principle-subtitle", f"principles[{index}].subtitle is too long"))
+                if principle.get("icon", "check") not in BOARD_ICON_NAMES:
+                    issues.append(Issue("error", "invalid-principle-icon", f"principles[{index}].icon is unsupported"))
+    return issues
+
+
+def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
+    if spec.get("layout") == BOARD_LAYOUT:
+        return validate_board_spec(spec)
+    issues: List[Issue] = []
+    allowed_top = {"title", "subtitle", "diagram_type", "direction", "layout", "theme", "brand", "nodes", "edges", "groups", "lanes", "legend"}
     for key in sorted(set(spec) - allowed_top):
         issues.append(Issue("warning", "unknown-field", f"Unknown top-level field: {key}"))
     if not isinstance(spec.get("title"), str) or not spec.get("title", "").strip():
         issues.append(Issue("error", "missing-title", "title must be a non-empty string"))
     if spec.get("direction", "LR") not in DIRECTIONS:
         issues.append(Issue("error", "invalid-direction", "direction must be LR or TB"))
+    if spec.get("layout", "graph") != "graph":
+        issues.append(Issue("error", "invalid-layout", "layout must be graph or board"))
     if spec.get("theme", "paper") not in THEMES:
         issues.append(Issue("error", "invalid-theme", f"theme must be one of: {', '.join(sorted(THEMES))}"))
     if spec.get("diagram_type", "process-flow") not in DIAGRAM_TYPES:
@@ -982,6 +1201,316 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     return "\n".join(lines)
 
 
+def board_block_height(block: Dict[str, Any]) -> float:
+    kind = block.get("kind", "grid")
+    if kind == "banner":
+        return 72.0
+    if kind == "list":
+        return 48.0 + len(block.get("items", [])) * 22.0 + 16.0
+    columns = max(1, int(block.get("columns", 3)))
+    rows = max(1, math.ceil(len(block.get("cards", [])) / columns))
+    header = 38.0 if str(block.get("title", "")).strip() else 0.0
+    footer = 31.0 if str(block.get("footer", "")).strip() else 0.0
+    return 24.0 + header + rows * 54.0 + max(0, rows - 1) * 8.0 + footer
+
+
+def layout_board(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, Any], List[Dict[str, Any]]]:
+    width = 1800.0
+    outer_x, outer_w = 20.0, width - 40.0
+    rail_w, gap = 184.0, 12.0
+    content_x = outer_x + rail_w + 12.0
+    content_w = outer_w - rail_w - 24.0
+    y = 96.0
+    section_gap = 12.0
+    anchors: Dict[str, Box] = {}
+    leaf_boxes: Dict[str, Box] = {}
+    section_frames: List[Dict[str, Any]] = []
+
+    for section_index, section in enumerate(spec.get("sections", [])):
+        blocks = section["blocks"]
+        measured = [board_block_height(block) for block in blocks]
+        inner_h = max(measured)
+        section_h = inner_h + 24.0
+        frame = {
+            "spec": section, "x": outer_x, "y": y, "w": outer_w, "h": section_h,
+            "content_x": content_x, "content_w": content_w, "blocks": [],
+        }
+        anchors[section["id"]] = Box(section["id"], outer_x, y, outer_w, section_h, section_index, [])
+        spans = [block.get("span", 1) for block in blocks]
+        usable_w = content_w - gap * max(0, len(blocks) - 1)
+        cursor_x = content_x
+        allocated = 0.0
+        for block_index, (block, span) in enumerate(zip(blocks, spans)):
+            if block_index == len(blocks) - 1:
+                block_w = content_x + content_w - cursor_x
+            else:
+                block_w = usable_w * span / sum(spans)
+                allocated += block_w
+            block_y = y + 12.0 + max(0.0, (inner_h - measured[block_index]) / 2.0)
+            block_h = measured[block_index]
+            block_frame = {"spec": block, "x": cursor_x, "y": block_y, "w": block_w, "h": block_h, "cards": []}
+            frame["blocks"].append(block_frame)
+            anchors[block["id"]] = Box(block["id"], cursor_x, block_y, block_w, block_h, section_index, [])
+
+            if block.get("kind", "grid") == "grid":
+                cards = block.get("cards", [])
+                columns = min(max(1, int(block.get("columns", 3))), max(1, len(cards)))
+                header = 38.0 if str(block.get("title", "")).strip() else 0.0
+                card_gap = 8.0
+                card_w = (block_w - 24.0 - card_gap * max(0, columns - 1)) / columns
+                card_y = block_y + 12.0 + header
+                for card_index, card in enumerate(cards):
+                    row, column = divmod(card_index, columns)
+                    card_x = cursor_x + 12.0 + column * (card_w + card_gap)
+                    current_y = card_y + row * 62.0
+                    box = Box(card["id"], card_x, current_y, card_w, 54.0, section_index, [])
+                    leaf_boxes[card["id"]] = box
+                    anchors[card["id"]] = box
+                    block_frame["cards"].append({"spec": card, "box": box})
+            cursor_x += block_w + gap
+        section_frames.append(frame)
+        y += section_h + section_gap
+
+    flow_frame = None
+    flow = spec.get("flow")
+    if isinstance(flow, dict) and flow.get("steps"):
+        flow_frame = {"spec": flow, "x": outer_x, "y": y, "w": outer_w, "h": 98.0, "steps": []}
+        step_gap = 10.0
+        steps = flow["steps"]
+        step_w = (content_w - step_gap * max(0, len(steps) - 1)) / len(steps)
+        for index, step in enumerate(steps):
+            box = Box(f"flow-{index}", content_x + index * (step_w + step_gap), y + 15.0, step_w, 68.0, index, [])
+            flow_frame["steps"].append({"spec": step, "box": box})
+            leaf_boxes[box.node_id] = box
+        y += 98.0 + section_gap
+
+    principles_frame = None
+    principles = spec.get("principles")
+    if isinstance(principles, list) and principles:
+        principles_frame = {"items": principles, "x": outer_x, "y": y, "w": outer_w, "h": 108.0, "cards": []}
+        card_gap = 10.0
+        card_w = (content_w - card_gap * max(0, len(principles) - 1)) / len(principles)
+        for index, principle in enumerate(principles):
+            box = Box(f"principle-{index}", content_x + index * (card_w + card_gap), y + 15.0, card_w, 78.0, index, [])
+            principles_frame["cards"].append({"spec": principle, "box": box})
+            leaf_boxes[box.node_id] = box
+        y += 108.0
+
+    canvas = {
+        "width": width, "height": round(y + 22.0, 1), "margin": 42.0, "title_h": 96.0,
+        "sections": section_frames, "flow": flow_frame, "principles": principles_frame,
+        "rail_w": rail_w, "content_x": content_x, "content_w": content_w, "anchors": anchors,
+        "legend": 0, "content_bottom": y, "content_right": width - 20.0,
+    }
+    routes = route_board_connections(spec, anchors)
+    return leaf_boxes, canvas, routes
+
+
+def route_board_connections(spec: Dict[str, Any], anchors: Dict[str, Box]) -> List[Dict[str, Any]]:
+    routes: List[Dict[str, Any]] = []
+    for index, connection in enumerate(spec.get("connections", [])):
+        source = anchors[connection["source"]]
+        target = anchors[connection["target"]]
+        if target.top >= source.bottom:
+            start_x = min(max(source.cx, target.left + 14.0), target.right - 14.0)
+            start = (start_x, source.bottom)
+            end = (start_x, target.top)
+            points = [start, end]
+        elif source.top >= target.bottom:
+            start_x = min(max(source.cx, target.left + 14.0), target.right - 14.0)
+            start = (start_x, source.top)
+            end = (start_x, target.bottom)
+            points = [start, end]
+        elif target.left >= source.right:
+            start, end = (source.right, source.cy), (target.left, target.cy)
+            corridor = (start[0] + end[0]) / 2.0
+            points = [start, (corridor, start[1]), (corridor, end[1]), end]
+        else:
+            start, end = (source.left, source.cy), (target.right, target.cy)
+            corridor = (start[0] + end[0]) / 2.0
+            points = [start, (corridor, start[1]), (corridor, end[1]), end]
+        edge = {
+            "source": connection["source"], "target": connection["target"],
+            "kind": connection.get("kind", "primary"), "label": connection.get("label", ""),
+            "bidirectional": bool(connection.get("bidirectional", False)),
+        }
+        routes.append({"index": index, "edge": edge, "points": dedupe_points(points)})
+    return routes
+
+
+def board_icon(name: str, x: float, y: float, size: float, color: str) -> str:
+    scale = size / 24.0
+    common = f'fill="none" stroke="{color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"'
+    icons = {
+        "phone": '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+        "laptop": '<rect x="4" y="4" width="16" height="13" rx="1.5"/><path d="M2 20h20M8 20h8"/>',
+        "desktop": '<rect x="3" y="3" width="18" height="13" rx="1.5"/><path d="M12 16v5M8 21h8"/>',
+        "terminal": '<rect x="3" y="4" width="18" height="16" rx="3"/><path d="m7 9 3 3-3 3M13 15h4"/>',
+        "gateway": '<path d="M9 18H6a4 4 0 0 1 0-8h1M15 6h3a4 4 0 0 1 0 8h-1M8 12h8"/>',
+        "api": '<path d="M4 8h16M4 16h16M8 4v16M16 4v16"/>',
+        "note": '<path d="M5 3h11l3 3v15H5zM16 3v4h4M8 11h8M8 15h6"/>',
+        "document": '<path d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/>',
+        "search": '<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6M10 7v6"/>',
+        "graph": '<circle cx="5" cy="12" r="2"/><circle cx="18" cy="5" r="2"/><circle cx="19" cy="18" r="2"/><path d="m7 11 9-5M7 13l10 4M18 7v9"/>',
+        "brain": '<path d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/>',
+        "calendar": '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M7 14h3M14 14h3M7 18h3"/>',
+        "chat": '<path d="M4 4h16v12H9l-5 4zM8 9h8M8 13h5"/>',
+        "mail": '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/>',
+        "folder": '<path d="M3 6h7l2 3h9v11H3z"/>',
+        "database": '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+        "code": '<path d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/>',
+        "prompt": '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M12 15h5"/>',
+        "test": '<path d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/>',
+        "archive": '<rect x="3" y="5" width="18" height="4" rx="1"/><path d="M5 9v11h14V9M9 13h6"/>',
+        "lock": '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/>',
+        "cloud": '<path d="M7 19h11a4 4 0 0 0 .4-8 7 7 0 0 0-13.3-1.7A5 5 0 0 0 7 19z"/>',
+        "sync": '<path d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/>',
+        "shield": '<path d="M12 2 20 5v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5zM8 12l3 3 5-6"/>',
+        "check": '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 6-7"/>',
+        "robot": '<rect x="4" y="7" width="16" height="13" rx="3"/><path d="M12 3v4M9 12h.1M15 12h.1M8 16h8M2 11h2M20 11h2"/>',
+        "agent": '<circle cx="12" cy="9" r="4"/><path d="M4 21a8 8 0 0 1 16 0M18 4l1 1 2-2"/>',
+        "user": '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+        "schema": '<rect x="3" y="3" width="7" height="6" rx="1"/><rect x="14" y="15" width="7" height="6" rx="1"/><path d="M10 6h5a3 3 0 0 1 3 3v6M7 9v6a3 3 0 0 0 3 3h4"/>',
+        "stream": '<path d="M3 7h12a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 17h8"/>',
+        "metrics": '<path d="M4 20V10M10 20V4M16 20v-7M22 20V7M2 20h21"/>',
+        "model": '<path d="m12 2 8 5-8 5-8-5zM4 12l8 5 8-5M4 17l8 5 8-5"/>',
+        "spark": '<path d="m12 2 1.7 5.3L19 9l-5.3 1.7L12 16l-1.7-5.3L5 9l5.3-1.7zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+        "layers": '<path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5M3 18l9 5 9-5"/>',
+        "image": '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 17 5-5 4 4 3-3 4 4"/>',
+    }
+    body = icons.get(name, icons["layers"])
+    body = body.replace("<path ", '<path fill="none" ').replace("<rect ", '<rect fill="none" ').replace("<circle ", '<circle fill="none" ').replace("<ellipse ", '<ellipse fill="none" ')
+    return f'<g transform="translate({x:g} {y:g}) scale({scale:g})" {common}>{body}</g>'
+
+
+def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Sequence[Dict[str, Any]]) -> str:
+    width, height = canvas["width"], canvas["height"]
+    _, edge_colors = resolve_visual_tokens(spec)
+    primary = spec.get("brand", {}).get("primary", "#246BCE") if isinstance(spec.get("brand"), dict) else "#246BCE"
+    title = esc(spec["title"])
+    subtitle = esc(spec.get("subtitle", ""))
+    desc = esc(f"High-density {DIAGRAM_TYPES[spec.get('diagram_type', 'system-architecture')]} with {len(spec.get('sections', []))} sections")
+    lines = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
+        f'<title id="abi-title">{title}</title><desc id="abi-desc">{desc}</desc>',
+        '<defs>',
+    ]
+    for kind in EDGE_KINDS:
+        color = edge_colors[kind]
+        lines.append(f'<marker id="arrow-{kind}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>')
+    lines.extend([
+        '</defs>',
+        '<style>',
+        '.board{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff}.board text{fill:#192132}.board-title{font-size:28px;font-weight:700;text-anchor:middle}.board-subtitle{font-size:12px;fill:#667085;text-anchor:middle;letter-spacing:.2px}.section-label{font-size:16px;font-weight:700}.section-subtitle{font-size:11px;font-weight:500}.block-title{font-size:15px;font-weight:700;text-anchor:middle}.block-subtitle{font-size:10.5px;fill:#667085;text-anchor:middle}.card-title{font-size:12.2px;font-weight:650}.card-subtitle{font-size:9.6px;fill:#536174}.list-title{font-size:13px;font-weight:700}.list-item{font-size:10.6px}.footer-text{font-size:10.5px;font-weight:650;text-anchor:middle}.flow-title,.principles-title{font-size:15px;font-weight:700}.step-title{font-size:11.4px;font-weight:650}.step-subtitle{font-size:9.2px;fill:#667085}.connection{fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.connection-label{font-size:9.5px;font-weight:650;text-anchor:middle;fill:#536174}',
+        '</style>',
+        f'<rect width="{width:g}" height="{height:g}" fill="#FFFFFF"/>',
+        f'<rect x="0" y="0" width="{width:g}" height="84" fill="#FBFCFE"/>',
+        f'<rect x="{width / 2 - 34:g}" y="77" width="68" height="3" rx="1.5" fill="{primary}"/>',
+        f'<text class="board-title" x="{width / 2:g}" y="39">{title}</text>',
+    ])
+    if subtitle:
+        lines.append(f'<text class="board-subtitle" x="{width / 2:g}" y="64">{subtitle}</text>')
+
+    for frame in canvas["sections"]:
+        section = frame["spec"]
+        tone = BOARD_TONES[section.get("tone", "blue")]
+        lines.append(f'<g class="board-section"><rect x="{frame["x"]:g}" y="{frame["y"]:g}" width="{frame["w"]:g}" height="{frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}" stroke-width="1"/>')
+        label_lines = wrap_text(section["label"], 19)[:2]
+        label_y = frame["y"] + frame["h"] / 2 - (8 if len(label_lines) > 1 else 0)
+        for index, label_line in enumerate(label_lines):
+            lines.append(f'<text class="section-label" x="{frame["x"] + 20:g}" y="{label_y + index * 20:g}" fill="{tone["ink"]}">{esc(label_line)}</text>')
+        section_subtitle = str(section.get("subtitle", "")).strip()
+        if section_subtitle:
+            lines.append(f'<text class="section-subtitle" x="{frame["x"] + 20:g}" y="{label_y + len(label_lines) * 20 + 3:g}" fill="{tone["ink"]}">{esc(section_subtitle)}</text>')
+        lines.append(f'<path d="M {frame["content_x"] - 10:g} {frame["y"] + 12:g} V {frame["y"] + frame["h"] - 12:g}" fill="none" stroke="{tone["stroke"]}" stroke-width=".8"/>')
+
+        for block_frame in frame["blocks"]:
+            block = block_frame["spec"]
+            kind = block.get("kind", "grid")
+            x, y, w, h = block_frame["x"], block_frame["y"], block_frame["w"], block_frame["h"]
+            dash = ' stroke-dasharray="5 4"' if kind == "list" else ""
+            lines.append(f'<g class="board-block"><rect x="{x:g}" y="{y:g}" width="{w:g}" height="{h:g}" rx="11" fill="{tone["panel"]}" stroke="{tone["stroke"]}" stroke-width="1"{dash}/>')
+            if kind == "banner":
+                icon = block.get("icon", "gateway")
+                icon_x = x + w / 2 - 122.0
+                icon_y = y + h / 2 - 14.0
+                lines.append(board_icon(icon, icon_x, icon_y, 28.0, tone["icon"]))
+                lines.append(f'<text class="block-title" x="{x + w / 2 + 8:g}" y="{y + h / 2 - 4:g}" fill="{tone["ink"]}">{esc(block["title"])}</text>')
+                if block.get("subtitle"):
+                    lines.append(f'<text class="block-subtitle" x="{x + w / 2 + 8:g}" y="{y + h / 2 + 17:g}">{esc(block["subtitle"])}</text>')
+            elif kind == "list":
+                lines.append(f'<text class="list-title" x="{x + 14:g}" y="{y + 24:g}" fill="{tone["ink"]}">{esc(block["title"])}</text>')
+                for index, item in enumerate(block.get("items", [])):
+                    item_y = y + 48.0 + index * 22.0
+                    lines.append(board_icon("check", x + 13.0, item_y - 12.0, 13.0, tone["icon"]))
+                    lines.append(f'<text class="list-item" x="{x + 34:g}" y="{item_y:g}" fill="{tone["ink"]}">{esc(item)}</text>')
+            else:
+                header = 38.0 if str(block.get("title", "")).strip() else 0.0
+                if header:
+                    lines.append(f'<text class="block-title" x="{x + w / 2:g}" y="{y + 25:g}" fill="{tone["ink"]}">{esc(block["title"])}</text>')
+                for card_frame in block_frame["cards"]:
+                    card, box = card_frame["spec"], card_frame["box"]
+                    lines.append(f'<g class="board-card"><rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="8" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".8"/>')
+                    lines.append(board_icon(card.get("icon", "layers"), box.x + 11.0, box.y + 15.0, 23.0, tone["icon"]))
+                    text_x = box.x + 42.0
+                    lines.append(f'<text class="card-title" x="{text_x:g}" y="{box.y + 22:g}" fill="{tone["ink"]}">{esc(card["label"])}</text>')
+                    if card.get("subtitle"):
+                        lines.append(f'<text class="card-subtitle" x="{text_x:g}" y="{box.y + 40:g}">{esc(card["subtitle"])}</text>')
+                    lines.append('</g>')
+                footer = str(block.get("footer", "")).strip()
+                if footer:
+                    footer_y = y + h - 28.0
+                    lines.append(f'<rect x="{x + 12:g}" y="{footer_y:g}" width="{w - 24:g}" height="19" rx="5" fill="{tone["bg"]}" stroke="{tone["stroke"]}" stroke-width=".5"/>')
+                    lines.append(f'<text class="footer-text" x="{x + w / 2:g}" y="{footer_y + 13:g}" fill="{tone["ink"]}">{esc(footer)}</text>')
+            lines.append('</g>')
+        lines.append('</g>')
+
+    flow_frame = canvas.get("flow")
+    if flow_frame:
+        flow = flow_frame["spec"]
+        tone = BOARD_TONES[flow.get("tone", "amber")]
+        lines.append(f'<g class="board-flow"><rect x="{flow_frame["x"]:g}" y="{flow_frame["y"]:g}" width="{flow_frame["w"]:g}" height="{flow_frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}"/>')
+        lines.append(f'<text class="flow-title" x="{flow_frame["x"] + 20:g}" y="{flow_frame["y"] + 54:g}" fill="{tone["ink"]}">{esc(flow.get("label", "核心数据流"))}</text>')
+        for index, step_frame in enumerate(flow_frame["steps"]):
+            step, box = step_frame["spec"], step_frame["box"]
+            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".7"/>')
+            lines.append(board_icon(step.get("icon", "check"), box.x + 10.0, box.y + 21.0, 24.0, tone["icon"]))
+            lines.append(f'<text class="step-title" x="{box.x + 41:g}" y="{box.y + 27:g}" fill="{tone["ink"]}">{index + 1}. {esc(step["label"])}</text>')
+            if step.get("subtitle"):
+                lines.append(f'<text class="step-subtitle" x="{box.x + 41:g}" y="{box.y + 46:g}">{esc(step["subtitle"])}</text>')
+            if index + 1 < len(flow_frame["steps"]):
+                next_box = flow_frame["steps"][index + 1]["box"]
+                arrow_y = box.cy
+                lines.append(f'<path d="M {box.right + 2:g} {arrow_y:g} H {next_box.left - 3:g}" fill="none" stroke="{tone["icon"]}" stroke-width="1.4" marker-end="url(#arrow-control)"/>')
+        lines.append('</g>')
+
+    principles_frame = canvas.get("principles")
+    if principles_frame:
+        tone = BOARD_TONES["slate"]
+        lines.append(f'<g class="board-principles"><rect x="{principles_frame["x"]:g}" y="{principles_frame["y"]:g}" width="{principles_frame["w"]:g}" height="{principles_frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}"/>')
+        lines.append(f'<text class="principles-title" x="{principles_frame["x"] + 20:g}" y="{principles_frame["y"] + 58:g}" fill="{tone["ink"]}">核心原则</text>')
+        for card_frame in principles_frame["cards"]:
+            principle, box = card_frame["spec"], card_frame["box"]
+            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".7"/>')
+            lines.append(board_icon(principle.get("icon", "check"), box.x + 13.0, box.y + 25.0, 25.0, tone["icon"]))
+            lines.append(f'<text class="step-title" x="{box.x + 48:g}" y="{box.y + 31:g}" fill="{tone["ink"]}">{esc(principle["label"])}</text>')
+            if principle.get("subtitle"):
+                lines.append(f'<text class="step-subtitle" x="{box.x + 48:g}" y="{box.y + 51:g}">{esc(principle["subtitle"])}</text>')
+        lines.append('</g>')
+
+    for route in routes:
+        edge = route["edge"]
+        kind = edge.get("kind", "primary")
+        marker_start = f' marker-start="url(#arrow-{kind})"' if edge.get("bidirectional") else ""
+        lines.append(f'<path class="connection" d="{path_data(route["points"])}" fill="none" stroke="{edge_colors[kind]}" marker-end="url(#arrow-{kind})"{marker_start}/>')
+        label = str(edge.get("label", "")).strip()
+        if label:
+            x, y = label_position(route["points"])
+            lines.append(f'<text class="connection-label" x="{x:g}" y="{y - 4:g}">{esc(label)}</text>')
+    lines.append('</svg>')
+    return "\n".join(lines)
+
+
 HTML_STYLE = """
 :root{color-scheme:light dark;--shell:#f3f4f6;--panel:#fff;--text:#111827;--muted:#667085;--border:#d0d5dd}
 :root[data-ui-theme="dark"]{--shell:#080d14;--panel:#111821;--text:#f8fafc;--muted:#a8b3c2;--border:#334155}
@@ -1007,7 +1536,8 @@ HTML_SCRIPT = r"""
   document.getElementById('zoomIn').onclick = () => zoom(.82);
   document.getElementById('zoomOut').onclick = () => zoom(1.22);
   document.getElementById('reset').onclick = () => { view = {...base}; applyView(); };
-  document.getElementById('theme').onclick = () => {
+  const themeButton = document.getElementById('theme');
+  if (themeButton) themeButton.onclick = () => {
     const dark = root.dataset.uiTheme !== 'dark';
     root.dataset.uiTheme = dark ? 'dark' : 'light'; svg.dataset.theme = dark ? 'dark' : 'light';
   };
@@ -1034,11 +1564,12 @@ HTML_SCRIPT = r"""
 
 def render_html(spec: Dict[str, Any], svg: str) -> str:
     title = esc(spec["title"])
-    initial = "dark" if spec.get("theme") in {"blueprint", "terminal"} else "light"
+    initial = "dark" if spec.get("layout") != BOARD_LAYOUT and spec.get("theme") in {"blueprint", "terminal"} else "light"
+    theme_button = "" if spec.get("layout") == BOARD_LAYOUT else '<button id="theme" type="button">Light / dark</button>'
     return f"""<!doctype html>
 <html lang="en" data-ui-theme="{initial}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>{title}</title><style>{HTML_STYLE}</style></head>
-<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button><button id="theme" type="button">Light / dark</button><button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button>{theme_button}<button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
 
 
 def validate_svg(svg: str) -> List[Issue]:
@@ -1065,21 +1596,27 @@ def build(spec: Dict[str, Any], initial_issues: Sequence[Issue]) -> Tuple[str, s
     issues = list(initial_issues)
     if any(issue.level == "error" for issue in issues):
         return "", "", {}, issues
-    boxes, canvas, _ = layout_graph(spec)
-    routes = route_edges(spec, boxes, canvas)
-    issues.extend(geometry_issues(routes, boxes))
-    issues.extend(group_geometry_issues(spec, boxes))
-    svg = render_svg(spec, boxes, canvas, routes)
+    if spec.get("layout") == BOARD_LAYOUT:
+        boxes, canvas, routes = layout_board(spec)
+        issues.extend(geometry_issues(routes, boxes))
+        svg = render_board_svg(spec, canvas, routes)
+    else:
+        boxes, canvas, _ = layout_graph(spec)
+        routes = route_edges(spec, boxes, canvas)
+        issues.extend(geometry_issues(routes, boxes))
+        issues.extend(group_geometry_issues(spec, boxes))
+        svg = render_svg(spec, boxes, canvas, routes)
     issues.extend(validate_svg(svg))
     quality = quality_report(spec, boxes, canvas, routes, issues)
     return svg, render_html(spec, svg), quality, issues
 
 
 def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, float], routes: Sequence[Dict[str, Any]], issues: Sequence[Issue]) -> Dict[str, Any]:
+    is_board = spec.get("layout") == BOARD_LAYOUT
     return {
         "schema_version": 2,
         "status": "passed" if not any(issue.level == "error" for issue in issues) else "failed",
-        "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "nodes": len(spec.get("nodes", [])), "edges": len(spec.get("edges", [])), "groups": len(spec.get("groups", [])), "lanes": len(spec.get("lanes", [])), "direction": spec.get("direction", "LR"), "theme": spec.get("theme", "paper"), "brand": spec.get("brand", {}).get("name") if isinstance(spec.get("brand"), dict) else None},
+        "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "layout": spec.get("layout", "graph"), "nodes": len(boxes) if is_board else len(spec.get("nodes", [])), "edges": len(spec.get("connections", [])) if is_board else len(spec.get("edges", [])), "groups": len(spec.get("sections", [])) if is_board else len(spec.get("groups", [])), "lanes": 0 if is_board else len(spec.get("lanes", [])), "direction": "TB" if is_board else spec.get("direction", "LR"), "theme": spec.get("theme", "paper"), "brand": spec.get("brand", {}).get("name") if isinstance(spec.get("brand"), dict) else None},
         "canvas": {"width": canvas.get("width"), "height": canvas.get("height")},
         "geometry": {
             "node_overlap_count": count_node_overlaps(list(boxes.values())),
