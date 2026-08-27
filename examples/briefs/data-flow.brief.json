@@ -1,0 +1,24 @@
+{
+  "goal": "Trace how product events become governed realtime and historical inputs for AI decisions and product feedback.",
+  "audience": "Data, AI platform, and product engineering teams",
+  "narrative": "Business events enter through one ingestion path, pass a named quality gate, split into realtime and historical processing, feed model decisions, and return product outcomes as feedback.",
+  "scope": "Logical data lineage from product sources through ingestion, governance, computation, storage, model serving, and experience; concrete vendors, latency guarantees, schemas, and retention rules are outside scope.",
+  "diagram_type": "data-flow",
+  "composition": "graph",
+  "must_show": ["Business event provenance", "CDC/API/queue ingestion", "Schema and PII quality gate", "Realtime computation", "Historical Lakehouse", "Model or Agent consumption", "Product experience consumer", "Outcome feedback"],
+  "emphasize": ["All paths pass through quality and contract checks", "Realtime signals and historical context remain distinct", "The experience produces an explicit feedback event"],
+  "deemphasize": ["Specific cloud vendors", "Physical deployment zones", "Unsupported latency targets"],
+  "relationships": ["Events enter the connector asynchronously", "The connector invokes validation", "Validated data splits to realtime compute and Lakehouse history", "Signals and context feed the model", "Model decisions reach the product experience", "Experience outcomes return as feedback events"],
+  "uncertainties": ["Realtime latency and delivery guarantees are unspecified", "The authoritative retention policy is unspecified"],
+  "assumptions": ["Lakehouse represents historical authoritative data for this conceptual view", "Feedback returns as a new business event rather than a direct model mutation"],
+  "density": "medium",
+  "content_risks": ["Do not imply a realtime SLA", "Do not present the Lakehouse and Event Bus as interchangeable", "Do not hide governance behind a generic ingestion box", "Do not confuse runtime service dependencies with data lineage"],
+  "quality_questions": ["Can every important output be traced back to a source?", "Are transformations named by what changes, not by vague service labels?", "Are authoritative stores distinguishable from indexes, caches, or queues?", "Is timing semantics shown only when supported?", "Are sensitive or trust-boundary crossings visible when provided?"],
+  "review_answers": [
+    {"question": "Can every important output be traced back to a source?", "status": "pass", "evidence": "The visible path begins at 业务事件, crosses 接入总线 and 质量与契约, then reaches both 模型与 Agent and 产品体验 before feedback returns to the source."},
+    {"question": "Are transformations named by what changes, not by vague service labels?", "status": "pass", "evidence": "Edge labels raw, validate, clean, batch, signals, context, and decision name the visible data state or operation at each transition."},
+    {"question": "Are authoritative stores distinguishable from indexes, caches, or queues?", "status": "pass", "evidence": "Lakehouse is the only database-shaped historical store and is labelled History · Replay · Training; no cache or queue is incorrectly presented as authoritative storage."},
+    {"question": "Is timing semantics shown only when supported?", "status": "pass", "evidence": "Async styling is limited to raw event ingestion and realtime signals, while the separate batch edge into Lakehouse avoids claiming unsupported end-to-end latency."},
+    {"question": "Are sensitive or trust-boundary crossings visible when provided?", "status": "pass", "evidence": "The only supplied sensitivity fact, PII, is visibly named inside the 质量与契约 gate; no unsupported trust zone or security boundary is invented."}
+  ]
+}

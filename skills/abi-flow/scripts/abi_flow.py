@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""VisualSpec: deterministic, dependency-free diagram renderer."""
+"""DiagramSpec: deterministic, dependency-free diagram renderer."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
+import importlib.util
 import json
 import math
 import re
@@ -20,11 +22,13 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 from urllib.parse import urlparse
 
 
-NODE_TYPES = {"process", "decision", "input", "document", "database", "agent", "external"}
-EDGE_KINDS = {"primary", "control", "feedback", "async", "success", "error"}
-THEMES = {"paper", "notion", "spectrum", "blueprint", "terminal"}
-DIRECTIONS = {"LR", "TB"}
-BRAND_COLOR_FIELDS = {"primary", "accent", "page", "surface", "ink", "muted", "hair", "group", "group_stroke"}
+NODE_TYPES = ("process", "decision", "input", "document", "database", "agent", "external")
+EDGE_KINDS = ("primary", "control", "feedback", "async", "success", "error")
+THEMES = ("paper", "notion", "spectrum", "blueprint", "terminal")
+DIRECTIONS = ("LR", "TB")
+# Order is part of the rendering contract. In particular, an explicit
+# group_stroke must override the accent-derived group emphasis.
+BRAND_COLOR_FIELDS = ("primary", "accent", "page", "surface", "ink", "muted", "hair", "group", "group_stroke")
 DIAGRAM_TYPES = {
     "system-architecture": "系统架构图 / System Architecture",
     "agent-workflow": "Agent 工作流 / Agent Workflow",
@@ -41,6 +45,7 @@ ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
 HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$")
 ALLOWED_LINK_SCHEMES = {"http", "https", "mailto"}
 TEMPLATE_DIR = Path(__file__).resolve().parents[1] / "templates"
+SPEC_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "references" / "spec.schema.json"
 
 EDGE_LABELS = {
     "primary": "Primary flow",
@@ -116,6 +121,15 @@ EDGE_COLORS = {
     "async": "#64748b", "success": "#059669", "error": "#dc2626",
 }
 
+EDGE_STYLES = {
+    "primary": {"dash": "", "width": 2.0},
+    "control": {"dash": "7 3", "width": 1.8},
+    "feedback": {"dash": "10 4", "width": 2.1},
+    "async": {"dash": "2 5", "width": 2.0},
+    "success": {"dash": "", "width": 2.7},
+    "error": {"dash": "4 3", "width": 2.3},
+}
+
 BOARD_LAYOUT = "board"
 BOARD_TONES = {
     "blue": {"bg": "#F4F8FF", "panel": "#FFFFFF", "stroke": "#7FB2F5", "ink": "#0B4F93", "icon": "#246BCE"},
@@ -126,6 +140,7 @@ BOARD_TONES = {
     "slate": {"bg": "#F7F8FA", "panel": "#FFFFFF", "stroke": "#B8C1CC", "ink": "#354052", "icon": "#536174"},
     "amber": {"bg": "#FFFBF0", "panel": "#FFFFFF", "stroke": "#E8C46D", "ink": "#8A5A08", "icon": "#A86F0A"},
 }
+BOARD_TONE_INDEX = {name: index for index, name in enumerate(BOARD_TONES)}
 BOARD_BLOCK_KINDS = {"grid", "banner", "list"}
 BOARD_ICON_NAMES = {
     "agent", "api", "archive", "brain", "calendar", "chat", "check", "cloud", "code",
@@ -133,6 +148,29 @@ BOARD_ICON_NAMES = {
     "layers", "lock", "mail", "metrics", "model", "note", "phone", "prompt", "robot",
     "schema", "search", "shield", "spark", "stream", "sync", "terminal", "test", "user",
 }
+
+
+def resolve_board_tone(spec: Dict[str, Any], tone_name: str, tokens: Dict[str, str], edge_colors: Dict[str, str]) -> Dict[str, str]:
+    """Resolve board bands without silently discarding theme or brand tokens."""
+    base = BOARD_TONES[tone_name]
+    theme = spec.get("theme", "paper")
+    brand = spec.get("brand", {}) if isinstance(spec.get("brand"), dict) else {}
+    if theme == "paper":
+        return {
+            "bg": brand.get("group", base["bg"]),
+            "panel": brand.get("surface", base["panel"]),
+            "stroke": brand.get("group_stroke", brand.get("accent", base["stroke"])),
+            "ink": brand.get("ink", base["ink"]),
+            "icon": brand.get("primary", base["icon"]),
+        }
+    index = BOARD_TONE_INDEX[tone_name] % 6
+    return {
+        "bg": tokens[f"group-tone-{index}"],
+        "panel": tokens["surface"],
+        "stroke": tokens["group_stroke"],
+        "ink": tokens["ink"],
+        "icon": edge_colors["primary"] if "primary" in brand else tokens["group_stroke"],
+    }
 
 
 def resolve_visual_tokens(spec: Dict[str, Any]) -> Tuple[Dict[str, str], Dict[str, str]]:
@@ -159,6 +197,9 @@ def resolve_visual_tokens(spec: Dict[str, Any]) -> Tuple[Dict[str, str], Dict[st
             elif field == "hair":
                 for node_type in NODE_TYPES:
                     tokens[f"node-{node_type}-stroke"] = value
+            elif field == "group":
+                for index in range(6):
+                    tokens[f"group-tone-{index}"] = value
     return tokens, edges
 
 
@@ -170,6 +211,133 @@ class Issue:
 
     def as_dict(self) -> Dict[str, str]:
         return {"level": self.level, "code": self.code, "message": self.message}
+
+
+_SPEC_SCHEMA: Optional[Dict[str, Any]] = None
+
+
+def _schema_path(path: Sequence[Any]) -> str:
+    result = "$"
+    for part in path:
+        result += f"[{part}]" if isinstance(part, int) else f".{part}"
+    return result
+
+
+def _schema_type_matches(value: Any, expected: str) -> bool:
+    if expected == "object":
+        return isinstance(value, dict)
+    if expected == "array":
+        return isinstance(value, list)
+    if expected == "string":
+        return isinstance(value, str)
+    if expected == "integer":
+        return isinstance(value, int) and not isinstance(value, bool)
+    if expected == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if expected == "boolean":
+        return isinstance(value, bool)
+    if expected == "null":
+        return value is None
+    return False
+
+
+def _resolve_schema_ref(root: Dict[str, Any], reference: str) -> Dict[str, Any]:
+    if not reference.startswith("#/"):
+        raise ValueError(f"unsupported schema reference: {reference}")
+    current: Any = root
+    for raw_part in reference[2:].split("/"):
+        part = raw_part.replace("~1", "/").replace("~0", "~")
+        if not isinstance(current, dict) or part not in current:
+            raise ValueError(f"unresolved schema reference: {reference}")
+        current = current[part]
+    if not isinstance(current, dict):
+        raise ValueError(f"schema reference is not an object: {reference}")
+    return current
+
+
+def _schema_errors(instance: Any, schema: Dict[str, Any], root: Dict[str, Any], path: Tuple[Any, ...] = ()) -> List[Issue]:
+    """Validate the published schema subset used by DiagramSpec without dependencies."""
+    if "$ref" in schema:
+        return _schema_errors(instance, _resolve_schema_ref(root, schema["$ref"]), root, path)
+
+    issues: List[Issue] = []
+    for branch in schema.get("allOf", []):
+        issues.extend(_schema_errors(instance, branch, root, path))
+    conditional = schema.get("if")
+    if isinstance(conditional, dict):
+        matches = not _schema_errors(instance, conditional, root, path)
+        selected = schema.get("then") if matches else schema.get("else")
+        if isinstance(selected, dict):
+            issues.extend(_schema_errors(instance, selected, root, path))
+
+    expected = schema.get("type")
+    if isinstance(expected, str) and not _schema_type_matches(instance, expected):
+        return issues + [Issue("error", "schema-type", f"{_schema_path(path)} must be {expected}")]
+    if isinstance(expected, list) and not any(_schema_type_matches(instance, item) for item in expected if isinstance(item, str)):
+        return issues + [Issue("error", "schema-type", f"{_schema_path(path)} has an unsupported type")]
+
+    if "const" in schema and instance != schema["const"]:
+        issues.append(Issue("error", "schema-const", f"{_schema_path(path)} must equal {schema['const']!r}"))
+    if "enum" in schema and instance not in schema["enum"]:
+        choices = ", ".join(repr(item) for item in schema["enum"])
+        issues.append(Issue("error", "schema-enum", f"{_schema_path(path)} must be one of {choices}"))
+
+    if isinstance(instance, dict):
+        required = schema.get("required", [])
+        if isinstance(required, list):
+            for key in required:
+                if key not in instance:
+                    issues.append(Issue("error", "schema-required", f"{_schema_path(path)} is missing required field {key!r}"))
+        properties = schema.get("properties", {})
+        if isinstance(properties, dict):
+            for key, value in instance.items():
+                child_schema = properties.get(key)
+                if isinstance(child_schema, dict):
+                    issues.extend(_schema_errors(value, child_schema, root, path + (key,)))
+                elif schema.get("additionalProperties") is False:
+                    issues.append(Issue("error", "schema-additional-property", f"{_schema_path(path)} contains unknown field {key!r}"))
+
+    if isinstance(instance, list):
+        minimum = schema.get("minItems")
+        maximum = schema.get("maxItems")
+        if isinstance(minimum, int) and len(instance) < minimum:
+            issues.append(Issue("error", "schema-min-items", f"{_schema_path(path)} needs at least {minimum} item(s)"))
+        if isinstance(maximum, int) and len(instance) > maximum:
+            issues.append(Issue("error", "schema-max-items", f"{_schema_path(path)} allows at most {maximum} item(s)"))
+        item_schema = schema.get("items")
+        if isinstance(item_schema, dict):
+            for index, value in enumerate(instance):
+                issues.extend(_schema_errors(value, item_schema, root, path + (index,)))
+
+    if isinstance(instance, str):
+        minimum_length = schema.get("minLength")
+        if isinstance(minimum_length, int) and len(instance) < minimum_length:
+            issues.append(Issue("error", "schema-min-length", f"{_schema_path(path)} must not be empty"))
+        pattern = schema.get("pattern")
+        if isinstance(pattern, str) and re.fullmatch(pattern, instance) is None:
+            issues.append(Issue("error", "schema-pattern", f"{_schema_path(path)} has an invalid format"))
+
+    if isinstance(instance, (int, float)) and not isinstance(instance, bool):
+        minimum = schema.get("minimum")
+        maximum = schema.get("maximum")
+        if isinstance(minimum, (int, float)) and instance < minimum:
+            issues.append(Issue("error", "schema-minimum", f"{_schema_path(path)} must be at least {minimum}"))
+        if isinstance(maximum, (int, float)) and instance > maximum:
+            issues.append(Issue("error", "schema-maximum", f"{_schema_path(path)} must be at most {maximum}"))
+    return issues
+
+
+def validate_published_schema(spec: Any) -> List[Issue]:
+    global _SPEC_SCHEMA
+    try:
+        if _SPEC_SCHEMA is None:
+            loaded = json.loads(SPEC_SCHEMA_PATH.read_text(encoding="utf-8"))
+            if not isinstance(loaded, dict):
+                raise ValueError("schema root must be an object")
+            _SPEC_SCHEMA = loaded
+        return _schema_errors(spec, _SPEC_SCHEMA, _SPEC_SCHEMA)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        return [Issue("error", "schema-unavailable", f"Published schema cannot be used: {exc}")]
 
 
 @dataclass
@@ -369,7 +537,7 @@ def validate_board_spec(spec: Dict[str, Any]) -> List[Issue]:
         if not isinstance(brand, dict):
             issues.append(Issue("error", "invalid-brand", "brand must be an object"))
         else:
-            unknown_brand = sorted(set(brand) - ({"name"} | BRAND_COLOR_FIELDS))
+            unknown_brand = sorted(set(brand) - ({"name"} | set(BRAND_COLOR_FIELDS)))
             for field in unknown_brand:
                 issues.append(Issue("warning", "unknown-brand-field", f"Unknown brand field: {field}"))
             if "name" in brand and (not isinstance(brand["name"], str) or not brand["name"].strip()):
@@ -542,8 +710,14 @@ def validate_board_spec(spec: Dict[str, Any]) -> List[Issue]:
 
 
 def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
+    schema_issues = validate_published_schema(spec)
+    if any(issue.code in {"schema-type", "schema-unavailable"} for issue in schema_issues):
+        return schema_issues
     if spec.get("layout") == BOARD_LAYOUT:
-        return validate_board_spec(spec)
+        issues = validate_board_spec(spec)
+        if not any(issue.level == "error" for issue in schema_issues + issues):
+            issues.extend(validate_diagram_contract(spec))
+        return schema_issues + issues
     issues: List[Issue] = []
     allowed_top = {"title", "subtitle", "diagram_type", "direction", "layout", "theme", "brand", "nodes", "edges", "groups", "lanes", "legend"}
     for key in sorted(set(spec) - allowed_top):
@@ -563,7 +737,7 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
         if not isinstance(brand, dict):
             issues.append(Issue("error", "invalid-brand", "brand must be an object"))
         else:
-            unknown_brand = sorted(set(brand) - ({"name"} | BRAND_COLOR_FIELDS))
+            unknown_brand = sorted(set(brand) - ({"name"} | set(BRAND_COLOR_FIELDS)))
             for field in unknown_brand:
                 issues.append(Issue("warning", "unknown-brand-field", f"Unknown brand field: {field}"))
             if "name" in brand and (not isinstance(brand["name"], str) or not brand["name"].strip()):
@@ -692,10 +866,101 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
         if display_units(str(edge.get("label", ""))) > 28:
             issues.append(Issue("warning", "long-edge-label", f"Edge {source!r} -> {target!r} label is too long"))
 
-    if node_ids and not any(issue.level == "error" for issue in issues):
+    if node_ids and not any(issue.level == "error" for issue in schema_issues + issues):
         _, cycle_nodes = calculate_ranks(nodes, edges)
         if cycle_nodes:
             issues.append(Issue("error", "unmarked-cycle", "Non-feedback edges contain a cycle involving: " + ", ".join(cycle_nodes)))
+    if not any(issue.level == "error" for issue in schema_issues + issues):
+        issues.extend(validate_diagram_contract(spec))
+    return schema_issues + issues
+
+
+def validate_diagram_contract(spec: Dict[str, Any]) -> List[Issue]:
+    """Enforce the minimum semantic grammar promised for each named diagram type."""
+    diagram_type = spec.get("diagram_type", "process-flow")
+    if spec.get("layout") == BOARD_LAYOUT:
+        issues: List[Issue] = []
+        if len(spec.get("sections", [])) < 2:
+            issues.append(Issue("error", "contract-board-layers", f"{diagram_type} boards require at least two sections/layers"))
+        if diagram_type in {"system-architecture", "agent-workflow", "data-flow", "process-flow"} and not spec.get("connections"):
+            issues.append(Issue("error", "contract-board-connections", f"{diagram_type} boards require at least one explicit connection"))
+        return issues
+
+    nodes = spec.get("nodes", [])
+    edges = spec.get("edges", [])
+    groups = spec.get("groups", [])
+    direction = spec.get("direction", "LR")
+    node_types = {node.get("type", "process") for node in nodes if isinstance(node, dict)}
+    edge_kinds = {edge.get("kind", "primary") for edge in edges if isinstance(edge, dict)}
+    issues: List[Issue] = []
+
+    expected_direction = {
+        "agent-workflow": "LR", "data-flow": "LR", "capability-map": "TB",
+        "user-flow": "TB", "system-topology": "LR", "decision-tree": "TB",
+        "roadmap": "LR", "strategy-map": "TB",
+    }.get(diagram_type)
+    if expected_direction and direction != expected_direction:
+        issues.append(Issue("error", "contract-direction", f"{diagram_type} requires direction {expected_direction}"))
+
+    required_types = {
+        "system-architecture": {"process", "database"},
+        "agent-workflow": {"input", "agent"},
+        "data-flow": {"external", "database"},
+        "capability-map": {"process"},
+        "user-flow": {"external", "decision"},
+        "system-topology": {"external", "database"},
+        "decision-tree": {"decision"},
+        "roadmap": set(),
+        "strategy-map": {"process", "document"},
+        "process-flow": {"process"},
+    }.get(diagram_type, set())
+    missing_types = sorted(required_types - node_types)
+    if missing_types:
+        issues.append(Issue("error", "contract-node-types", f"{diagram_type} requires node type(s): {', '.join(missing_types)}"))
+
+    minimum_nodes = {
+        "system-architecture": 4, "agent-workflow": 4, "data-flow": 4,
+        "capability-map": 4, "user-flow": 4, "system-topology": 4,
+        "decision-tree": 3, "roadmap": 2, "strategy-map": 4, "process-flow": 2,
+    }[diagram_type]
+    minimum_edges = {
+        "system-architecture": 3, "agent-workflow": 3, "data-flow": 3,
+        "capability-map": 3, "user-flow": 3, "system-topology": 3,
+        "decision-tree": 2, "roadmap": 1, "strategy-map": 3, "process-flow": 1,
+    }[diagram_type]
+    if len(nodes) < minimum_nodes:
+        issues.append(Issue("error", "contract-node-count", f"{diagram_type} requires at least {minimum_nodes} nodes"))
+    if len(edges) < minimum_edges:
+        issues.append(Issue("error", "contract-edge-count", f"{diagram_type} requires at least {minimum_edges} edges"))
+
+    minimum_groups = {"capability-map": 2, "system-topology": 2, "roadmap": 2, "strategy-map": 3}.get(diagram_type, 0)
+    if len(groups) < minimum_groups:
+        issues.append(Issue("error", "contract-groups", f"{diagram_type} requires at least {minimum_groups} meaningful groups/phases"))
+
+    if diagram_type == "decision-tree":
+        branching = False
+        for node in nodes:
+            if node.get("type", "process") != "decision":
+                continue
+            outgoing = {edge.get("kind", "primary") for edge in edges if edge.get("source") == node.get("id")}
+            if "success" in outgoing and "error" in outgoing:
+                branching = True
+                break
+        if not branching:
+            issues.append(Issue("error", "contract-decision-branches", "decision-tree requires a decision with explicit success and error branches"))
+    if diagram_type == "roadmap":
+        if len(nodes) < 2:
+            issues.append(Issue("error", "contract-roadmap-phases", "roadmap requires at least two outcome phases"))
+        if any(not node.get("group") for node in nodes):
+            issues.append(Issue("error", "contract-roadmap-phase-assignment", "every roadmap outcome must belong to a phase group"))
+        if edge_kinds & {"feedback", "error"}:
+            issues.append(Issue("error", "contract-roadmap-edge", "roadmap cannot use feedback or error edges as chronology"))
+    if diagram_type == "capability-map" and "feedback" in edge_kinds:
+        issues.append(Issue("error", "contract-capability-sequence", "capability-map cannot use feedback edges that imply execution sequence"))
+    if diagram_type == "agent-workflow" and not (edge_kinds & {"control", "success", "feedback"}):
+        issues.append(Issue("error", "contract-agent-semantics", "agent-workflow requires control, outcome, or feedback edge semantics"))
+    if diagram_type == "data-flow" and not (node_types & {"process", "agent"}):
+        issues.append(Issue("error", "contract-data-transform", "data-flow requires a process or agent transformation"))
     return issues
 
 
@@ -1151,7 +1416,7 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     lines.append('.lane-box{fill:var(--surface);stroke:var(--hair);stroke-width:1.1}.lane:nth-child(even) .lane-box{fill:var(--group)}.lane-title{font-size:12px;font-weight:850;fill:var(--muted);letter-spacing:.45px}.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}')
     lines.append('.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}')
     lines.append('.node-title{font-size:14.5px;font-weight:750;text-anchor:middle;dominant-baseline:middle}.node-subtitle{font-size:11.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}')
-    lines.append('.edge{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.edge.async,.edge.error{stroke-dasharray:6 5}.edge.feedback{stroke-width:2.2}.edge-label-bg{fill:var(--page);stroke:var(--hair);stroke-width:.7;opacity:.97}.edge-label{font-size:10.8px;font-weight:650;text-anchor:middle;dominant-baseline:middle;fill:var(--muted)}')
+    lines.append('.edge{fill:none;stroke-linecap:round;stroke-linejoin:round}.edge-label-bg{fill:var(--page);stroke:var(--hair);stroke-width:.7;opacity:.97}.edge-label{font-size:10.8px;font-weight:650;text-anchor:middle;dominant-baseline:middle;fill:var(--muted)}')
     lines.append('.legend-bg{fill:var(--surface);stroke:var(--hair)}.legend-text{font-size:10.5px;fill:var(--muted)}.node-link{cursor:pointer}.node-link:focus .node-shape,.node-link:hover .node-shape{stroke:var(--edge-primary);stroke-width:2.4}.node-link:focus{outline:none}')
     lines.append('</style>')
     lines.append(f'<rect class="page-bg" width="{width:g}" height="{height:g}"/>')
@@ -1172,7 +1437,9 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     for route in routes:
         edge = route["edge"]
         kind = edge.get("kind", "primary")
-        lines.append(f'<path class="edge {kind}" style="stroke:var(--edge-{kind})" d="{path_data(route["points"])}" marker-end="url(#arrow-{kind})"/>')
+        edge_style = EDGE_STYLES[kind]
+        dash = f' stroke-dasharray="{edge_style["dash"]}"' if edge_style["dash"] else ""
+        lines.append(f'<path class="edge {kind}" style="stroke:var(--edge-{kind})" stroke-width="{edge_style["width"]:g}"{dash} d="{path_data(route["points"])}" marker-end="url(#arrow-{kind})"/>')
 
     node_map = {node["id"]: node for node in spec["nodes"]}
     for node_id in [node["id"] for node in spec["nodes"]]:
@@ -1194,20 +1461,69 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
         lines.append(f'<g class="legend"><rect class="legend-bg" x="{start_x:g}" y="{y - 18:g}" width="{legend_w:g}" height="36" rx="12"/>')
         for index, kind in enumerate(kinds):
             x = start_x + 18 + index * item_w
-            dash = ' stroke-dasharray="6 5"' if kind in {"async", "error"} else ''
-            lines.append(f'<path d="M {x:g} {y:g} H {x + 24:g}" stroke="var(--edge-{kind})" stroke-width="2"{dash}/><text class="legend-text" x="{x + 32:g}" y="{y + 4:g}">{esc(EDGE_LABELS[kind])}</text>')
+            edge_style = EDGE_STYLES[kind]
+            dash = f' stroke-dasharray="{edge_style["dash"]}"' if edge_style["dash"] else ""
+            lines.append(f'<path d="M {x:g} {y:g} H {x + 24:g}" stroke="var(--edge-{kind})" stroke-width="{edge_style["width"]:g}"{dash}/><text class="legend-text" x="{x + 32:g}" y="{y + 4:g}">{esc(EDGE_LABELS[kind])}</text>')
         lines.append('</g>')
     lines.append('</svg>')
     return "\n".join(lines)
 
 
-def board_block_height(block: Dict[str, Any]) -> float:
+def estimated_text_width(text: str, font_size: float) -> float:
+    return display_units(str(text)) * font_size * 0.53
+
+
+def board_card_min_width(card: Dict[str, Any]) -> float:
+    text_width = max(
+        estimated_text_width(card.get("label", ""), 12.2),
+        estimated_text_width(card.get("subtitle", ""), 9.6),
+    )
+    return max(142.0, min(286.0, 42.0 + text_width + 12.0))
+
+
+def board_block_min_width(block: Dict[str, Any]) -> float:
+    kind = block.get("kind", "grid")
+    if kind == "grid":
+        cards = block.get("cards", [])
+        return max([board_card_min_width(card) for card in cards] or [180.0]) + 24.0
+    if kind == "list":
+        content = [block.get("title", ""), *block.get("items", [])]
+        return max(190.0, min(360.0, max([estimated_text_width(item, 10.6) for item in content] or [0]) + 48.0))
+    return max(220.0, min(420.0, estimated_text_width(block.get("title", ""), 15.0) + 92.0))
+
+
+def allocate_board_widths(blocks: Sequence[Dict[str, Any]], available: float, gap: float) -> List[float]:
+    usable = available - gap * max(0, len(blocks) - 1)
+    floors = [board_block_min_width(block) for block in blocks]
+    if sum(floors) > usable:
+        # The four-block limit keeps this floor usable on the fixed enterprise canvas.
+        scale = usable / sum(floors)
+        floors = [max(150.0, value * scale) for value in floors]
+    remaining = max(0.0, usable - sum(floors))
+    spans = [max(1, int(block.get("span", 1))) for block in blocks]
+    total_span = sum(spans)
+    widths = [floor + remaining * span / total_span for floor, span in zip(floors, spans)]
+    if widths:
+        widths[-1] += usable - sum(widths)
+    return widths
+
+
+def effective_grid_columns(block: Dict[str, Any], block_width: float) -> int:
+    cards = block.get("cards", [])
+    requested = min(max(1, int(block.get("columns", 3))), max(1, len(cards)))
+    card_gap = 8.0
+    min_card = max([board_card_min_width(card) for card in cards] or [142.0])
+    fitting = max(1, int((block_width - 24.0 + card_gap) // (min_card + card_gap)))
+    return min(requested, fitting)
+
+
+def board_block_height(block: Dict[str, Any], columns: Optional[int] = None) -> float:
     kind = block.get("kind", "grid")
     if kind == "banner":
         return 72.0
     if kind == "list":
         return 48.0 + len(block.get("items", [])) * 22.0 + 16.0
-    columns = max(1, int(block.get("columns", 3)))
+    columns = columns or max(1, int(block.get("columns", 3)))
     rows = max(1, math.ceil(len(block.get("cards", [])) / columns))
     header = 38.0 if str(block.get("title", "")).strip() else 0.0
     footer = 31.0 if str(block.get("footer", "")).strip() else 0.0
@@ -1228,7 +1544,12 @@ def layout_board(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, Any], 
 
     for section_index, section in enumerate(spec.get("sections", [])):
         blocks = section["blocks"]
-        measured = [board_block_height(block) for block in blocks]
+        block_widths = allocate_board_widths(blocks, content_w, gap)
+        effective_columns = [
+            effective_grid_columns(block, block_width) if block.get("kind", "grid") == "grid" else None
+            for block, block_width in zip(blocks, block_widths)
+        ]
+        measured = [board_block_height(block, columns) for block, columns in zip(blocks, effective_columns)]
         inner_h = max(measured)
         section_h = inner_h + 24.0
         frame = {
@@ -1236,25 +1557,18 @@ def layout_board(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, Any], 
             "content_x": content_x, "content_w": content_w, "blocks": [],
         }
         anchors[section["id"]] = Box(section["id"], outer_x, y, outer_w, section_h, section_index, [])
-        spans = [block.get("span", 1) for block in blocks]
-        usable_w = content_w - gap * max(0, len(blocks) - 1)
         cursor_x = content_x
-        allocated = 0.0
-        for block_index, (block, span) in enumerate(zip(blocks, spans)):
-            if block_index == len(blocks) - 1:
-                block_w = content_x + content_w - cursor_x
-            else:
-                block_w = usable_w * span / sum(spans)
-                allocated += block_w
+        for block_index, block in enumerate(blocks):
+            block_w = block_widths[block_index]
             block_y = y + 12.0 + max(0.0, (inner_h - measured[block_index]) / 2.0)
             block_h = measured[block_index]
-            block_frame = {"spec": block, "x": cursor_x, "y": block_y, "w": block_w, "h": block_h, "cards": []}
+            block_frame = {"spec": block, "x": cursor_x, "y": block_y, "w": block_w, "h": block_h, "cards": [], "columns": effective_columns[block_index]}
             frame["blocks"].append(block_frame)
             anchors[block["id"]] = Box(block["id"], cursor_x, block_y, block_w, block_h, section_index, [])
 
             if block.get("kind", "grid") == "grid":
                 cards = block.get("cards", [])
-                columns = min(max(1, int(block.get("columns", 3))), max(1, len(cards)))
+                columns = int(effective_columns[block_index] or 1)
                 header = 38.0 if str(block.get("title", "")).strip() else 0.0
                 card_gap = 8.0
                 card_w = (block_w - 24.0 - card_gap * max(0, columns - 1)) / columns
@@ -1300,10 +1614,72 @@ def layout_board(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, Any], 
         "width": width, "height": round(y + 22.0, 1), "margin": 42.0, "title_h": 96.0,
         "sections": section_frames, "flow": flow_frame, "principles": principles_frame,
         "rail_w": rail_w, "content_x": content_x, "content_w": content_w, "anchors": anchors,
-        "legend": 0, "content_bottom": y, "content_right": width - 20.0,
+        "spec": spec, "connections": spec.get("connections", []),
+        "legend": 1 if len({item.get("kind", "primary") for item in spec.get("connections", [])}) > 1 else 0,
+        "content_bottom": y, "content_right": width - 20.0,
     }
+    if canvas["legend"]:
+        canvas["height"] += 54.0
     routes = route_board_connections(spec, anchors)
     return leaf_boxes, canvas, routes
+
+
+def board_text_issues(canvas: Dict[str, Any]) -> List[Issue]:
+    """Check estimated glyph bounds, not only rectangle overlap."""
+    issues: List[Issue] = []
+    spec = canvas.get("spec", {})
+
+    def check(context: str, text: Any, font_size: float, available: float) -> None:
+        value = str(text or "").strip()
+        if value and estimated_text_width(value, font_size) > max(1.0, available):
+            issues.append(Issue("error", "board-text-overflow", f"{context} exceeds its text bounds"))
+
+    top_available = canvas["width"] - 2 * canvas.get("margin", 42.0)
+    check("Board title", spec.get("title"), 28.0, top_available)
+    check("Board subtitle", spec.get("subtitle"), 12.0, top_available)
+    for section in canvas.get("sections", []):
+        section_spec = section["spec"]
+        label_lines = wrap_text(str(section_spec.get("label", "")), 19)
+        if len(label_lines) > 2:
+            issues.append(Issue("error", "board-text-overflow", f"Section {section_spec.get('id')!r} label exceeds two rail lines"))
+        rail_available = canvas.get("rail_w", 184.0) - 30.0
+        check(f"Section {section_spec.get('id')!r} subtitle", section_spec.get("subtitle"), 11.0, rail_available)
+        for block in section.get("blocks", []):
+            block_spec = block["spec"]
+            kind = block_spec.get("kind", "grid")
+            if kind == "banner":
+                title_available = max(120.0, block["w"] - 300.0)
+                check(f"Banner {block_spec.get('id')!r} title", block_spec.get("title"), 15.0, title_available)
+                check(f"Banner {block_spec.get('id')!r} subtitle", block_spec.get("subtitle"), 10.5, title_available)
+            else:
+                check(f"Block {block_spec.get('id')!r} title", block_spec.get("title"), 15.0 if kind == "grid" else 13.0, block["w"] - 28.0)
+            if kind == "list":
+                for index, item in enumerate(block_spec.get("items", [])):
+                    check(f"List {block_spec.get('id')!r} item {index}", item, 10.6, block["w"] - 52.0)
+            check(f"Block {block_spec.get('id')!r} footer", block_spec.get("footer"), 10.5, block["w"] - 48.0)
+            for card_frame in block.get("cards", []):
+                card, box = card_frame["spec"], card_frame["box"]
+                available = box.w - 54.0
+                check(f"Card {card.get('id')!r} label", card.get("label"), 12.2, available)
+                check(f"Card {card.get('id')!r} subtitle", card.get("subtitle"), 9.6, available)
+    flow = canvas.get("flow")
+    if flow:
+        check("Flow label", flow["spec"].get("label"), 15.0, canvas.get("rail_w", 184.0) - 40.0)
+    if canvas.get("principles"):
+        check("Principles label", "核心原则", 15.0, canvas.get("rail_w", 184.0) - 40.0)
+    for frame_name in ("flow", "principles"):
+        frame = canvas.get(frame_name)
+        if not frame:
+            continue
+        entries = frame.get("steps", frame.get("cards", []))
+        for index, entry in enumerate(entries):
+            item, box = entry["spec"], entry["box"]
+            available = box.w - 56.0
+            check(f"{frame_name}[{index}] label", item.get("label"), 11.4, available)
+            check(f"{frame_name}[{index}] subtitle", item.get("subtitle"), 9.2, available)
+    for index, connection in enumerate(canvas.get("connections", [])):
+        check(f"Connection {index} label", connection.get("label"), 9.5, 220.0)
+    return issues
 
 
 def route_board_connections(spec: Dict[str, Any], anchors: Dict[str, Box]) -> List[Dict[str, Any]]:
@@ -1385,13 +1761,17 @@ def board_icon(name: str, x: float, y: float, size: float, color: str) -> str:
 
 def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Sequence[Dict[str, Any]]) -> str:
     width, height = canvas["width"], canvas["height"]
-    _, edge_colors = resolve_visual_tokens(spec)
-    primary = spec.get("brand", {}).get("primary", "#246BCE") if isinstance(spec.get("brand"), dict) else "#246BCE"
+    visual_tokens, edge_colors = resolve_visual_tokens(spec)
+    primary = edge_colors["primary"]
+    brand = spec.get("brand", {}) if isinstance(spec.get("brand"), dict) else {}
+    accent_value = brand.get("accent")
+    accent = accent_value if isinstance(accent_value, str) and HEX_COLOR_RE.fullmatch(accent_value) else primary
+    default_mode = "dark" if spec.get("theme") in {"blueprint", "terminal"} else "light"
     title = esc(spec["title"])
     subtitle = esc(spec.get("subtitle", ""))
     desc = esc(f"High-density {DIAGRAM_TYPES[spec.get('diagram_type', 'system-architecture')]} with {len(spec.get('sections', []))} sections")
     lines = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="light" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" class="abi-flow board" data-theme="{default_mode}" viewBox="0 0 {width:g} {height:g}" role="img" aria-labelledby="abi-title abi-desc">',
         f'<title id="abi-title">{title}</title><desc id="abi-desc">{desc}</desc>',
         '<defs>',
     ]
@@ -1401,11 +1781,12 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
     lines.extend([
         '</defs>',
         '<style>',
-        '.board{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#fff}.board text{fill:#192132}.board-title{font-size:28px;font-weight:700;text-anchor:middle}.board-subtitle{font-size:12px;fill:#667085;text-anchor:middle;letter-spacing:.2px}.section-label{font-size:16px;font-weight:700}.section-subtitle{font-size:11px;font-weight:500}.block-title{font-size:15px;font-weight:700;text-anchor:middle}.block-subtitle{font-size:10.5px;fill:#667085;text-anchor:middle}.card-title{font-size:12.2px;font-weight:650}.card-subtitle{font-size:9.6px;fill:#536174}.list-title{font-size:13px;font-weight:700}.list-item{font-size:10.6px}.footer-text{font-size:10.5px;font-weight:650;text-anchor:middle}.flow-title,.principles-title{font-size:15px;font-weight:700}.step-title{font-size:11.4px;font-weight:650}.step-subtitle{font-size:9.2px;fill:#667085}.connection{fill:none;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}.connection-label{font-size:9.5px;font-weight:650;text-anchor:middle;fill:#536174}',
+        f'.board{{{css_variables(visual_tokens)};font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}.board text{{fill:var(--ink)}}.board-title{{font-size:28px;font-weight:700;text-anchor:middle}}.board-subtitle{{font-size:12px;fill:var(--muted);text-anchor:middle;letter-spacing:.2px}}.section-label{{font-size:16px;font-weight:700}}.section-subtitle{{font-size:11px;font-weight:500}}.block-title{{font-size:15px;font-weight:700;text-anchor:middle}}.block-subtitle{{font-size:10.5px;fill:var(--muted);text-anchor:middle}}.card-title{{font-size:12.2px;font-weight:650}}.card-subtitle{{font-size:9.6px;fill:var(--muted)}}.list-title{{font-size:13px;font-weight:700}}.list-item{{font-size:10.6px}}.footer-text{{font-size:10.5px;font-weight:650;text-anchor:middle}}.flow-title,.principles-title{{font-size:15px;font-weight:700}}.step-title{{font-size:11.4px;font-weight:650}}.step-subtitle{{font-size:9.2px;fill:var(--muted)}}.connection{{fill:none;stroke-linecap:round;stroke-linejoin:round}}.connection-label{{font-size:9.5px;font-weight:650;text-anchor:middle;fill:var(--muted)}}.board-legend-text{{font-size:10.5px;font-weight:650;fill:var(--muted)}}',
         '</style>',
-        f'<rect width="{width:g}" height="{height:g}" fill="#FFFFFF"/>',
-        f'<rect x="0" y="0" width="{width:g}" height="84" fill="#FBFCFE"/>',
-        f'<rect x="{width / 2 - 34:g}" y="77" width="68" height="3" rx="1.5" fill="{primary}"/>',
+        f'<rect width="{width:g}" height="{height:g}" fill="{visual_tokens["page"]}"/>',
+        f'<rect x="0" y="0" width="{width:g}" height="84" fill="{visual_tokens["surface"]}" stroke="{visual_tokens["hair"]}" stroke-width=".7"/>',
+        f'<rect x="{width / 2 - 34:g}" y="77" width="42" height="3" rx="1.5" fill="{primary}"/>',
+        f'<rect x="{width / 2 + 8:g}" y="77" width="26" height="3" rx="1.5" fill="{accent}"/>',
         f'<text class="board-title" x="{width / 2:g}" y="39">{title}</text>',
     ])
     if subtitle:
@@ -1413,7 +1794,7 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
 
     for frame in canvas["sections"]:
         section = frame["spec"]
-        tone = BOARD_TONES[section.get("tone", "blue")]
+        tone = resolve_board_tone(spec, section.get("tone", "blue"), visual_tokens, edge_colors)
         lines.append(f'<g class="board-section"><rect x="{frame["x"]:g}" y="{frame["y"]:g}" width="{frame["w"]:g}" height="{frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}" stroke-width="1"/>')
         label_lines = wrap_text(section["label"], 19)[:2]
         label_y = frame["y"] + frame["h"] / 2 - (8 if len(label_lines) > 1 else 0)
@@ -1450,7 +1831,7 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
                     lines.append(f'<text class="block-title" x="{x + w / 2:g}" y="{y + 25:g}" fill="{tone["ink"]}">{esc(block["title"])}</text>')
                 for card_frame in block_frame["cards"]:
                     card, box = card_frame["spec"], card_frame["box"]
-                    lines.append(f'<g class="board-card"><rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="8" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".8"/>')
+                    lines.append(f'<g class="board-card"><rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="8" fill="{visual_tokens["surface"]}" stroke="{tone["stroke"]}" stroke-width=".8"/>')
                     lines.append(board_icon(card.get("icon", "layers"), box.x + 11.0, box.y + 15.0, 23.0, tone["icon"]))
                     text_x = box.x + 42.0
                     lines.append(f'<text class="card-title" x="{text_x:g}" y="{box.y + 22:g}" fill="{tone["ink"]}">{esc(card["label"])}</text>')
@@ -1468,12 +1849,12 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
     flow_frame = canvas.get("flow")
     if flow_frame:
         flow = flow_frame["spec"]
-        tone = BOARD_TONES[flow.get("tone", "amber")]
+        tone = resolve_board_tone(spec, flow.get("tone", "amber"), visual_tokens, edge_colors)
         lines.append(f'<g class="board-flow"><rect x="{flow_frame["x"]:g}" y="{flow_frame["y"]:g}" width="{flow_frame["w"]:g}" height="{flow_frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}"/>')
         lines.append(f'<text class="flow-title" x="{flow_frame["x"] + 20:g}" y="{flow_frame["y"] + 54:g}" fill="{tone["ink"]}">{esc(flow.get("label", "核心数据流"))}</text>')
         for index, step_frame in enumerate(flow_frame["steps"]):
             step, box = step_frame["spec"], step_frame["box"]
-            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".7"/>')
+            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="{visual_tokens["surface"]}" stroke="{tone["stroke"]}" stroke-width=".7"/>')
             lines.append(board_icon(step.get("icon", "check"), box.x + 10.0, box.y + 21.0, 24.0, tone["icon"]))
             lines.append(f'<text class="step-title" x="{box.x + 41:g}" y="{box.y + 27:g}" fill="{tone["ink"]}">{index + 1}. {esc(step["label"])}</text>')
             if step.get("subtitle"):
@@ -1486,12 +1867,12 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
 
     principles_frame = canvas.get("principles")
     if principles_frame:
-        tone = BOARD_TONES["slate"]
+        tone = resolve_board_tone(spec, "slate", visual_tokens, edge_colors)
         lines.append(f'<g class="board-principles"><rect x="{principles_frame["x"]:g}" y="{principles_frame["y"]:g}" width="{principles_frame["w"]:g}" height="{principles_frame["h"]:g}" rx="12" fill="{tone["bg"]}" stroke="{tone["stroke"]}"/>')
         lines.append(f'<text class="principles-title" x="{principles_frame["x"] + 20:g}" y="{principles_frame["y"] + 58:g}" fill="{tone["ink"]}">核心原则</text>')
         for card_frame in principles_frame["cards"]:
             principle, box = card_frame["spec"], card_frame["box"]
-            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="#FFFFFF" stroke="{tone["stroke"]}" stroke-width=".7"/>')
+            lines.append(f'<rect x="{box.x:g}" y="{box.y:g}" width="{box.w:g}" height="{box.h:g}" rx="9" fill="{visual_tokens["surface"]}" stroke="{tone["stroke"]}" stroke-width=".7"/>')
             lines.append(board_icon(principle.get("icon", "check"), box.x + 13.0, box.y + 25.0, 25.0, tone["icon"]))
             lines.append(f'<text class="step-title" x="{box.x + 48:g}" y="{box.y + 31:g}" fill="{tone["ink"]}">{esc(principle["label"])}</text>')
             if principle.get("subtitle"):
@@ -1501,12 +1882,28 @@ def render_board_svg(spec: Dict[str, Any], canvas: Dict[str, Any], routes: Seque
     for route in routes:
         edge = route["edge"]
         kind = edge.get("kind", "primary")
+        style = EDGE_STYLES[kind]
+        dash = f' stroke-dasharray="{style["dash"]}"' if style["dash"] else ""
         marker_start = f' marker-start="url(#arrow-{kind})"' if edge.get("bidirectional") else ""
-        lines.append(f'<path class="connection" d="{path_data(route["points"])}" fill="none" stroke="{edge_colors[kind]}" marker-end="url(#arrow-{kind})"{marker_start}/>')
+        lines.append(f'<path class="connection kind-{kind}" data-kind="{kind}" d="{path_data(route["points"])}" fill="none" stroke="{edge_colors[kind]}" stroke-width="{style["width"]:g}"{dash} marker-end="url(#arrow-{kind})"{marker_start}/>')
         label = str(edge.get("label", "")).strip()
         if label:
             x, y = label_position(route["points"])
             lines.append(f'<text class="connection-label" x="{x:g}" y="{y - 4:g}">{esc(label)}</text>')
+    if canvas.get("legend"):
+        kinds = [kind for kind in EDGE_KINDS if any(route["edge"].get("kind", "primary") == kind for route in routes)]
+        item_w = 190.0
+        legend_w = 28.0 + item_w * len(kinds)
+        legend_x = (width - legend_w) / 2.0
+        legend_y = canvas["content_bottom"] + 10.0
+        lines.append(f'<g class="board-legend"><rect x="{legend_x:g}" y="{legend_y:g}" width="{legend_w:g}" height="36" rx="11" fill="{visual_tokens["surface"]}" stroke="{visual_tokens["hair"]}"/>')
+        for index, kind in enumerate(kinds):
+            x = legend_x + 16.0 + index * item_w
+            y = legend_y + 18.0
+            style = EDGE_STYLES[kind]
+            dash = f' stroke-dasharray="{style["dash"]}"' if style["dash"] else ""
+            lines.append(f'<path d="M {x:g} {y:g} H {x + 28:g}" fill="none" stroke="{edge_colors[kind]}" stroke-width="{style["width"]:g}"{dash} marker-end="url(#arrow-{kind})"/><text class="board-legend-text" x="{x + 38:g}" y="{y + 4:g}">{esc(EDGE_LABELS[kind])}</text>')
+        lines.append('</g>')
     lines.append('</svg>')
     return "\n".join(lines)
 
@@ -1564,12 +1961,12 @@ HTML_SCRIPT = r"""
 
 def render_html(spec: Dict[str, Any], svg: str) -> str:
     title = esc(spec["title"])
-    initial = "dark" if spec.get("layout") != BOARD_LAYOUT and spec.get("theme") in {"blueprint", "terminal"} else "light"
+    initial = "dark" if spec.get("theme") in {"blueprint", "terminal"} else "light"
     theme_button = "" if spec.get("layout") == BOARD_LAYOUT else '<button id="theme" type="button">Light / dark</button>'
     return f"""<!doctype html>
 <html lang="en" data-ui-theme="{initial}">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src blob: data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"><title>{title}</title><style>{HTML_STYLE}</style></head>
-<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">VisualSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button>{theme_button}<button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
+<body><main class="shell"><div class="toolbar" role="toolbar" aria-label="Diagram controls"><span class="brand">DiagramSpec</span><span class="hint">Drag to pan · wheel to zoom</span><button id="zoomIn" type="button" aria-label="Zoom in">＋</button><button id="zoomOut" type="button" aria-label="Zoom out">－</button><button id="reset" type="button">Reset</button>{theme_button}<button id="svgDownload" type="button">Download SVG</button><button id="pngDownload" type="button">Download PNG</button></div><div class="viewport" tabindex="0" aria-label="Interactive diagram viewport">{svg}</div></main><script>{HTML_SCRIPT}</script></body></html>"""
 
 
 def validate_svg(svg: str) -> List[Issue]:
@@ -1599,6 +1996,7 @@ def build(spec: Dict[str, Any], initial_issues: Sequence[Issue]) -> Tuple[str, s
     if spec.get("layout") == BOARD_LAYOUT:
         boxes, canvas, routes = layout_board(spec)
         issues.extend(geometry_issues(routes, boxes))
+        issues.extend(board_text_issues(canvas))
         svg = render_board_svg(spec, canvas, routes)
     else:
         boxes, canvas, _ = layout_graph(spec)
@@ -1607,15 +2005,27 @@ def build(spec: Dict[str, Any], initial_issues: Sequence[Issue]) -> Tuple[str, s
         issues.extend(group_geometry_issues(spec, boxes))
         svg = render_svg(spec, boxes, canvas, routes)
     issues.extend(validate_svg(svg))
-    quality = quality_report(spec, boxes, canvas, routes, issues)
-    return svg, render_html(spec, svg), quality, issues
+    page = render_html(spec, svg)
+    quality = quality_report(spec, boxes, canvas, routes, issues, svg, page)
+    return svg, page, quality, issues
 
 
-def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, float], routes: Sequence[Dict[str, Any]], issues: Sequence[Issue]) -> Dict[str, Any]:
+def sha256_bytes(content: bytes) -> str:
+    return hashlib.sha256(content).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    return sha256_bytes(path.read_bytes())
+
+
+def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, float], routes: Sequence[Dict[str, Any]], issues: Sequence[Issue], svg: str = "", page: str = "") -> Dict[str, Any]:
     is_board = spec.get("layout") == BOARD_LAYOUT
+    structural_status = "failed" if any(issue.level == "error" for issue in issues) else "passed"
+    canonical_source = json.dumps(spec, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return {
-        "schema_version": 2,
-        "status": "passed" if not any(issue.level == "error" for issue in issues) else "failed",
+        "schema_version": 3,
+        "status": "failed" if structural_status == "failed" else "pending-review",
+        "structural_status": structural_status,
         "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "layout": spec.get("layout", "graph"), "nodes": len(boxes) if is_board else len(spec.get("nodes", [])), "edges": len(spec.get("connections", [])) if is_board else len(spec.get("edges", [])), "groups": len(spec.get("sections", [])) if is_board else len(spec.get("groups", [])), "lanes": 0 if is_board else len(spec.get("lanes", [])), "direction": "TB" if is_board else spec.get("direction", "LR"), "theme": spec.get("theme", "paper"), "brand": spec.get("brand", {}).get("name") if isinstance(spec.get("brand"), dict) else None},
         "canvas": {"width": canvas.get("width"), "height": canvas.get("height")},
         "geometry": {
@@ -1624,10 +2034,16 @@ def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str
             "edge_crossing_count": sum(issue.code == "edge-crossing" for issue in issues),
             "group_overlap_count": sum(issue.code == "group-overlap" for issue in issues),
             "group_intrusion_count": sum(issue.code == "group-intrusion" for issue in issues),
+            "text_overflow_count": sum(issue.code == "board-text-overflow" for issue in issues),
             "route_segment_count": sum(len(route["points"]) - 1 for route in routes),
         },
         "issues": [issue.as_dict() for issue in issues],
-        "visual_review": "pending",
+        "artifacts": {
+            "source": {"sha256": sha256_bytes(canonical_source), "basis": "canonical-json"},
+            "svg": {"sha256": sha256_bytes((svg + "\n").encode("utf-8"))} if svg else None,
+            "html": {"sha256": sha256_bytes((page + "\n").encode("utf-8"))} if page else None,
+        },
+        "visual_review": {"status": "pending", "artifact": "svg", "evidence": None},
     }
 
 
@@ -1655,25 +2071,39 @@ def strict_failed(issues: Sequence[Issue], strict: bool) -> bool:
     return any(issue.level == "error" or (strict and issue.level == "warning") for issue in issues)
 
 
+def detect_png_backend() -> Optional[Tuple[str, str]]:
+    for name in ("rsvg-convert", "magick", "convert"):
+        executable = shutil.which(name)
+        if executable:
+            return name, executable
+    return None
+
+
 def render_png(svg_path: Path, png_path: Path, spec: Dict[str, Any]) -> Optional[str]:
-    renderer = shutil.which("rsvg-convert")
-    if not renderer:
-        return "rsvg-convert is unavailable; PNG export skipped"
+    backend = detect_png_backend()
+    if not backend:
+        return "PNG export requested but no supported rasterizer was found (install rsvg-convert or ImageMagick); SVG and HTML were still generated"
+    backend_name, renderer = backend
     tokens, edge_colors = resolve_visual_tokens(spec)
     if spec.get("theme", "paper") in {"blueprint", "terminal"}:
         tokens.update(DARK_TOKENS)
     tokens.update({f"edge-{kind}": color for kind, color in edge_colors.items()})
     source = svg_path.read_text(encoding="utf-8")
-    source = re.sub(r"var\(--([a-z-]+)\)", lambda match: tokens.get(match.group(1), match.group(0)), source)
+    source = re.sub(r"var\(--([a-z0-9-]+)\)", lambda match: tokens.get(match.group(1), match.group(0)), source)
     with tempfile.NamedTemporaryFile("w", suffix=".svg", encoding="utf-8", delete=False) as handle:
         handle.write(source)
         raster_svg = Path(handle.name)
     try:
-        result = subprocess.run([renderer, "-w", "1920", str(raster_svg), "-o", str(png_path)], text=True, capture_output=True)
+        if backend_name == "rsvg-convert":
+            command = [renderer, "-w", "1920", str(raster_svg), "-o", str(png_path)]
+        else:
+            command = [renderer, "-background", "none", str(raster_svg), "-resize", "1920x", str(png_path)]
+        result = subprocess.run(command, text=True, capture_output=True)
     finally:
         raster_svg.unlink(missing_ok=True)
-    if result.returncode:
-        return f"PNG renderer failed: {result.stderr.strip() or result.stdout.strip()}"
+    if result.returncode or not png_path.is_file() or png_path.stat().st_size == 0:
+        detail = result.stderr.strip() or result.stdout.strip() or "renderer did not create a non-empty PNG"
+        return f"PNG renderer {backend_name!r} failed: {detail}"
     return None
 
 
@@ -1710,15 +2140,21 @@ def command_render(args: argparse.Namespace) -> int:
     quality_path = output_dir / f"{name}.quality.json"
     svg_path.write_text(svg + "\n", encoding="utf-8")
     html_path.write_text(page + "\n", encoding="utf-8")
+    quality["artifacts"]["source"] = {"sha256": sha256_file(args.input), "basis": "file-bytes"}
+    quality["artifacts"]["svg"] = {"sha256": sha256_file(svg_path), "path": svg_path.name}
+    quality["artifacts"]["html"] = {"sha256": sha256_file(html_path), "path": html_path.name}
     png_warning = None
     png_path = output_dir / f"{name}.png"
     if args.png:
         png_warning = render_png(svg_path, png_path, spec)
         if png_warning:
-            quality["visual_review"] = "skipped: PNG renderer unavailable or failed"
-            quality["issues"].append(Issue("warning", "png-export-skipped", png_warning).as_dict())
+            quality["status"] = "failed"
+            quality["visual_review"] = {"status": "blocked", "artifact": "png", "evidence": None}
+            quality["issues"].append(Issue("error", "png-export-failed", png_warning).as_dict())
+            quality["artifacts"]["png"] = None
         else:
-            quality["visual_review"] = "pending: inspect generated PNG"
+            quality["visual_review"] = {"status": "pending", "artifact": "png", "evidence": None}
+            quality["artifacts"]["png"] = {"sha256": sha256_file(png_path), "path": png_path.name}
     quality_path.write_text(json.dumps(quality, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"svg: {svg_path}")
     print(f"html: {html_path}")
@@ -1727,7 +2163,151 @@ def command_render(args: argparse.Namespace) -> int:
         print(f"png: {png_path}")
     if png_warning:
         print(f"warning: {png_warning}")
-    return 1 if args.strict and png_warning else 0
+    return 1 if png_warning else 0
+
+
+def command_png_backend(_: argparse.Namespace) -> int:
+    backend = detect_png_backend()
+    if not backend:
+        print("PNG backend: unavailable (install rsvg-convert or ImageMagick); SVG and HTML remain available")
+        return 1
+    print(f"PNG backend: {backend[0]} ({backend[1]})")
+    return 0
+
+
+def load_brief_validator() -> Any:
+    module_path = Path(__file__).resolve().with_name("diagram_brief.py")
+    module_spec = importlib.util.spec_from_file_location("abi_flow_diagram_brief", module_path)
+    if module_spec is None or module_spec.loader is None:
+        raise RuntimeError(f"cannot load Diagram Brief validator: {module_path}")
+    module = importlib.util.module_from_spec(module_spec)
+    sys.modules[module_spec.name] = module
+    module_spec.loader.exec_module(module)
+    return module
+
+
+def command_review(args: argparse.Namespace) -> int:
+    """Atomically finalize a quality receipt only after a hash-bound visual review."""
+    source, source_issues = load_spec(args.source)
+    if source_issues:
+        print_issues(source_issues)
+        return 1
+    semantic_issues = validate_spec(source)
+    if semantic_issues:
+        print_issues(semantic_issues)
+        return 1
+    quality, quality_issues = load_json_object(args.quality)
+    if quality_issues:
+        print_issues(quality_issues)
+        return 1
+    if quality.get("schema_version") != 3 or quality.get("structural_status") != "passed":
+        print("error: review-quality-invalid: quality receipt must be schema_version 3 with structural_status passed", file=sys.stderr)
+        return 1
+    if quality.get("status") not in {"pending-review", "passed"}:
+        print("error: review-quality-failed: a failed or blocked render must be rendered again before review", file=sys.stderr)
+        return 1
+    visual_review = quality.get("visual_review")
+    if not isinstance(visual_review, dict) or visual_review.get("status") not in {"pending", "passed"}:
+        print("error: review-visual-blocked: a blocked or malformed visual review cannot be finalized; render again", file=sys.stderr)
+        return 1
+    if any(isinstance(issue, dict) and issue.get("level") == "error" for issue in quality.get("issues", [])):
+        print("error: review-quality-errors: a receipt containing render errors cannot be finalized", file=sys.stderr)
+        return 1
+    artifacts = quality.get("artifacts")
+    if not isinstance(artifacts, dict):
+        print("error: review-artifacts-missing: quality receipt has no hash-bound artifacts", file=sys.stderr)
+        return 1
+    source_receipt = artifacts.get("source")
+    actual_source_hash = sha256_file(args.source)
+    if not isinstance(source_receipt, dict) or source_receipt.get("basis") != "file-bytes" or source_receipt.get("sha256") != actual_source_hash:
+        print("error: review-source-stale: source bytes do not match the quality receipt; render again before review", file=sys.stderr)
+        return 1
+
+    declared_paths: Dict[str, Path] = {}
+    for declared_kind in ("svg", "html", "png"):
+        declared_receipt = artifacts.get(declared_kind)
+        if declared_receipt is None:
+            continue
+        if not isinstance(declared_receipt, dict):
+            print(f"error: review-artifact-set-invalid: {declared_kind} receipt is malformed", file=sys.stderr)
+            return 1
+        relative_path = declared_receipt.get("path")
+        if not isinstance(relative_path, str) or Path(relative_path).name != relative_path:
+            print(f"error: review-artifact-set-invalid: {declared_kind} receipt must declare a sibling filename", file=sys.stderr)
+            return 1
+        declared_path = args.quality.parent / relative_path
+        if not declared_path.is_file() or declared_receipt.get("sha256") != sha256_file(declared_path):
+            print(f"error: review-artifact-set-stale: declared {declared_kind} bytes do not match the quality receipt; render again before review", file=sys.stderr)
+            return 1
+        declared_paths[declared_kind] = declared_path
+
+    artifact_kind = args.artifact.suffix.lower().lstrip(".")
+    if artifact_kind not in {"svg", "png"}:
+        print("error: review-artifact-type: --artifact must be the SVG or PNG that was actually inspected", file=sys.stderr)
+        return 1
+    artifact_receipt = artifacts.get(artifact_kind)
+    if not args.artifact.is_file():
+        print(f"error: review-artifact-missing: {args.artifact}", file=sys.stderr)
+        return 1
+    actual_artifact_hash = sha256_file(args.artifact)
+    if not isinstance(artifact_receipt, dict) or artifact_receipt.get("sha256") != actual_artifact_hash:
+        print("error: review-artifact-stale: inspected artifact does not match the quality receipt; render again before review", file=sys.stderr)
+        return 1
+    if artifact_kind not in declared_paths or args.artifact.resolve() != declared_paths[artifact_kind].resolve():
+        print("error: review-artifact-path: inspected artifact must be the declared sibling output", file=sys.stderr)
+        return 1
+    if artifact_kind == "svg":
+        artifact_validation = validate_svg(args.artifact.read_text(encoding="utf-8"))
+        if artifact_validation:
+            print_issues(artifact_validation)
+            return 1
+    elif not args.artifact.read_bytes().startswith(b"\x89PNG\r\n\x1a\n"):
+        print("error: review-artifact-invalid: artifact does not have a PNG signature", file=sys.stderr)
+        return 1
+
+    try:
+        brief = json.loads(args.brief.read_text(encoding="utf-8"))
+        brief_validator = load_brief_validator()
+    except FileNotFoundError as exc:
+        print(f"error: review-brief-missing: {exc.filename}", file=sys.stderr)
+        return 1
+    except (json.JSONDecodeError, RuntimeError) as exc:
+        print(f"error: review-brief-invalid: {exc}", file=sys.stderr)
+        return 1
+    brief_issues = brief_validator.validate_brief(brief, require_review=True, spec=source)
+    if brief_issues:
+        for issue in brief_issues:
+            print(f"{issue.level}: {issue.code}: {issue.message}")
+        return 1
+    brief_hash = sha256_file(args.brief)
+    prior_review = quality.get("visual_review")
+    if isinstance(prior_review, dict) and prior_review.get("status") == "passed":
+        if prior_review.get("brief_sha256") != brief_hash:
+            print("error: review-brief-stale: a passed receipt is bound to different brief bytes; render again before re-review", file=sys.stderr)
+            return 1
+        if prior_review.get("artifact_sha256") != actual_artifact_hash:
+            print("error: review-artifact-stale: a passed receipt is bound to different artifact bytes", file=sys.stderr)
+            return 1
+
+    artifacts["brief"] = {"sha256": brief_hash, "basis": "file-bytes"}
+    quality["visual_review"] = {
+        "status": "passed",
+        "artifact": artifact_kind,
+        "artifact_sha256": actual_artifact_hash,
+        "brief_sha256": brief_hash,
+        "source_sha256": actual_source_hash,
+        "evidence": "review_answers",
+    }
+    quality["status"] = "passed"
+    args.quality.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=args.quality.parent, prefix=f".{args.quality.name}.", suffix=".tmp", delete=False) as handle:
+        json.dump(quality, handle, ensure_ascii=False, indent=2)
+        handle.write("\n")
+        temporary = Path(handle.name)
+    temporary.replace(args.quality)
+    print(f"review finalized: {args.quality}")
+    print(f"artifact: {artifact_kind} sha256={actual_artifact_hash}")
+    return 0
 
 
 def command_types(_: argparse.Namespace) -> int:
@@ -1753,7 +2333,7 @@ def command_new(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="VisualSpec: render polished, validated diagrams from JSON")
+    parser = argparse.ArgumentParser(description="DiagramSpec: render polished, validated diagrams from JSON")
     subparsers = parser.add_subparsers(dest="command", required=True)
     validate = subparsers.add_parser("validate", help="Validate structure and computed geometry")
     validate.add_argument("input", type=Path)
@@ -1767,7 +2347,7 @@ def build_parser() -> argparse.ArgumentParser:
     render.add_argument("input", type=Path)
     render.add_argument("--output-dir", type=Path, required=True)
     render.add_argument("--name", help="Output basename")
-    render.add_argument("--png", action="store_true", help="Export a 1920 px PNG with rsvg-convert")
+    render.add_argument("--png", action="store_true", help="Export a 1920 px PNG with rsvg-convert or ImageMagick")
     render.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     render.set_defaults(func=command_render)
     types = subparsers.add_parser("types", help="List supported diagram types and starter templates")
@@ -1777,6 +2357,14 @@ def build_parser() -> argparse.ArgumentParser:
     new.add_argument("--output", type=Path, required=True)
     new.add_argument("--force", action="store_true", help="Replace an existing output file")
     new.set_defaults(func=command_new)
+    png_backend = subparsers.add_parser("png-backend", help="Report whether an optional PNG rasterizer is available")
+    png_backend.set_defaults(func=command_png_backend)
+    review = subparsers.add_parser("review", help="Finalize a hash-bound quality receipt after visual inspection")
+    review.add_argument("source", type=Path, help="Diagram source used for rendering")
+    review.add_argument("--quality", type=Path, required=True, help="Pending schema_version 3 quality receipt")
+    review.add_argument("--brief", type=Path, required=True, help="Completed Diagram Brief with concrete passing review evidence")
+    review.add_argument("--artifact", type=Path, required=True, help="Exact SVG or PNG that was visually inspected")
+    review.set_defaults(func=command_review)
     return parser
 
 

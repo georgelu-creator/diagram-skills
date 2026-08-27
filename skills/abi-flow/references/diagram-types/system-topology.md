@@ -25,5 +25,5 @@ Use `blueprint` by default. `external` marks boundaries, `agent` active orchestr
 ## Example prompt
 
 ```text
-Create a system-topology diagram for a highly available AI API. Include clients, global gateway, Agent API, async workers, primary store, event bus, telemetry hub, and explicit sync/async paths. Group edge, service, data, and observability planes. Use blueprint theme, bilingual labels, VisualSpec JSON, strict validation.
+Create a system-topology diagram for a highly available AI API. Include clients, global gateway, Agent API, async workers, primary store, event bus, telemetry hub, and explicit sync/async paths. Group edge, service, data, and observability planes. Use blueprint theme, bilingual labels, DiagramSpec JSON, strict validation.
 ```

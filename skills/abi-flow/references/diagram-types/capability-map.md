@@ -24,5 +24,5 @@ Use `notion` for portfolio documentation or `spectrum` for product storytelling.
 ## Example prompt
 
 ```text
-Create a capability-map for an AI customer-support platform. North star: trusted resolution at scale. Domains: understanding, orchestration, agent assistance, automation, governance. Outcomes: faster resolution, higher quality, lower risk. Use three top-to-bottom bands, no invented sequence, concise Chinese labels, English feature keywords, spectrum theme, valid VisualSpec JSON.
+Create a capability-map for an AI customer-support platform. North star: trusted resolution at scale. Domains: understanding, orchestration, agent assistance, automation, governance. Outcomes: faster resolution, higher quality, lower risk. Use three top-to-bottom bands, no invented sequence, concise Chinese labels, English feature keywords, spectrum theme, valid DiagramSpec JSON.
 ```

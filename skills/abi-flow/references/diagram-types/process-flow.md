@@ -24,5 +24,5 @@ Use `paper` for business operations and `terminal` for runbooks. Use verbs for a
 ## Example prompt
 
 ```text
-Create a process-flow for production release: candidate change, automated checks, risk gate, canary, monitoring, full release, retrospective, and a fix/retry path. Use a left-to-right happy path with explicit success/error/feedback semantics, paper theme, Chinese-first labels, VisualSpec JSON, strict validation.
+Create a process-flow for production release: candidate change, automated checks, risk gate, canary, monitoring, full release, retrospective, and a fix/retry path. Use a left-to-right happy path with explicit success/error/feedback semantics, paper theme, Chinese-first labels, DiagramSpec JSON, strict validation.
 ```

@@ -52,6 +52,7 @@
       "goal": "Trace governed data from source systems to real-time compute, historical storage, model serving and product feedback.",
       "copy_prompt": "Map our RAG and real-time AI data flow. Separate sources, ingestion and governance, compute and storage, model serving, product experience, and the learning feedback path.",
       "source": "skills/abi-flow/templates/data-flow.json",
+      "brief": "examples/briefs/data-flow.brief.json",
       "svg": "examples/generated/data-flow.svg",
       "html": "examples/generated/data-flow.html",
       "png": "examples/generated/data-flow.png",
@@ -69,6 +70,7 @@
       "goal": "Connect the product north star to platform capabilities, governance and measurable outcomes.",
       "copy_prompt": "Create a capability map for our AI product. Start with the north star, organize the core capability domains, and connect each domain to the customer or business outcomes it enables.",
       "source": "skills/abi-flow/templates/capability-map.json",
+      "brief": "examples/briefs/capability-map.brief.json",
       "svg": "examples/generated/capability-map.svg",
       "html": "examples/generated/capability-map.html",
       "png": "examples/generated/capability-map.png",
@@ -86,6 +88,7 @@
       "goal": "Make ownership, approval, implementation, evidence, staged release and rework visible across teams.",
       "copy_prompt": "Visualize our release process as swimlanes for product, security and engineering. Show the approval gate, implementation, evidence, staged release and the rework loop with explicit ownership.",
       "source": "examples/swimlane-release.json",
+      "brief": "examples/briefs/swimlane-release.brief.json",
       "svg": "examples/generated/swimlane-release.svg",
       "html": "examples/generated/swimlane-release.html",
       "png": "examples/generated/swimlane-release.png",
@@ -103,10 +106,29 @@
       "goal": "Show runtime dependencies and synchronous, asynchronous, control and observability paths across service planes.",
       "copy_prompt": "Show the runtime topology of our highly available AI service. Separate edge, service, data and observability planes, and distinguish synchronous requests, asynchronous work and telemetry paths.",
       "source": "skills/abi-flow/templates/system-topology.json",
+      "brief": "examples/briefs/system-topology.brief.json",
       "svg": "examples/generated/system-topology.svg",
       "html": "examples/generated/system-topology.html",
       "png": "examples/generated/system-topology.png",
       "quality": "examples/generated/system-topology.quality.json"
+    },
+    {
+      "slug": "ai-assistant-first-activation-user-flow",
+      "title": "AI Assistant First-Activation User Flow",
+      "title_zh": "AI 助手首次激活用户流程",
+      "alt": "AI 助手首次激活用户流程，展示价值理解、授权、首次成功、持续使用和不确定性恢复",
+      "diagram_type": "user-flow",
+      "theme": "spectrum",
+      "status": "available",
+      "audience": "Product, onboarding and customer-success teams",
+      "goal": "Explain how a new user moves from product discovery to first success and repeat use, including an uncertainty recovery path.",
+      "copy_prompt": "Show the first-activation user flow for our AI assistant. Include discovery, value understanding, a readiness decision, scoped workspace connection, first success, repeat use, and a recovery path for uncertain users.",
+      "source": "skills/abi-flow/templates/user-flow.json",
+      "brief": "examples/briefs/user-flow.brief.json",
+      "svg": "examples/generated/user-flow.svg",
+      "html": "examples/generated/user-flow.html",
+      "png": "examples/generated/user-flow.png",
+      "quality": "examples/generated/user-flow.quality.json"
     }
   ]
 }

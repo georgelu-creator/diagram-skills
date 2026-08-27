@@ -1,6 +1,7 @@
 {
-  "schema_version": 2,
-  "status": "passed",
+  "schema_version": 3,
+  "status": "pending-review",
+  "structural_status": "passed",
   "diagram": {
     "title": "多 Agent 软件交付控制面全景图",
     "type": "agent-workflow",
@@ -11,11 +12,11 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSpec"
+    "brand": "VisualSkills"
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1203.0
+    "height": 1257.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,8 +24,31 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 12
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for bands, Agent cards, control routes, text, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "0f121d9b517478b97321d1e9ef9a6b457472e7d792834bd42510c8b4a9dc7117",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "1b32487572561ac7806800c8db5c4de1f9eafe0f81d518d2ff899a375b5fd3fe",
+      "path": "multi-agent-delivery-control-plane.svg"
+    },
+    "html": {
+      "sha256": "b4d722acb783a28a1f0d83acade721140a4480abe6859a39e34fe994708c4130",
+      "path": "multi-agent-delivery-control-plane.html"
+    },
+    "png": {
+      "sha256": "aff7ea500ca2f08ff54989bf78e8d839865b2541235922dc8e0a82998aafeb6b",
+      "path": "multi-agent-delivery-control-plane.png"
+    }
+  },
+  "visual_review": {
+    "status": "pending",
+    "artifact": "png",
+    "evidence": null
+  }
 }

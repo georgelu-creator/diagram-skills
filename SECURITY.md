@@ -6,7 +6,7 @@ Security fixes are applied to the current default branch.
 
 ## Reporting
 
-Do not publish suspected vulnerabilities or sensitive diagram data in a public issue. Contact the repository owner privately through the email address associated with the GitHub profile.
+Do not publish suspected vulnerabilities or sensitive diagram data in a public issue. Use GitHub's enabled [private vulnerability reporting form](https://github.com/georgelu-creator/abi-flow/security/advisories/new). If that form is unavailable, open a public issue containing only a request for a private contact channel—do not include vulnerability details or sensitive data.
 
 ## Threat model
 

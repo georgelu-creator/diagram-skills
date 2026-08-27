@@ -25,5 +25,5 @@ Use cylinders only for durable stores, not every data-bearing component. Edge la
 ## Example prompt
 
 ```text
-Create a data-flow diagram for a real-time recommendation platform. Include app events, CDC/API ingestion, schema and PII checks, streaming features, lakehouse history, model inference, recommendation API, and outcome feedback. Keep stream and batch paths visually parallel, Chinese-first with English technical subtitles, spectrum theme, strict VisualSpec output.
+Create a data-flow diagram for a real-time recommendation platform. Include app events, CDC/API ingestion, schema and PII checks, streaming features, lakehouse history, model inference, recommendation API, and outcome feedback. Keep stream and batch paths visually parallel, Chinese-first with English technical subtitles, spectrum theme, strict DiagramSpec output.
 ```

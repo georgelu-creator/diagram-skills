@@ -24,5 +24,5 @@ Use `paper` or `notion`. Reserve green/red semantics for accepted/rejected branc
 ## Example prompt
 
 ```text
-Create a decision-tree for whether an AI feature should launch. Questions: user value proven, privacy/safety risk controlled, evaluation evidence sufficient. Outcomes: research further, guarded pilot, or general launch. Use top-to-bottom diamonds, explicit branch labels, paper theme, Chinese-first labels, valid VisualSpec JSON.
+Create a decision-tree for whether an AI feature should launch. Questions: user value proven, privacy/safety risk controlled, evaluation evidence sufficient. Outcomes: research further, guarded pilot, or general launch. Use top-to-bottom diamonds, explicit branch labels, paper theme, Chinese-first labels, valid DiagramSpec JSON.
 ```

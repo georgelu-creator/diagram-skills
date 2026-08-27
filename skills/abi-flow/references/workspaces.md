@@ -1,6 +1,6 @@
 # Multi-view workspaces
 
-A workspace is the browser editor's source of truth for overview-to-detail navigation. Use it when one canvas would exceed the primary-message rule or when different audiences need different levels of detail.
+A workspace is the optional repository Studio's source of truth for overview-to-detail navigation. It is not required for the standalone installed Skill. Use it only when a full repository checkout contains `editor/` and one canvas would exceed the primary-message rule or different audiences need different levels of detail.
 
 ## Shape
 
@@ -52,8 +52,16 @@ A workspace is the browser editor's source of truth for overview-to-detail navig
 
 ## Validation
 
+From a full repository checkout:
+
 ```bash
 python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
+```
+
+From an installed Skill folder, validate any user-supplied workspace with a path that exists locally:
+
+```bash
+python3 scripts/abi_flow.py workspace-validate /path/to/workspace.json --strict
 ```
 
 Mermaid syntax is validated in the browser editor by the official Mermaid engine; the dependency-free Python validator checks that Mermaid views contain non-empty source.

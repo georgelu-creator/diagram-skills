@@ -14,19 +14,19 @@ VisualSkills accepts focused contributions that improve diagram meaning, source-
 
 ```bash
 python3 -m unittest discover -s tests -v
-python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
-python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/agent-workflow.brief.json --spec skills/abi-flow/templates/agent-workflow.json --strict --reviewed
 for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done
-python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/abi-flow
+python3 -m unittest tests.test_skill_package tests.test_gallery_manifest -v
+python3 skills/abi-flow/scripts/abi_flow.py png-backend
+python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
 python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
 cd editor
 npm ci
 npm run typecheck
 npm test
 npm run build
-npm audit
+npm audit --audit-level=moderate
 ```
 
 For visual changes, render representative `LR` and `TB` diagrams in light and dark themes. Inspect the PNG at full size for clipping, text wrapping, hierarchy, edge routes, group boundaries, and contrast.

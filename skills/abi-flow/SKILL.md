@@ -1,6 +1,6 @@
 ---
 name: abi-flow
-description: Generate presentation-ready enterprise architecture diagrams, Agent workflows, data flows, capability maps, user flows, topologies, decisions, roadmaps, strategy maps, and swimlane processes from a request. Use when the Agent should deliver polished SVG/HTML with editable JSON, plus PNG when a local rasterizer is available—not merely diagram source. Includes high-density layered boards, graph starters, visual themes, and optional local Studio workflows. Do not use for quantitative charts or free-form raster illustration.
+description: Generate presentation-ready enterprise architecture diagrams, Agent workflows, data flows, capability maps, user flows, topologies, decisions, roadmaps, strategy maps, and swimlane processes from a request. Use when the Agent should directly deliver polished SVG/HTML with editable JSON, plus PNG when a supported local rasterizer is available—not merely diagram source. Includes a self-contained renderer, high-density layered boards, graph starters, visual themes, and strict quality evidence. Do not use for quantitative charts or free-form raster illustration.
 ---
 
 # VisualSkills
@@ -13,9 +13,9 @@ Turn a diagram request into a finished visual deliverable with the bundled Diagr
 2. Read the selected profile in [references/diagram-thinking-profiles.json](references/diagram-thinking-profiles.json), tailor at least three quality questions, and run `diagram_brief.py ... --strict` before drawing.
 3. For a layered overview with more than 14 visible concepts, read [references/enterprise-board.md](references/enterprise-board.md) and use `layout: board`. For smaller relationship graphs, use nodes/edges.
 4. Start from the matching template, replace its example content, and keep the brief and source JSON beside the outputs.
-5. Run `render ... --strict`; add `--png` when `rsvg-convert` is available. A source file alone is not a completed visual request.
+5. Run `png-backend` before requesting PNG, then run `render ... --strict` with `--png` only when a supported local rasterizer is available. A source file alone is not a completed visual request.
 6. Inspect the generated SVG or 1920-pixel PNG at full size. Check hierarchy, Chinese text, icon consistency, clipping, crowded cards, line crossings, and whether the brief's narrative is visually dominant.
-7. Answer every brief quality question with concrete evidence and run `diagram_brief.py ... --spec ... --strict --reviewed`. If any answer fails or the type/composition differs from the source, correct the brief, source, or renderer and rerender. Stop after three evidence-based correction rounds; then simplify or split.
+7. Answer every brief quality question with concrete, distinct evidence and run `diagram_brief.py ... --spec ... --strict --reviewed`. Then bind the reviewed brief, source, and inspected SVG or PNG into the quality receipt with `abi_flow.py review ...`. If any check fails, correct the brief, source, or renderer and rerender. Stop after three evidence-based correction rounds; then simplify or split.
 8. Deliver the image first, then link the brief, SVG/HTML/source/quality evidence. Mention the browser editor only when the user asks for manual editing, imports, or drill-down.
 
 ## Route the request
@@ -36,11 +36,9 @@ Turn a diagram request into a finished visual deliverable with the bundled Diagr
 4. Read only the selected type's profile in [references/diagram-thinking-profiles.json](references/diagram-thinking-profiles.json).
 5. Read [references/spec.md](references/spec.md) while authoring a single diagram. Use `scripts/abi_flow.py new` for a production-shaped starter.
 6. Read [references/enterprise-board.md](references/enterprise-board.md) for high-density layered architecture infographics, section grids, side lists, process strips, and principle cards.
-7. Read [references/workspaces.md](references/workspaces.md) only for overview-to-detail projects, `child_view`, or mixed native/Mermaid views.
-8. Read [references/imports.md](references/imports.md) before importing Mermaid or CSV. Preserve Mermaid source; do not promise a native conversion from an unstable or partial AST.
-9. Read [references/editor.md](references/editor.md) only when direct manipulation, live editing, or offline browser persistence is explicitly useful.
-10. Read [references/visual-language.md](references/visual-language.md) only when choosing themes, brand tokens, node/edge semantics, or Chinese/English label treatment.
-11. Apply [references/quality-contract.md](references/quality-contract.md). A generated file is only a candidate until content review, strict validation, and visual review pass.
+7. The installed Skill is the complete generation path. If a full VisualSkills repository checkout is also present, [references/workspaces.md](references/workspaces.md), [references/imports.md](references/imports.md), and [references/editor.md](references/editor.md) describe optional Studio-only workflows. Check that the repository's `editor/` directory exists before offering them; never make them a prerequisite for generation.
+8. Read [references/visual-language.md](references/visual-language.md) only when choosing themes, brand tokens, node/edge semantics, or Chinese/English label treatment.
+9. Apply [references/quality-contract.md](references/quality-contract.md). A generated file is only a candidate until content review, strict validation, and visual review pass.
 
 ## Input contract
 
@@ -62,8 +60,8 @@ Accept natural language or structured fields. Preserve user-provided values; inf
 - `language`: Chinese-first by default; retain established English technical terms
 - `theme`: `paper`, `notion`, `spectrum`, `blueprint`, or `terminal`
 - `brand`: allowlisted hex color tokens layered over a preset
-- `views`: overview and detail views; connect with `child_view`
-- `imports`: optional Mermaid source or CSV table
+- `views`: optional repository-Studio overview and detail views; connect with `child_view`
+- `imports`: optional repository-Studio Mermaid source or CSV table
 - `outputs`: finished SVG/HTML plus source JSON and diagnostics by default; PNG when the local rasterizer is available
 
 Ask only when an unresolved choice materially changes meaning, publishing safety, or required output. Otherwise choose the conventional layout from the type guide and state the assumption.
@@ -75,15 +73,17 @@ From the Skill folder:
 ```bash
 python3 scripts/diagram_brief.py work/architecture.brief.json --strict
 python3 scripts/abi_flow.py types
+python3 scripts/abi_flow.py png-backend
 python3 scripts/abi_flow.py new system-architecture --output work/architecture.json
 python3 scripts/abi_flow.py validate work/architecture.json --strict
-python3 scripts/abi_flow.py render work/architecture.json --output-dir output --png --strict
+python3 scripts/abi_flow.py render work/architecture.json --output-dir output --strict
 python3 scripts/diagram_brief.py work/architecture.brief.json --spec work/architecture.json --strict --reviewed
+python3 scripts/abi_flow.py review work/architecture.json --quality output/architecture.quality.json --brief work/architecture.brief.json --artifact output/architecture.svg
 ```
 
-`render` writes `.svg`, `.html`, `.quality.json`, and—when `rsvg-convert` is available and `--png` is supplied—`.png`.
+`render` always writes `.svg`, `.html`, and a hash-bound `.quality.json` receipt; it also writes `.png` when `--png` is supplied and `png-backend` reports a supported rasterizer. A structurally valid render remains `pending-review` until `review` verifies the source, inspected artifact, reviewed brief, and their hashes. A failed PNG request never leaves a passed receipt.
 
-The browser workspace is optional. Use it only when the user wants manual inspection, Mermaid/CSV import, or multi-view editing.
+The installed Skill is self-contained for generation. The browser workspace, Mermaid/CSV import, and multi-view editing are repository companions and are available only from a full checkout containing `editor/`.
 
 ## Non-negotiable behavior
 
@@ -96,19 +96,19 @@ The browser workspace is optional. Use it only when the user wants manual inspec
 - Allow node links only for `https`, `http`, `mailto`, or page fragments. Executable URL schemes are rejected.
 - Keep Chinese labels concise and put stable English technical terms in subtitles. Split overloaded nodes instead of shrinking text.
 - Prefer `LR` for pipelines, roadmaps, topologies, and feedback loops; prefer `TB` for layers, decisions, strategies, and user journeys.
-- Run brief and diagram strict validation. When PNG export is available, inspect the raster at full size, answer every quality question, and validate the completed review.
+- Run brief and diagram strict validation. Inspect the SVG or full-size PNG, answer every type-profile question with distinct evidence, and finalize the hash-bound quality receipt with `review`.
 - Do not claim completion after writing Mermaid/JSON alone when the user asked for a diagram. Render and return the actual visual.
 - Keep the `.brief.json` and source JSON beside deliverables so meaning and pixels remain reproducible and reviewable.
-- Treat imported content as untrusted. Mermaid renders in strict mode, CSV becomes typed fields, and arbitrary CSS or executable links are rejected.
+- When a full repository checkout provides Studio imports, treat imported content as untrusted. Mermaid renders in strict mode, CSV becomes typed fields, and arbitrary CSS or executable links are rejected.
 
 ## Output choice
 
-- PNG: default preview and presentation deliverable; show this first.
+- PNG: preferred preview when `png-backend` reports a supported local rasterizer; otherwise show the SVG first.
 - Diagram Brief JSON: content intent, scope, uncertainty, prioritization, risks, and review evidence.
 - SVG: scalable documentation and source control.
 - HTML: responsive viewing, pan/zoom, theme switching, downloads, and clickable nodes.
 - Quality JSON: machine-readable validation evidence.
-- Workspace JSON: browser editing, mixed Mermaid/native views, offline persistence, and drill-down.
+- Workspace JSON: optional repository-Studio format for browser editing, mixed Mermaid/native views, offline persistence, and drill-down.
 
 ## Extension
 

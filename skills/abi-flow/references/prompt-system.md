@@ -79,7 +79,7 @@ content_risks, and at least three quality_questions.
 5. Tailor risks and questions from the selected thinking profile.
 6. Validate the sidecar with diagram_brief.py --strict.
 
-Stage B — VisualSpec source
+Stage B — DiagramSpec source
 1. Apply the selected type and composition contract with one dominant reading direction.
 2. Use concise Chinese labels and useful English technical subtitles.
 3. Use semantic node/edge kinds and mark intentional cycles as feedback.
@@ -88,10 +88,11 @@ Stage B — VisualSpec source
 6. Output valid graph nodes/edges or board sections/blocks/connections/flow/principles; never mix them.
 
 Stage C — Render and review
-1. Render JSON, SVG, HTML, PNG, and quality evidence with strict validation.
-2. Inspect the 1920-pixel PNG and answer every brief quality question with concrete evidence.
+1. Render JSON, SVG, HTML, and a pending hash-bound quality receipt with strict validation; add PNG only when `png-backend` succeeds.
+2. Inspect the SVG or 1920-pixel PNG and answer every profile-grounded brief quality question with concrete, distinct evidence.
 3. Append review_answers and run diagram_brief.py --spec <source.json> --strict --reviewed.
-4. If any answer fails, fix the brief, source, or renderer and rerender. Do not patch generated SVG.
+4. Run `abi_flow.py review` with the source, pending quality receipt, reviewed brief, and inspected artifact; never hand-edit a receipt to passed.
+5. If any answer fails, fix the brief, source, or renderer and rerender. Do not patch generated SVG.
 ```
 
 Load only the selected profile and type guide; do not copy every guide into one prompt.

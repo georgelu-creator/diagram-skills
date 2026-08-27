@@ -1,0 +1,24 @@
+{
+  "goal": "Explain how a first-time user moves from discovery to a first successful AI-assisted task and repeat use, including an uncertainty recovery path.",
+  "audience": "Product, growth, onboarding, and customer-success teams",
+  "narrative": "A user discovers the product, understands its value, decides whether to begin, connects a scoped workspace, completes a guided first task, and forms a habit; uncertain users can review evidence and reconsider.",
+  "scope": "A conceptual first-activation journey from discovery through repeat use; concrete screens, conversion metrics, authentication protocol, and billing are outside scope.",
+  "diagram_type": "user-flow",
+  "composition": "graph",
+  "must_show": ["Discovery entry", "Core value understanding", "Readiness decision", "Workspace connection", "Real example recovery", "First successful task", "Repeat-use outcome"],
+  "emphasize": ["The user's goal precedes connection", "The uncertainty branch has a recovery route", "First success is distinct from long-term habit"],
+  "deemphasize": ["Individual UI screens", "Unsupported conversion metrics", "Vendor-specific authorization details"],
+  "relationships": ["Discovery leads to value understanding", "A readiness decision separates activation from uncertainty", "Uncertain users review a real case and reconsider", "Ready users connect a scoped workspace", "Connection enables the first guided success", "First success leads to repeat use"],
+  "uncertainties": ["The concrete consent screen is unspecified", "The number of reconsideration attempts is unspecified"],
+  "assumptions": ["Workspace connection includes account, permission, and scope decisions", "The feedback route represents optional reconsideration rather than an automatic loop"],
+  "density": "medium",
+  "content_risks": ["Do not map invented screens", "Do not hide the uncertain-user recovery path", "Do not conflate first success with habitual use", "Do not invent motivation or conversion data"],
+  "quality_questions": ["Is the user's goal explicit before the first step?", "Can the happy path be followed without crossing exception branches?", "Does every decision change the subsequent path?", "Are system responses shown where they matter to user understanding?", "Is the success state unambiguous?"],
+  "review_answers": [
+    {"question": "Is the user's goal explicit before the first step?", "status": "pass", "evidence": "The title and subtitle frame first activation and continued use, while 发现产品 visibly precedes 理解核心价值 rather than beginning at an unexplained screen."},
+    {"question": "Can the happy path be followed without crossing exception branches?", "status": "pass", "evidence": "The TB success route follows 发现产品 → 理解核心价值 → 准备开始？ → 连接工作空间 → 完成首个任务 → 形成使用习惯 without crossing the recovery branch."},
+    {"question": "Does every decision change the subsequent path?", "status": "pass", "evidence": "The single 准备开始？ diamond has distinct 是 and 还不确定 exits that lead to workspace connection or evidence review respectively."},
+    {"question": "Are system responses shown where they matter to user understanding?", "status": "pass", "evidence": "连接工作空间 names Account · Permission · Scope and 完成首个任务 is visually separated as Guided success, making the system contribution visible without inventing screens."},
+    {"question": "Is the success state unambiguous?", "status": "pass", "evidence": "形成使用习惯 is the terminal green success node and is explicitly subtitled Repeat · Share · Automate after the first-task milestone."}
+  ]
+}

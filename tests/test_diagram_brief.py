@@ -73,8 +73,12 @@ class DiagramThinkingLayerTests(unittest.TestCase):
         codes = {issue.code for issue in self.validator.validate_brief(brief, require_review=True)}
         self.assertIn("missing-review-answers", codes)
         brief["review_answers"] = [
-            {"question": question, "status": "pass", "evidence": "Verified in the rendered PNG."}
-            for question in brief["quality_questions"]
+            {
+                "question": question,
+                "status": "pass",
+                "evidence": f"Visible check {index + 1}: the rendered layer label and its connected route provide concrete evidence for this question.",
+            }
+            for index, question in enumerate(brief["quality_questions"])
         ]
         self.assertEqual([], self.validator.validate_brief(brief, require_review=True))
         brief["review_answers"][0]["status"] = "fail"
@@ -95,6 +99,26 @@ class DiagramThinkingLayerTests(unittest.TestCase):
         for path in files:
             brief = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual([], self.validator.validate_brief(brief, require_review=True), path.name)
+
+    def test_quality_questions_must_be_unique_and_profile_grounded(self):
+        brief = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        brief["quality_questions"] = ["Does it look nice?", "Does it look nice?", "Is the font attractive?"]
+        codes = {issue.code for issue in self.validator.validate_brief(brief)}
+        self.assertIn("duplicate-quality-question", codes)
+        self.assertIn("profile-quality-gap", codes)
+
+    def test_review_evidence_must_be_concrete_and_distinct(self):
+        brief = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+        brief["review_answers"] = [
+            {"question": question, "status": "pass", "evidence": "Verified in the rendered PNG."}
+            for question in brief["quality_questions"]
+        ]
+        codes = {issue.code for issue in self.validator.validate_brief(brief, require_review=True)}
+        self.assertIn("weak-review-evidence", codes)
+        self.assertIn("duplicate-review-evidence", codes)
+
+    def test_reviewed_cli_requires_a_bound_spec(self):
+        self.assertEqual(1, self.validator.main([str(TEMPLATE), "--reviewed"]))
 
 
 if __name__ == "__main__":

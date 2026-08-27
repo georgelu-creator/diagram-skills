@@ -24,7 +24,7 @@ Do not use a board to hide uncertain relationships. If the source does not estab
 7. Optional `flow` strip with six or seven numbered steps.
 8. Optional `principles` strip with four to six durable design rules.
 
-The renderer uses a 1800-unit vector canvas and exports a 1920-pixel PNG when `rsvg-convert` is available. It computes section heights, block spans, card grids, anchors, icon placement, and cross-band routes deterministically.
+The renderer uses a 1800-unit vector canvas and exports a 1920-pixel PNG when `png-backend` reports rsvg-convert or ImageMagick. It computes section heights, block spans, card grids, anchors, icon placement, and cross-band routes deterministically.
 
 ## Board fields
 
@@ -64,4 +64,4 @@ Deliver the validated JSON, SVG, HTML, PNG, and quality report. Inspect the PNG
 at full size and revise the source if any label, route, or hierarchy is weak.
 ```
 
-Start from `templates/system-architecture.json` or study `examples/enterprise-agent-office.json` in the repository.
+Start from the installed `templates/system-architecture.json`. A full repository checkout also contains the larger `examples/enterprise-agent-office.json` showcase, but generation must not depend on that repository-only example.

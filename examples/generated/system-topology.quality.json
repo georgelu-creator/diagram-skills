@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "高可用 AI 服务拓扑",
     "type": "system-topology",
+    "layout": "graph",
     "nodes": 7,
     "edges": 7,
     "groups": 4,
+    "lanes": 0,
     "direction": "LR",
-    "theme": "blueprint"
+    "theme": "blueprint",
+    "brand": null
   },
   "canvas": {
     "width": 1606.8,
@@ -20,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 20
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, topology routes, contrast, whitespace, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "564725127889175e77c6c182739391eeb38d6ec619b64dab3f9cb8d738512b5a",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "149633c5d14247cc7b1963263a045ea04fb466de54e654d1a6091b1feff6e147",
+      "path": "system-topology.svg"
+    },
+    "html": {
+      "sha256": "e8e3262cb715b1afe1fac0bcae846578c590b6e3acf770ab7fb516927d0d0d5f",
+      "path": "system-topology.html"
+    },
+    "png": {
+      "sha256": "341a413ac510fca6651de86f4b9139071c3bd17604539a5f3ed9acdfd0f070c8",
+      "path": "system-topology.png"
+    },
+    "brief": {
+      "sha256": "61c5e3c3ec0b3a0434b437c54d585f4bd8eb8ade6fe597c06596c28b5ec5e9a8",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "341a413ac510fca6651de86f4b9139071c3bd17604539a5f3ed9acdfd0f070c8",
+    "brief_sha256": "61c5e3c3ec0b3a0434b437c54d585f4bd8eb8ade6fe597c06596c28b5ec5e9a8",
+    "source_sha256": "564725127889175e77c6c182739391eeb38d6ec619b64dab3f9cb8d738512b5a",
+    "evidence": "review_answers"
+  }
 }

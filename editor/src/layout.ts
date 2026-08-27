@@ -170,7 +170,16 @@ async function elkNodes(view: VisualSpecView): Promise<CanvasNode[]> {
   }));
 }
 
+export function assertUniqueLayoutIds(view: VisualSpecView): void {
+  const seen = new Set<string>();
+  for (const node of view.nodes) {
+    if (seen.has(node.id)) throw new Error(`Cannot layout duplicate node id: ${node.id}`);
+    seen.add(node.id);
+  }
+}
+
 export async function layoutView(view: VisualSpecView): Promise<{ nodes: CanvasNode[]; edges: CanvasEdge[] }> {
+  assertUniqueLayoutIds(view);
   const nodes = view.lanes.length
     ? swimlaneNodes(view)
     : view.layout_mode === "ranked"

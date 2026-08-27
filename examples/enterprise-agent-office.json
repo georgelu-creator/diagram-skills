@@ -4,7 +4,7 @@
   "diagram_type": "system-architecture",
   "layout": "board",
   "theme": "paper",
-  "brand": {"name": "VisualSpec", "primary": "#246BCE", "accent": "#6D3BC3"},
+  "brand": {"name": "VisualSkills", "primary": "#246BCE", "accent": "#6D3BC3"},
   "sections": [
     {
       "id": "devices",

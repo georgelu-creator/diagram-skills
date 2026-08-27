@@ -1,0 +1,24 @@
+{
+  "goal": "Explain the runtime planes and synchronous, asynchronous, and telemetry dependencies of a highly available AI service without inventing deployment facts.",
+  "audience": "Platform, reliability, and AI service engineering teams",
+  "narrative": "Client traffic enters through a global gateway, splits into synchronous Agent API and asynchronous worker paths, persists through distinct data components, and emits telemetry to one observability plane.",
+  "scope": "A logical runtime topology spanning edge, service, data, and observability planes; concrete regions, replicas, failover policy, network protocols, and capacity are outside scope.",
+  "diagram_type": "system-topology",
+  "composition": "graph",
+  "must_show": ["Clients", "Global gateway", "Synchronous Agent API", "Asynchronous workers", "Primary state store", "Event bus", "Telemetry hub", "Edge, service, data, and observability planes"],
+  "emphasize": ["Synchronous and asynchronous traffic are visually distinct", "Runtime planes are explicit", "No unsupported redundancy is shown"],
+  "deemphasize": ["Conceptual product capabilities", "Vendor names", "Unspecified regions and replicas"],
+  "relationships": ["Clients call the global gateway", "The gateway routes synchronous traffic to Agent API", "The gateway sends asynchronous work to workers", "API uses the primary store", "Workers use the event bus", "Data components emit telemetry"],
+  "uncertainties": ["Region placement and failover policy are unspecified", "Replication and delivery guarantees are unspecified"],
+  "assumptions": ["Global Gateway is a logical runtime entry rather than proof of multi-region deployment", "Telemetry links express observation, not business data movement"],
+  "density": "medium",
+  "content_risks": ["Do not imply redundancy that is not supplied", "Do not mix conceptual architecture layers with deployment zones", "Do not render telemetry as primary application traffic", "Do not collapse synchronous and asynchronous paths"],
+  "quality_questions": ["Can the viewer identify deployment or trust zones immediately?", "Are primary traffic and failover/replication visually distinct?", "Are only runtime-relevant dependencies shown?", "Is observability placed as a cross-cutting concern only when supported?", "Does the diagram avoid implying redundancy that was not specified?"],
+  "review_answers": [
+    {"question": "Can the viewer identify deployment or trust zones immediately?", "status": "pass", "evidence": "Four labelled enclosures—EDGE, SERVICE PLANE, DATA PLANE, and OBSERVABILITY—separate runtime roles without adding unsupported geographic boundaries."},
+    {"question": "Are primary traffic and failover/replication visually distinct?", "status": "pass", "evidence": "Primary and async request routes use distinct line semantics, while no failover or replication edge is drawn because neither behavior was supplied."},
+    {"question": "Are only runtime-relevant dependencies shown?", "status": "pass", "evidence": "Every visible node is a client, gateway, service, worker, store, bus, or telemetry component; product capabilities and roadmap concepts do not appear."},
+    {"question": "Is observability placed as a cross-cutting concern only when supported?", "status": "pass", "evidence": "Telemetry Hub sits in its own OBSERVABILITY enclosure and receives the two supplied metrics/events paths from data components rather than intercepting request traffic."},
+    {"question": "Does the diagram avoid implying redundancy that was not specified?", "status": "pass", "evidence": "Primary Store appears once and there are no replica, region, failover, active-active, or standby labels anywhere in the rendered topology."}
+  ]
+}

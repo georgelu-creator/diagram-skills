@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "Agent 任务执行闭环",
     "type": "agent-workflow",
+    "layout": "graph",
     "nodes": 8,
     "edges": 9,
     "groups": 0,
+    "lanes": 0,
     "direction": "LR",
-    "theme": "spectrum"
+    "theme": "spectrum",
+    "brand": null
   },
   "canvas": {
     "width": 2406.0,
@@ -20,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 27
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, routes, contrast, whitespace, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "8842f14506a526847798c2f561908d3528cfe378a24e0891a1cfbb7eebc9736e",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "8d51a7e709c5e45ffb3892395d685a7883c1f4c3432f9bfa30f652f9cf95fff6",
+      "path": "agent-workflow.svg"
+    },
+    "html": {
+      "sha256": "05edd4512bc4b42b41111bf4e86c1dee12c198359415e0f3c14c46a15a7e191b",
+      "path": "agent-workflow.html"
+    },
+    "png": {
+      "sha256": "577183cef450c672a8d4c9fe1515c884ad84b15ff1b3aefe624e9fc82fd5e161",
+      "path": "agent-workflow.png"
+    },
+    "brief": {
+      "sha256": "ed27c3203aed30748d9524f32d67e37f7d538abaf2c976df4721b5309b832670",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "577183cef450c672a8d4c9fe1515c884ad84b15ff1b3aefe624e9fc82fd5e161",
+    "brief_sha256": "ed27c3203aed30748d9524f32d67e37f7d538abaf2c976df4721b5309b832670",
+    "source_sha256": "8842f14506a526847798c2f561908d3528cfe378a24e0891a1cfbb7eebc9736e",
+    "evidence": "review_answers"
+  }
 }

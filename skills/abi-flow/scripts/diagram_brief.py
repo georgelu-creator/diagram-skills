@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Validate VisualSpec Diagram Brief sidecars and completed content reviews."""
+"""Validate DiagramSpec Brief sidecars and completed content reviews."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -22,6 +24,15 @@ REQUIRED_LISTS = {
 }
 OPTIONAL_FIELDS = {"review_answers"}
 PROFILE_FIELDS = {"question", "focus", "must_distinguish", "failure_modes", "quality_questions"}
+STOP_WORDS = {
+    "about", "after", "again", "against", "also", "and", "are", "been", "before", "being",
+    "between", "both", "but", "can", "could", "does", "each", "every", "from", "have", "into",
+    "only", "rather", "should", "that", "the", "their", "then", "there", "these", "they", "this",
+    "those", "through", "under", "viewer", "when", "where", "which", "while", "with", "without",
+}
+GENERIC_EVIDENCE = {
+    "verified in the rendered png", "verified in the rendered svg", "looks good", "checked", "passed",
+}
 
 
 @dataclass(frozen=True)
@@ -40,6 +51,55 @@ def _non_empty_string(value: Any) -> bool:
 
 def _string_list(value: Any) -> bool:
     return isinstance(value, list) and all(_non_empty_string(item) for item in value)
+
+
+def canonical_sha256(value: Any) -> str:
+    content = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(content).hexdigest()
+
+
+def _semantic_tokens(text: str) -> set[str]:
+    words = re.findall(r"[a-z0-9]+", text.lower())
+    result = set()
+    for word in words:
+        if len(word) < 4 or word in STOP_WORDS:
+            continue
+        if word.endswith("ies") and len(word) > 5:
+            word = word[:-3] + "y"
+        elif word.endswith("ing") and len(word) > 6:
+            word = word[:-3]
+        elif word.endswith("ed") and len(word) > 5:
+            word = word[:-2]
+        elif word.endswith("s") and len(word) > 5:
+            word = word[:-1]
+        result.add(word)
+    return result
+
+
+def validate_profile_questions(brief: Dict[str, Any], profile: Dict[str, Any]) -> List[BriefIssue]:
+    questions = brief.get("quality_questions")
+    if not _string_list(questions):
+        return []
+    issues: List[BriefIssue] = []
+    normalized = [" ".join(question.lower().split()) for question in questions]
+    if len(set(normalized)) != len(normalized):
+        issues.append(BriefIssue("error", "duplicate-quality-question", "quality_questions must be unique"))
+    profile_text = " ".join(
+        [profile.get("question", "")]
+        + profile.get("focus", [])
+        + profile.get("must_distinguish", [])
+        + profile.get("failure_modes", [])
+        + profile.get("quality_questions", [])
+    )
+    profile_tokens = _semantic_tokens(profile_text)
+    grounded = [question for question in questions if len(_semantic_tokens(question) & profile_tokens) >= 2]
+    total_overlap = set().union(*(_semantic_tokens(question) & profile_tokens for question in questions)) if questions else set()
+    if len(grounded) < 3 or len(total_overlap) < 6:
+        issues.append(BriefIssue(
+            "error", "profile-quality-gap",
+            "quality_questions must include at least three concrete checks grounded in this diagram type's thinking profile",
+        ))
+    return issues
 
 
 def load_profiles() -> Dict[str, Dict[str, Any]]:
@@ -80,6 +140,7 @@ def validate_review_answers(brief: Dict[str, Any], require_review: bool) -> List
 
     seen = set()
     answered = set()
+    evidence_seen = set()
     allowed_questions = set(questions) if _string_list(questions) else set()
     for index, answer in enumerate(answers):
         location = f"review_answers[{index}]"
@@ -106,6 +167,13 @@ def validate_review_answers(brief: Dict[str, Any], require_review: bool) -> List
             issues.append(BriefIssue("error", "invalid-review-status", f"{location}.status must be pass, fail, or not-reviewed"))
         if not _non_empty_string(evidence):
             issues.append(BriefIssue("error", "missing-review-evidence", f"{location}.evidence must be non-empty"))
+        else:
+            normalized_evidence = " ".join(evidence.lower().strip().rstrip(".").split())
+            if len(evidence.strip()) < 24 or normalized_evidence in GENERIC_EVIDENCE:
+                issues.append(BriefIssue("error", "weak-review-evidence", f"{location}.evidence must cite a concrete visible label, route, boundary, or layout fact"))
+            if normalized_evidence in evidence_seen:
+                issues.append(BriefIssue("error", "duplicate-review-evidence", "Each review answer needs distinct visual evidence"))
+            evidence_seen.add(normalized_evidence)
         if require_review and status != "pass":
             issues.append(BriefIssue("error", "content-review-not-passed", f"Review question did not pass: {question}"))
 
@@ -163,6 +231,8 @@ def validate_brief(brief: Dict[str, Any], require_review: bool = False, spec: An
             issues.append(BriefIssue("warning", f"empty-{field.replace('_', '-')}", f"{field} should contain at least one concrete item"))
     if _string_list(brief.get("quality_questions")) and len(brief["quality_questions"]) < 3:
         issues.append(BriefIssue("warning", "weak-quality-gate", "quality_questions should contain at least three concrete checks"))
+    if _non_empty_string(diagram_type) and diagram_type in profiles:
+        issues.extend(validate_profile_questions(brief, profiles[diagram_type]))
 
     must_show = brief.get("must_show", [])
     composition = brief.get("composition")
@@ -180,6 +250,9 @@ def validate_brief(brief: Dict[str, Any], require_review: bool = False, spec: An
 
 
 def command_validate(path: Path, strict: bool, reviewed: bool, spec_path: Optional[Path]) -> int:
+    if reviewed and spec_path is None:
+        print("error: reviewed-spec-required: --reviewed requires --spec so the completed review is bound to a concrete diagram source", file=sys.stderr)
+        return 1
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:
@@ -206,15 +279,17 @@ def command_validate(path: Path, strict: bool, reviewed: bool, spec_path: Option
     failed = any(issue.level == "error" or (strict and issue.level == "warning") for issue in issues)
     if not issues:
         print("brief validation: passed" + (" (review complete)" if reviewed else ""))
+        if reviewed and diagram_spec is not None:
+            print(f"reviewed spec sha256 (canonical JSON): {canonical_sha256(diagram_spec)}")
     return int(failed)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Validate a VisualSpec Diagram Brief")
+    parser = argparse.ArgumentParser(description="Validate a DiagramSpec Brief")
     parser.add_argument("input", type=Path)
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     parser.add_argument("--reviewed", action="store_true", help="Require every quality question to have passing evidence")
-    parser.add_argument("--spec", type=Path, help="Require diagram_type and composition to match this VisualSpec source")
+    parser.add_argument("--spec", type=Path, help="Require diagram_type and composition to match this DiagramSpec source")
     return parser
 
 

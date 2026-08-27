@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/georgelu-creator/abi-flow/blob/main/skills/abi-flow/references/spec.schema.json",
-  "title": "ABI Flow diagram",
+  "title": "DiagramSpec diagram",
   "type": "object",
   "additionalProperties": false,
   "required": ["title"],
@@ -16,12 +16,13 @@
     "title": {"type": "string", "minLength": 1},
     "subtitle": {"type": "string"},
     "diagram_type": {
+      "type": "string",
       "enum": ["system-architecture", "agent-workflow", "data-flow", "capability-map", "user-flow", "system-topology", "decision-tree", "roadmap", "strategy-map", "process-flow"],
       "default": "process-flow"
     },
-    "direction": {"enum": ["LR", "TB"], "default": "LR"},
-    "layout": {"enum": ["graph", "board"], "default": "graph"},
-    "theme": {"enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
+    "direction": {"type": "string", "enum": ["LR", "TB"], "default": "LR"},
+    "layout": {"type": "string", "enum": ["graph", "board"], "default": "graph"},
+    "theme": {"type": "string", "enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
     "brand": {
       "type": "object",
       "additionalProperties": false,
@@ -90,7 +91,7 @@
           "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
           "label": {"type": "string", "minLength": 1},
           "subtitle": {"type": "string"},
-          "type": {"enum": ["process", "decision", "input", "document", "database", "agent", "external"], "default": "process"},
+          "type": {"type": "string", "enum": ["process", "decision", "input", "document", "database", "agent", "external"], "default": "process"},
           "group": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
           "lane": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
           "rank": {"type": "integer", "minimum": 0},
@@ -109,7 +110,7 @@
           "source": {"type": "string"},
           "target": {"type": "string"},
           "label": {"type": "string"},
-          "kind": {"enum": ["primary", "control", "feedback", "async", "success", "error"], "default": "primary"}
+          "kind": {"type": "string", "enum": ["primary", "control", "feedback", "async", "success", "error"], "default": "primary"}
         }
       }
     }
@@ -118,6 +119,7 @@
     "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"},
     "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
     "boardIcon": {
+      "type": "string",
       "enum": ["agent", "api", "archive", "brain", "calendar", "chat", "check", "cloud", "code", "database", "desktop", "document", "folder", "gateway", "graph", "image", "laptop", "layers", "lock", "mail", "metrics", "model", "note", "phone", "prompt", "robot", "schema", "search", "shield", "spark", "stream", "sync", "terminal", "test", "user"]
     },
     "boardItem": {
@@ -143,7 +145,7 @@
       "required": ["id", "kind", "title"],
       "properties": {
         "id": {"$ref": "#/$defs/id"},
-        "kind": {"enum": ["grid", "banner", "list"]},
+        "kind": {"type": "string", "enum": ["grid", "banner", "list"]},
         "title": {"type": "string"},
         "subtitle": {"type": "string"},
         "icon": {"$ref": "#/$defs/boardIcon"},
@@ -162,7 +164,7 @@
         "id": {"$ref": "#/$defs/id"},
         "label": {"type": "string", "minLength": 1},
         "subtitle": {"type": "string"},
-        "tone": {"enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
+        "tone": {"type": "string", "enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
         "blocks": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"$ref": "#/$defs/boardBlock"}}
       }
     },
@@ -174,7 +176,7 @@
         "source": {"$ref": "#/$defs/id"},
         "target": {"$ref": "#/$defs/id"},
         "label": {"type": "string"},
-        "kind": {"enum": ["primary", "control", "feedback", "async", "success", "error"]},
+        "kind": {"type": "string", "enum": ["primary", "control", "feedback", "async", "success", "error"]},
         "bidirectional": {"type": "boolean"}
       }
     },
@@ -184,7 +186,7 @@
       "required": ["label", "steps"],
       "properties": {
         "label": {"type": "string", "minLength": 1},
-        "tone": {"enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
+        "tone": {"type": "string", "enum": ["blue", "purple", "green", "orange", "teal", "slate", "amber"]},
         "steps": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/boardItem"}}
       }
     }

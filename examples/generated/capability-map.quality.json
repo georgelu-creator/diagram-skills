@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "AI 产品能力地图",
     "type": "capability-map",
+    "layout": "graph",
     "nodes": 7,
     "edges": 6,
     "groups": 3,
+    "lanes": 0,
     "direction": "TB",
-    "theme": "spectrum"
+    "theme": "spectrum",
+    "brand": null
   },
   "canvas": {
     "width": 960,
@@ -20,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 18
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, grouping, hierarchy, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "90c6cecf3f7bfe2a9bbb757048e03a13102d13fcbcad09a219e9c10327f3fbd7",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "8fe771f9da92ee2ca91146300095bc5f47b8a16cd1fa774d01be901ef57d9a8e",
+      "path": "capability-map.svg"
+    },
+    "html": {
+      "sha256": "349e86669c1a9e84251764362ab7d5351efb0b221f1209868b5c9f74dc69a6d3",
+      "path": "capability-map.html"
+    },
+    "png": {
+      "sha256": "2d0dd6dbadbb23332d2109ddc7dfb7ec9a1a25bd65e4682693e50732d527f1d2",
+      "path": "capability-map.png"
+    },
+    "brief": {
+      "sha256": "607e80f8ed4403d8968574969adcade6ed76b482f40ed21211892242d4649e58",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "2d0dd6dbadbb23332d2109ddc7dfb7ec9a1a25bd65e4682693e50732d527f1d2",
+    "brief_sha256": "607e80f8ed4403d8968574969adcade6ed76b482f40ed21211892242d4649e58",
+    "source_sha256": "90c6cecf3f7bfe2a9bbb757048e03a13102d13fcbcad09a219e9c10327f3fbd7",
+    "evidence": "review_answers"
+  }
 }

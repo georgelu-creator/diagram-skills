@@ -27,7 +27,7 @@ Supported `diagram_type` values:
 
 `system-architecture`, `agent-workflow`, `data-flow`, `capability-map`, `user-flow`, `system-topology`, `decision-tree`, `roadmap`, `strategy-map`, `process-flow`.
 
-The type is semantic metadata: it records intent, selects a template, appears as a diagram badge, and is included in the quality report. Direction and graph relationships still determine layout.
+The type is an enforced semantic contract, not a decorative label. It selects a template, appears as a diagram badge, and activates minimum direction, node-role, grouping, branching, and relationship rules appropriate to that grammar. Geometry still comes from the declared direction, lanes, ranks, groups, and graph relationships.
 
 ## Enterprise board
 
@@ -127,7 +127,7 @@ Swimlanes are full diagram bands. In `LR` diagrams they are horizontal; in `TB` 
 }
 ```
 
-All color values must be six- or eight-digit hex colors. The renderer maps `primary` to the primary edge and Agent accent, and `accent` to group emphasis. The allowlist prevents arbitrary CSS from entering generated SVG.
+All color values must be six- or eight-digit hex colors. Graphs and enterprise boards both consume the complete token set. The renderer maps `primary` to the primary edge and Agent/icon accent. `accent` supplies secondary header emphasis and the default group emphasis; an explicit `group_stroke` takes precedence only for the group boundary. The allowlist prevents arbitrary CSS from entering generated SVG.
 
 ## Multi-view workspaces
 

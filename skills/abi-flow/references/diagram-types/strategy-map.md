@@ -24,5 +24,5 @@ Use `notion` for leadership operating documents or `spectrum` for presentations.
 ## Example prompt
 
 ```text
-Create a strategy-map for becoming an AI-native organization. Vision: human–AI collaboration is the default. Pillars: leading experience, reusable platform, organization adoption. Map one initiative and one supplied key result to each pillar. Use four top-to-bottom bands, notion theme, Chinese-first labels, valid VisualSpec JSON.
+Create a strategy-map for becoming an AI-native organization. Vision: human–AI collaboration is the default. Pillars: leading experience, reusable platform, organization adoption. Map one initiative and one supplied key result to each pillar. Use four top-to-bottom bands, notion theme, Chinese-first labels, valid DiagramSpec JSON.
 ```

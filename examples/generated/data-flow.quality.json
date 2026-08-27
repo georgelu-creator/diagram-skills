@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "实时智能数据流",
     "type": "data-flow",
+    "layout": "graph",
     "nodes": 7,
     "edges": 8,
     "groups": 4,
+    "lanes": 0,
     "direction": "LR",
-    "theme": "spectrum"
+    "theme": "spectrum",
+    "brand": null
   },
   "canvas": {
     "width": 1965.8,
@@ -20,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 23
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, data routes, contrast, whitespace, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "3ad39738297b42325144e50e547358f97bd56a7a5f5c7a2d7d0fecffadd9c7a8",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "bf3e8c3d7068cd15959672b7c4259cf416b39915b55346206bd2a5bc2393c344",
+      "path": "data-flow.svg"
+    },
+    "html": {
+      "sha256": "23c47dbc19a55c28fa51f2a19b72175f19dfb26f83ee5e9e38fd56922c7136ce",
+      "path": "data-flow.html"
+    },
+    "png": {
+      "sha256": "c38aa402f06ebcf96a521cd8ccde577d1f5dda0cc7ad7bf7493f85aabfef28dd",
+      "path": "data-flow.png"
+    },
+    "brief": {
+      "sha256": "786697dd12058f453e6ddb141e843ecfdd59f3a6004e6616bff70ffe39d82d91",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "c38aa402f06ebcf96a521cd8ccde577d1f5dda0cc7ad7bf7493f85aabfef28dd",
+    "brief_sha256": "786697dd12058f453e6ddb141e843ecfdd59f3a6004e6616bff70ffe39d82d91",
+    "source_sha256": "3ad39738297b42325144e50e547358f97bd56a7a5f5c7a2d7d0fecffadd9c7a8",
+    "evidence": "review_answers"
+  }
 }

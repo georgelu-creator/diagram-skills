@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
-  "status": "passed",
+  "schema_version": 3,
+  "status": "pending-review",
+  "structural_status": "passed",
   "diagram": {
     "title": "Aurora Deep-Space Resilience Network",
     "type": "system-architecture",
+    "layout": "graph",
     "nodes": 12,
     "edges": 17,
     "groups": 6,
+    "lanes": 0,
     "direction": "LR",
-    "theme": "spectrum"
+    "theme": "spectrum",
+    "brand": null
   },
   "canvas": {
     "width": 2230.2,
@@ -20,8 +24,31 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 51
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for dense graph hierarchy, labels, routes, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "0927e8aa0fd6e4c06b631e699e65994395b81b330887ab8d417bad0e7b00797b",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "d5a138016a918f253bc13a0e37568567cec6657264772412bb711bb2aafa253e",
+      "path": "aurora-resilience-network.svg"
+    },
+    "html": {
+      "sha256": "1a1b6a53bc2b6b7c837d106d7f25e38cac95d323984e7e241df48bc1a577c5b4",
+      "path": "aurora-resilience-network.html"
+    },
+    "png": {
+      "sha256": "0dd2117ad0da5c559214a2a0450ad7cdaaa4a117207fa1cf767d5cf4ca17fa0c",
+      "path": "aurora-resilience-network.png"
+    }
+  },
+  "visual_review": {
+    "status": "pending",
+    "artifact": "png",
+    "evidence": null
+  }
 }

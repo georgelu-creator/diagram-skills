@@ -24,5 +24,5 @@ Use `external` for the human/entry, `input` for forms or permission grants, `dec
 ## Example prompt
 
 ```text
-Create a user-flow for first-time activation of an AI meeting assistant. Include discovery, value proof, consent, calendar connection, first recording, summary review, share, and repeat use; include a privacy-concern recovery branch. Use a top-to-bottom happy path, Chinese-first labels, spectrum theme, VisualSpec JSON, strict validation.
+Create a user-flow for first-time activation of an AI meeting assistant. Include discovery, value proof, consent, calendar connection, first recording, summary review, share, and repeat use; include a privacy-concern recovery branch. Use a top-to-bottom happy path, Chinese-first labels, spectrum theme, DiagramSpec JSON, strict validation.
 ```

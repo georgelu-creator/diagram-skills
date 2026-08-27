@@ -4,7 +4,7 @@
   "diagram_type": "agent-workflow",
   "layout": "board",
   "theme": "paper",
-  "brand": {"name": "VisualSpec", "primary": "#5B55D6", "accent": "#17856F"},
+  "brand": {"name": "VisualSkills", "primary": "#5B55D6", "accent": "#17856F"},
   "sections": [
     {
       "id": "demand",

@@ -1,6 +1,7 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "跨设备云端 Agent 办公系统架构全景图",
     "type": "system-architecture",
@@ -11,11 +12,11 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSpec"
+    "brand": "VisualSkills"
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1216.0
+    "height": 1270.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 11
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for bands, nested grids, icons, routes, text, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "1d2378c8b341eb70def42bca24ffe9b98588d374077279db5308f01b1314bd7c",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "acb8a32299e0147c7979636b02c86ee694f08f8384fe85910f400a1c6f58d4d1",
+      "path": "enterprise-agent-office.svg"
+    },
+    "html": {
+      "sha256": "33f09a42c98f2eb11695714c08471f1fe87946dce226c8cc7f4c5df68bc84bd0",
+      "path": "enterprise-agent-office.html"
+    },
+    "png": {
+      "sha256": "89e3252f708ea58b0fa2de949c0729ae6c06846bced3dd786a50ab0e0773a0f5",
+      "path": "enterprise-agent-office.png"
+    },
+    "brief": {
+      "sha256": "e8b026b46b4b36bf862430d3ccc2b669e1cc7c3f47d5b1165f277d8460514fdc",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "89e3252f708ea58b0fa2de949c0729ae6c06846bced3dd786a50ab0e0773a0f5",
+    "brief_sha256": "e8b026b46b4b36bf862430d3ccc2b669e1cc7c3f47d5b1165f277d8460514fdc",
+    "source_sha256": "1d2378c8b341eb70def42bca24ffe9b98588d374077279db5308f01b1314bd7c",
+    "evidence": "review_answers"
+  }
 }

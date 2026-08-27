@@ -9,9 +9,20 @@ A render is deliverable only when every required check passes.
 - Uncertainties remain absent from the diagram unless later resolved; assumptions are explicit and low risk.
 - `must_show` facts remain visible; `deemphasize` facts are intentionally grouped, omitted, or moved to a detail view.
 - Content risks are tailored to the selected diagram type rather than copied mechanically.
-- After PNG inspection, every quality question has a passing `review_answers` entry with concrete evidence.
+- After SVG or PNG inspection, every type-profile question has a passing `review_answers` entry with concrete, distinct evidence.
 
-Run `diagram_brief.py <brief> --strict` before authoring and `diagram_brief.py <brief> --spec <source> --strict --reviewed` before delivery. The latter also proves that type and composition agree with the rendered source.
+Run `diagram_brief.py <brief> --strict` before authoring and `diagram_brief.py <brief> --spec <source> --strict --reviewed` after inspection. The latter requires the source, profile-grounded unique questions, and non-template evidence, and proves that type and composition agree.
+
+Then finalize the render receipt:
+
+```bash
+python3 scripts/abi_flow.py review source.json \
+  --quality output/diagram.quality.json \
+  --brief source.brief.json \
+  --artifact output/diagram.svg
+```
+
+`render` records source and output SHA-256 values plus sibling artifact filenames and leaves overall status `pending-review`. `review` recomputes the source hash and every declared SVG/HTML/PNG hash, validates the brief against the source, verifies that the inspected SVG or PNG is the declared sibling output, and atomically changes the receipt to `passed`. Any changed source, brief, sibling artifact, missing PNG, failed PNG request, or failed structural check blocks finalization; rerender instead of editing the receipt by hand. A failed PNG receipt cannot be finalized by switching the review target to SVG: rerender without `--png` first.
 
 ## Structural gate
 
@@ -43,7 +54,7 @@ For high-density boards, review at the delivered 1920-pixel width. The board is 
 
 ## Visual review gate
 
-When a PNG renderer is available:
+When `png-backend` reports a PNG renderer:
 
 1. Render at 1920 px width.
 2. Inspect the image rather than trusting source validation.
@@ -52,7 +63,7 @@ When a PNG renderer is available:
 
 The deliverable is the rendered visual, not merely source code. Present the PNG or SVG first, keep JSON beside it for reproducibility, and treat the browser editor as an optional inspection surface rather than a required generation step.
 
-When no raster renderer or image reader is available, report `visual review: skipped` and do not claim that the diagram was visually verified.
+When no raster renderer is available, inspect the SVG at full size and bind that SVG as the reviewed artifact. If no image inspection capability is available, leave the receipt `pending-review` and do not claim visual verification.
 
 ## Security and portability gate
 

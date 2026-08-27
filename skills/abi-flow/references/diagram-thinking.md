@@ -1,6 +1,6 @@
 # Diagram thinking contract
 
-Use this reference before authoring VisualSpec nodes, cards, or edges from prose. The output is a concise, reviewable **Diagram Brief**, not private chain-of-thought. Its purpose is to prevent a geometrically correct diagram from telling the wrong story.
+Use this reference before authoring DiagramSpec nodes, cards, or edges from prose. The output is a concise, reviewable **Diagram Brief**, not private chain-of-thought. Its purpose is to prevent a geometrically correct diagram from telling the wrong story.
 
 ## Content pass
 
@@ -43,7 +43,7 @@ python3 scripts/diagram_brief.py work/example.brief.json --strict
 
 ## Closed-loop review
 
-After rendering and inspecting the PNG, append one answer for every `quality_questions` entry:
+After rendering and inspecting the SVG or PNG, append one concrete, distinct answer for every profile-grounded `quality_questions` entry:
 
 ```json
 "review_answers": [
@@ -62,6 +62,8 @@ python3 scripts/diagram_brief.py work/example.brief.json --spec work/example.jso
 ```
 
 `--reviewed` fails when any question is missing, failed, not reviewed, or lacks evidence. `--spec` also blocks a mismatch between the brief's diagram type/composition and the rendered source. Fix the brief, source, or renderer and repeat; do not edit generated SVG by hand.
+
+Finally, bind the reviewed brief to the exact source and inspected artifact with `abi_flow.py review`; see [quality-contract.md](quality-contract.md).
 
 ## Type-specific distinctions
 

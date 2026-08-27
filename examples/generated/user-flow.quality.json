@@ -1,14 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "AI 助手首次激活用户流程",
     "type": "user-flow",
+    "layout": "graph",
     "nodes": 7,
     "edges": 7,
     "groups": 0,
+    "lanes": 0,
     "direction": "TB",
-    "theme": "spectrum"
+    "theme": "spectrum",
+    "brand": null
   },
   "canvas": {
     "width": 960,
@@ -20,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 20
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, decision branches, recovery routes, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "d4af2e5c46af969e63f0bd19ae34abc31b2a3f82ef17f486e7e7fa984db681f5",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "137daf20658b3d00792631c5bb805d3c4e7ed9f4a2cdcb8b85c6dd7cf24ef2fe",
+      "path": "user-flow.svg"
+    },
+    "html": {
+      "sha256": "cd360f0644f9cf82616805adb0292fa6ef7f870bfeebef07bbf4351d432d6b72",
+      "path": "user-flow.html"
+    },
+    "png": {
+      "sha256": "4fae69cbf6eec93644f05c7df46a8ceb5204c4817dec1bec194f87f060f1edf6",
+      "path": "user-flow.png"
+    },
+    "brief": {
+      "sha256": "e77539fed52bceadaae7d5cf69a8aef75c93797ec5ef08f8fa4d1c5373075360",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "4fae69cbf6eec93644f05c7df46a8ceb5204c4817dec1bec194f87f060f1edf6",
+    "brief_sha256": "e77539fed52bceadaae7d5cf69a8aef75c93797ec5ef08f8fa4d1c5373075360",
+    "source_sha256": "d4af2e5c46af969e63f0bd19ae34abc31b2a3f82ef17f486e7e7fa984db681f5",
+    "evidence": "review_answers"
+  }
 }

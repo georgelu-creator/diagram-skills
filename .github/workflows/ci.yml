@@ -15,12 +15,21 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+      - name: Install PNG rasterizer
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes librsvg2-bin
       - name: Unit tests
         run: python3 -m unittest discover -s tests -v
       - name: Diagram Brief content gates
         run: |
           python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/enterprise-agent-office.brief.json --spec examples/enterprise-agent-office.json --strict --reviewed
           python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/agent-workflow.brief.json --spec skills/abi-flow/templates/agent-workflow.json --strict --reviewed
+          python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/data-flow.brief.json --spec skills/abi-flow/templates/data-flow.json --strict --reviewed
+          python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/capability-map.brief.json --spec skills/abi-flow/templates/capability-map.json --strict --reviewed
+          python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/user-flow.brief.json --spec skills/abi-flow/templates/user-flow.json --strict --reviewed
+          python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/system-topology.brief.json --spec skills/abi-flow/templates/system-topology.json --strict --reviewed
+          python3 skills/abi-flow/scripts/diagram_brief.py examples/briefs/swimlane-release.brief.json --spec examples/swimlane-release.json --strict --reviewed
       - name: Strict example and template validation
         run: |
           python3 skills/abi-flow/scripts/abi_flow.py validate examples/aurora-resilience-network.json --strict
@@ -32,10 +41,15 @@ jobs:
           for spec in skills/abi-flow/templates/*.json; do
             python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
           done
-      - name: Render example
+      - name: Exercise real PNG and review-command integrity
         run: |
-          python3 skills/abi-flow/scripts/abi_flow.py render examples/aurora-resilience-network.json --output-dir /tmp/abi-flow --name aurora-resilience-network --strict
-          python3 skills/abi-flow/scripts/abi_flow.py render examples/enterprise-agent-office.json --output-dir /tmp/abi-flow --name enterprise-agent-office --strict
+          python3 skills/abi-flow/scripts/abi_flow.py png-backend
+          python3 skills/abi-flow/scripts/abi_flow.py render examples/enterprise-agent-office.json --output-dir /tmp/abi-flow --name enterprise-agent-office --png --strict
+          python3 -c 'import json; q=json.load(open("/tmp/abi-flow/enterprise-agent-office.quality.json")); assert q["status"] == "pending-review" and q["artifacts"]["png"]["sha256"]'
+          python3 skills/abi-flow/scripts/abi_flow.py review examples/enterprise-agent-office.json --quality /tmp/abi-flow/enterprise-agent-office.quality.json --brief examples/briefs/enterprise-agent-office.brief.json --artifact /tmp/abi-flow/enterprise-agent-office.png
+          python3 -c 'import json; q=json.load(open("/tmp/abi-flow/enterprise-agent-office.quality.json")); assert q["status"] == "passed" and q["visual_review"]["status"] == "passed"'
+          cmp /tmp/abi-flow/enterprise-agent-office.svg examples/generated/enterprise-agent-office.svg
+          cmp /tmp/abi-flow/enterprise-agent-office.html examples/generated/enterprise-agent-office.html
 
   editor:
     runs-on: ubuntu-latest

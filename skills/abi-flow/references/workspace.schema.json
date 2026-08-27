@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/georgelu-creator/abi-flow/blob/main/skills/abi-flow/references/workspace.schema.json",
-  "title": "VisualSpec multi-view workspace",
+  "title": "DiagramSpec multi-view workspace",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "title", "entry_view", "views"],

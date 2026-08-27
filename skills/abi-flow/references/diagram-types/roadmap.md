@@ -24,5 +24,5 @@ Use `spectrum` for roadmap storytelling and `notion` for operating reviews. Use 
 ## Example prompt
 
 ```text
-Create a roadmap for an AI platform across Q1–Q4. Q1 context foundation, Q2 team Agents, Q3 Skill/MCP ecosystem, Q4 governed autonomy. State the outcome of each phase and dependency to the next. Use left-to-right groups, spectrum theme, Chinese primary labels, English technical subtitles, VisualSpec JSON.
+Create a roadmap for an AI platform across Q1–Q4. Q1 context foundation, Q2 team Agents, Q3 Skill/MCP ecosystem, Q4 governed autonomy. State the outcome of each phase and dependency to the next. Use left-to-right groups, spectrum theme, Chinese primary labels, English technical subtitles, DiagramSpec JSON.
 ```

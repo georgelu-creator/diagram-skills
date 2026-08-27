@@ -16,25 +16,35 @@ import {
   type Connection,
   type NodeProps,
 } from "@xyflow/react";
-import { importCsv, importMermaid } from "./importers";
 import { layoutView, type CanvasNode, type CanvasNodeData } from "./layout";
 import {
-  WorkspaceSchema,
   diagramTypes,
   nodeTypes,
   parseWorkspace,
+  removeDiagramNodes,
   serializeWorkspace,
   themeNames,
   type DiagramNode,
   type VisualSpecView,
   type Workspace,
+  type WorkspaceUpdateResult,
   type WorkspaceView,
+  validateWorkspaceUpdate,
 } from "./model";
-import { RealtimeWorkspace, type RealtimeStatus } from "./realtime";
+import { ensureDocumentId, RealtimeWorkspace, type RealtimeStatus } from "./realtime";
 import { sampleWorkspace } from "./sample";
+import { resolveThemeTokens, themeStyle } from "./theme";
+import { prepareWorkspaceImport, type ImportMode } from "./workspace-import";
 
 const nodeTypeMap = { visual: VisualNode, lane: LaneNode };
 const Editor = lazy(() => import("./MonacoEditor"));
+
+function nextId(prefix: string, existing: Iterable<string>): string {
+  const ids = new Set(existing);
+  let index = ids.size + 1;
+  while (ids.has(`${prefix}-${index}`)) index += 1;
+  return `${prefix}-${index}`;
+}
 
 function VisualNode({ data, selected }: NodeProps<CanvasNode>) {
   const horizontal = data.direction !== "TB";
@@ -84,17 +94,23 @@ function DiagramCanvasInner({
 }) {
   const [nodes, setNodes, onNodesChange] = useNodesState<CanvasNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [layoutError, setLayoutError] = useState<string>();
   const { fitView } = useReactFlow();
   const dragStarted = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
-    layoutView(view).then((layout) => {
-      if (!active) return;
-      setNodes(layout.nodes.map((node) => ({ ...node, data: { ...node.data, direction: view.direction } as CanvasNodeData })));
-      setEdges(layout.edges);
-      window.setTimeout(() => fitView({ padding: 0.18, duration: 220 }), 0);
-    });
+    layoutView(view)
+      .then((layout) => {
+        if (!active) return;
+        setLayoutError(undefined);
+        setNodes(layout.nodes.map((node) => ({ ...node, data: { ...node.data, direction: view.direction } as CanvasNodeData })));
+        setEdges(layout.edges);
+        window.setTimeout(() => fitView({ padding: 0.18, duration: 220 }), 0);
+      })
+      .catch((error: unknown) => {
+        if (active) setLayoutError(error instanceof Error ? error.message : "Layout failed");
+      });
     return () => { active = false; };
   }, [view, setNodes, setEdges, fitView]);
 
@@ -116,6 +132,8 @@ function DiagramCanvasInner({
     });
   }, [onChange, view]);
 
+  const tokens = resolveThemeTokens(view);
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -129,11 +147,14 @@ function DiagramCanvasInner({
       onPaneClick={() => onSelectNode(undefined)}
       onNodeClick={(_event, node) => !node.id.startsWith("lane:") && onSelectNode(node.id)}
       onNodeDoubleClick={(_event, node) => node.data.childView && onOpenView(node.data.childView)}
-      onNodesDelete={(deleted) => onChange({
-        ...view,
-        nodes: view.nodes.filter((node) => !deleted.some((item) => item.id === node.id)),
-        edges: view.edges.filter((edge) => !deleted.some((item) => item.id === edge.source || item.id === edge.target)),
-      })}
+      onNodesDelete={(deleted) => {
+        const result = removeDiagramNodes(view, deleted.filter((item) => !item.id.startsWith("lane:")).map((item) => item.id));
+        if (result.ok) onChange(result.view);
+      }}
+      onBeforeDelete={async ({ nodes: deleted }) => {
+        const nodeIds = deleted.filter((item) => !item.id.startsWith("lane:")).map((item) => item.id);
+        return nodeIds.length === 0 || removeDiagramNodes(view, nodeIds).ok;
+      }}
       onEdgesDelete={(deleted) => onChange({
         ...view,
         edges: view.edges.filter((edge, index) => !deleted.some((item) => item.id === (edge.id ?? `${edge.source}-${edge.target}-${index}`))),
@@ -145,9 +166,10 @@ function DiagramCanvasInner({
       colorMode={view.theme === "blueprint" || view.theme === "terminal" ? "dark" : "light"}
       className={`canvas canvas--${view.theme}`}
     >
-      <Background gap={24} size={1} />
-      <MiniMap pannable zoomable nodeStrokeWidth={2} />
+      <Background gap={24} size={1} color={tokens.hair} />
+      <MiniMap pannable zoomable nodeStrokeWidth={2} bgColor={tokens.surface} nodeColor={tokens.group_stroke} />
       <Controls showInteractive={false} />
+      {layoutError && <div className="canvas-error">布局失败：{layoutError}</div>}
     </ReactFlow>
   );
 }
@@ -235,8 +257,16 @@ function Inspector({
           <Field label="布局"><select value={view.layout_mode} onChange={(event) => onChange({ ...view, layout_mode: event.target.value as VisualSpecView["layout_mode"] })}><option value="auto">ELK 自动布局</option><option value="ranked">手动 Rank</option><option value="manual">手动坐标</option></select></Field>
           <Field label="主题"><select value={view.theme} onChange={(event) => onChange({ ...view, theme: event.target.value as VisualSpecView["theme"] })}>{themeNames.map((theme) => <option key={theme}>{theme}</option>)}</select></Field>
           <div className="color-grid">
-            <ColorField label="品牌主色" value={view.brand?.primary ?? "#4F46E5"} onChange={(primary) => onChange({ ...view, brand: { ...view.brand, primary } })} />
-            <ColorField label="强调色" value={view.brand?.accent ?? "#14B8A6"} onChange={(accent) => onChange({ ...view, brand: { ...view.brand, accent } })} />
+            {([
+              ["primary", "品牌主色"], ["accent", "强调色"], ["page", "画布"], ["surface", "卡片"],
+              ["ink", "正文"], ["muted", "次要文字"], ["hair", "细边框"], ["group", "分组底色"],
+              ["group_stroke", "分组边框"],
+            ] as const).map(([token, label]) => <ColorField
+              key={token}
+              label={label}
+              value={view.brand?.[token] ?? resolveThemeTokens(view)[token]}
+              onChange={(value) => onChange({ ...view, brand: { ...view.brand, [token]: value } })}
+            />)}
           </div>
           <div className="button-row"><button onClick={onAddNode}>＋ 节点</button><button onClick={onAddLane}>＋ 泳道</button></div>
         </>
@@ -253,8 +283,8 @@ function ColorField({ label, value, onChange }: { label: string; value: string; 
   return <label className="color-field"><span>{label}</span><input type="color" value={value.slice(0, 7)} onChange={(event) => onChange(event.target.value)} /></label>;
 }
 
-function ImportDialog({ onClose, onImport }: { onClose: () => void; onImport: (mode: "json" | "csv" | "mermaid", title: string, source: string) => Promise<void> }) {
-  const [mode, setMode] = useState<"json" | "csv" | "mermaid">("csv");
+function ImportDialog({ onClose, onImport }: { onClose: () => void; onImport: (mode: ImportMode, title: string, source: string) => Promise<void> }) {
+  const [mode, setMode] = useState<ImportMode>("csv");
   const [title, setTitle] = useState("导入视图");
   const [source, setSource] = useState("node_id,label,type,lane,lane_label,rank,source,target,edge_kind\nrequest,提交请求,input,user,用户,0,,,\nreview,人工审核,decision,ops,运营,1,request,review,control\napprove,审核通过,process,ops,运营,2,review,approve,success");
   const [error, setError] = useState<string>();
@@ -288,6 +318,7 @@ function downloadJson(workspace: Workspace) {
 
 export default function App() {
   const initialSource = useMemo(() => serializeWorkspace(sampleWorkspace), []);
+  const documentId = useMemo(() => ensureDocumentId(), []);
   const [workspace, setWorkspace] = useState<Workspace>(sampleWorkspace);
   const [source, setSource] = useState(initialSource);
   const [sourceError, setSourceError] = useState<string>();
@@ -309,24 +340,24 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const document = new RealtimeWorkspace(initialSource, receiveSource, setStatus);
+    const document = new RealtimeWorkspace(documentId, initialSource, receiveSource, setStatus);
     realtime.current = document;
     return () => document.destroy();
-  }, [initialSource, receiveSource]);
+  }, [documentId, initialSource, receiveSource]);
 
-  const updateWorkspace = useCallback((nextWorkspace: Workspace) => {
-    const result = WorkspaceSchema.safeParse(nextWorkspace);
-    if (!result.success) {
-      const issue = result.error.issues[0];
-      setSourceError(`${issue.path.join(".") || "workspace"}: ${issue.message}`);
-      return;
+  const updateWorkspace = useCallback((nextWorkspace: Workspace): WorkspaceUpdateResult => {
+    const result = validateWorkspaceUpdate(nextWorkspace);
+    if (!result.ok) {
+      setSourceError(result.error);
+      return result;
     }
-    const normalized = result.data;
+    const normalized = result.workspace;
     const nextSource = serializeWorkspace(normalized);
     setWorkspace(normalized);
     setSource(nextSource);
     setSourceError(undefined);
     realtime.current?.replace(nextSource);
+    return result;
   }, []);
 
   const activeView = workspace.views.find((view) => view.id === activeViewId) ?? workspace.views[0];
@@ -354,7 +385,7 @@ export default function App() {
 
   const addNode = () => {
     if (activeView.format !== "visualspec") return;
-    const id = `node-${Date.now()}`;
+    const id = nextId("node", activeView.nodes.map((node) => node.id));
     const lane = activeView.lanes[0]?.id;
     updateView({ ...activeView, nodes: [...activeView.nodes, { id, label: "新节点", type: "process", lane }] });
     setSelectedNode(id);
@@ -362,16 +393,21 @@ export default function App() {
 
   const addLane = () => {
     if (activeView.format !== "visualspec") return;
-    const id = `lane-${activeView.lanes.length + 1}`;
+    const id = nextId("lane", activeView.lanes.map((lane) => lane.id));
+    const starterId = nextId("node", activeView.nodes.map((node) => node.id));
+    const firstLane = activeView.lanes.length === 0;
     updateView({
       ...activeView,
       lanes: [...activeView.lanes, { id, label: `泳道 ${activeView.lanes.length + 1}`, order: activeView.lanes.length }],
-      nodes: activeView.lanes.length ? activeView.nodes : activeView.nodes.map((node) => ({ ...node, lane: id })),
+      nodes: firstLane
+        ? activeView.nodes.map((node) => ({ ...node, lane: id }))
+        : [...activeView.nodes, { id: starterId, label: "新节点", type: "process", lane: id }],
     });
+    if (!firstLane) setSelectedNode(starterId);
   };
 
   const addView = () => {
-    const id = `view-${Date.now()}`;
+    const id = nextId("view", workspace.views.map((view) => view.id));
     const next: VisualSpecView = { id, format: "visualspec", title: "新视图", diagram_type: "process-flow", direction: "LR", theme: "paper", layout_mode: "auto", groups: [], lanes: [], nodes: [{ id: "start", label: "开始", type: "input" }], edges: [] };
     updateWorkspace({ ...workspace, views: [...workspace.views, next] });
     setActiveViewId(id);
@@ -387,17 +423,11 @@ export default function App() {
     } else setSourceError(parsed.error);
   };
 
-  const handleImport = async (mode: "json" | "csv" | "mermaid", title: string, importSource: string) => {
-    if (mode === "json") {
-      const parsed = parseWorkspace(importSource);
-      if (!parsed.workspace) throw new Error(parsed.error);
-      updateWorkspace(parsed.workspace);
-      setActiveViewId(parsed.workspace.entry_view);
-      return;
-    }
-    const view = mode === "csv" ? importCsv(importSource, title) : await importMermaid(importSource, title);
-    updateWorkspace({ ...workspace, views: [...workspace.views, view] });
-    setActiveViewId(view.id);
+  const handleImport = async (mode: ImportMode, title: string, importSource: string) => {
+    const prepared = await prepareWorkspaceImport(workspace, mode, title, importSource);
+    const applied = updateWorkspace(prepared.workspace);
+    if (!applied.ok) throw new Error(applied.error);
+    setActiveViewId(prepared.activeViewId);
   };
 
   const statusText = status === "connected" ? "实时协作已连接" : status === "offline-ready" ? "离线自动保存" : status === "disconnected" ? "协作已断开 · 本地可用" : "正在恢复文档";
@@ -415,10 +445,7 @@ export default function App() {
           <nav>{workspace.views.map((view) => <button key={view.id} className={view.id === activeView.id ? "active" : ""} onClick={() => { setActiveViewId(view.id); setHistory([]); }}><span className={`format-dot format-dot--${view.format}`} /> <span>{view.title}</span><small>{view.format}</small></button>)}</nav>
           <div className="rail-note"><strong>多视图下钻</strong><span>在节点属性中选择 child_view，双击节点即可进入子视图。</span></div>
         </aside>
-        <main className="canvas-area" style={activeView.format === "visualspec" ? ({
-          "--brand-primary": activeView.brand?.primary ?? "#4F46E5",
-          "--brand-accent": activeView.brand?.accent ?? "#14B8A6",
-        } as React.CSSProperties) : undefined}>
+        <main className="canvas-area" style={activeView.format === "visualspec" ? themeStyle(activeView) : undefined}>
           {activeView.format === "visualspec"
             ? <DiagramCanvas view={activeView} onChange={updateView as (view: VisualSpecView) => void} onSelectNode={setSelectedNode} onOpenView={openView} />
             : <MermaidCanvas view={activeView} onChange={updateView} />}

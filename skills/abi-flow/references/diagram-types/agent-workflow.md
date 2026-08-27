@@ -25,5 +25,5 @@ Use `agent` only for components that choose or act. Use `control` for orchestrat
 ## Example prompt
 
 ```text
-Create an agent-workflow diagram for a research Agent. Show user intent, task planning, retrieval from files and memory, evidence sufficiency gate, web/tool execution, citation verification, final report, and reusable memory writeback. Use a left-to-right primary path with clearly labeled fallback and feedback loops. Chinese-first, spectrum theme, VisualSpec JSON, strict validation.
+Create an agent-workflow diagram for a research Agent. Show user intent, task planning, retrieval from files and memory, evidence sufficiency gate, web/tool execution, citation verification, final report, and reusable memory writeback. Use a left-to-right primary path with clearly labeled fallback and feedback loops. Chinese-first, spectrum theme, DiagramSpec JSON, strict validation.
 ```

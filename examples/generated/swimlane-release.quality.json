@@ -1,16 +1,18 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "status": "passed",
+  "structural_status": "passed",
   "diagram": {
     "title": "AI 功能发布泳道",
     "type": "process-flow",
+    "layout": "graph",
     "nodes": 6,
     "edges": 6,
     "groups": 0,
     "lanes": 3,
     "direction": "LR",
     "theme": "paper",
-    "brand": "VisualSpec"
+    "brand": "VisualSkills"
   },
   "canvas": {
     "width": 2072.2,
@@ -22,8 +24,38 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 18
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for labels, lanes, routes, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "3cd32e0ebcbcf7aac13dba84c48e8e808bd12a73453d90b107b56e0bbd352722",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "f2fe5514cc4ccf265c4ee3b83431f9762061f2e4baf7644b05f7d1c3a1810046",
+      "path": "swimlane-release.svg"
+    },
+    "html": {
+      "sha256": "2f90133d1458d27f50514d1c07b53a8aa84565c2676bc706530128d0dd351e19",
+      "path": "swimlane-release.html"
+    },
+    "png": {
+      "sha256": "d5f0fe56cdc40f22f8213b913d7a3a903f4befd8d4ea99735e369a8e05a7cbaf",
+      "path": "swimlane-release.png"
+    },
+    "brief": {
+      "sha256": "f5a958ce50f5cc037bbafb2aee2c275ed6fe3cf9999894bee3a492dced436ce6",
+      "basis": "file-bytes"
+    }
+  },
+  "visual_review": {
+    "status": "passed",
+    "artifact": "png",
+    "artifact_sha256": "d5f0fe56cdc40f22f8213b913d7a3a903f4befd8d4ea99735e369a8e05a7cbaf",
+    "brief_sha256": "f5a958ce50f5cc037bbafb2aee2c275ed6fe3cf9999894bee3a492dced436ce6",
+    "source_sha256": "3cd32e0ebcbcf7aac13dba84c48e8e808bd12a73453d90b107b56e0bbd352722",
+    "evidence": "review_answers"
+  }
 }

@@ -1,0 +1,24 @@
+{
+  "goal": "Make the ownership, evidence, approval, delivery, and rework path of an AI feature release understandable across teams.",
+  "audience": "Product, security, compliance, engineering, and platform teams",
+  "narrative": "Product defines intent and acceptance criteria, security decides whether risk is acceptable, engineering implements and verifies, and product expands a staged release only after evidence passes.",
+  "scope": "A reusable release process with three owners, one risk gate, verification evidence, staged rollout, and an explicit correction loop; team-specific SLAs, tools, and incident procedures are outside scope.",
+  "diagram_type": "process-flow",
+  "composition": "graph",
+  "must_show": ["Business intent trigger", "Release brief artifact", "Risk acceptance gate", "Implementation", "Verification evidence", "Staged release", "Correction loop", "Product, security, and engineering ownership"],
+  "emphasize": ["Responsibility changes are visible through swimlanes", "Risk approval precedes implementation", "Failed verification returns to implementation"],
+  "deemphasize": ["Concrete CI vendors", "Fixed SLA numbers", "Release calendar dates"],
+  "relationships": ["Intent creates a release brief", "Security reviews the brief", "Approval hands work to engineering", "Implementation produces verification evidence", "Passing evidence permits staged release", "Failed evidence returns to implementation"],
+  "uncertainties": ["The negative risk-gate outcome is organization-specific", "The number of correction cycles is unspecified"],
+  "assumptions": ["A rejected risk review pauses the process outside this simplified flow", "The feedback edge represents any number of evidence-driven correction cycles"],
+  "density": "medium",
+  "content_risks": ["Do not hide ownership at handoffs", "Do not imply approval without a security decision", "Do not merge implementation and verification", "Do not present the feedback loop as an unmarked normal edge"],
+  "quality_questions": ["Is the trigger and final operational outcome clear?", "Are handoffs visible where responsibility changes?", "Do decisions have meaningful branches rather than decorative diamonds?", "Are artifacts shown only where they affect the process?", "Are rework and exception loops explicit and intentional?"],
+  "review_answers": [
+    {"question": "Is the trigger and final operational outcome clear?", "status": "pass", "evidence": "The leftmost 业务意图 input starts the ranked path and the rightmost 分阶段发布 node is the visible operational outcome."},
+    {"question": "Are handoffs visible where responsibility changes?", "status": "pass", "evidence": "The flow crosses labelled PRODUCT, SECURITY, and ENGINEERING lanes at 发布简报 → 风险可接受？ and 风险可接受？ → 实现与集成."},
+    {"question": "Do decisions have meaningful branches rather than decorative diamonds?", "status": "pass", "evidence": "风险可接受？ is a typed decision and its approved path is explicitly labelled 批准 before implementation; the brief records the out-of-scope rejected path."},
+    {"question": "Are artifacts shown only where they affect the process?", "status": "pass", "evidence": "发布简报 is the only document node and directly supplies the security review; verification evidence remains an activity because it includes tests, audit, and rollback checks."},
+    {"question": "Are rework and exception loops explicit and intentional?", "status": "pass", "evidence": "A dashed feedback edge labelled 修正 returns from 验证与证据 to 实现与集成 and is visually distinct from the success route to release."}
+  ]
+}

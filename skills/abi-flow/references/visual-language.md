@@ -1,6 +1,6 @@
 # Visual language
 
-VisualSpec uses a restrained enterprise language: clear hierarchy, low-saturation surfaces, semantic accents, dense but scannable content, and no decorative 3D or clip art.
+DiagramSpec uses a restrained enterprise language: clear hierarchy, low-saturation surfaces, semantic accents, dense but scannable content, and no decorative 3D or clip art.
 
 ## Reading direction
 
@@ -32,10 +32,10 @@ VisualSpec uses a restrained enterprise language: clear hierarchy, low-saturatio
 | Kind | Meaning | Default treatment |
 |---|---|---|
 | `primary` | Main data or execution path | Blue solid |
-| `control` | Trigger, policy, orchestration | Orange solid |
-| `feedback` | Return path or iteration | Purple solid, outer lane |
-| `async` | Eventual/asynchronous delivery | Gray dashed |
-| `success` | Accepted or healthy branch | Green solid |
+| `control` | Trigger, policy, orchestration | Orange long-dash |
+| `feedback` | Return path or iteration | Purple long-dash, outer lane |
+| `async` | Eventual/asynchronous delivery | Gray dotted/dashed |
+| `success` | Accepted or healthy branch | Green thick solid |
 | `error` | Failed, rejected, or fallback branch | Red dashed |
 
 Color is never the only signal: line patterns, labels, and the legend preserve meaning for color-vision deficiencies.
@@ -48,7 +48,7 @@ Color is never the only signal: line patterns, labels, and the legend preserve m
 - `blueprint`: dark technical presentation style; good for topology and platform architecture.
 - `terminal`: dark high-contrast engineering/runbook style.
 
-Themes change surface and typography colors, never graph meaning.
+Themes change surface and typography colors in both graphs and enterprise boards, never relationship meaning.
 
 ## Brand configuration
 

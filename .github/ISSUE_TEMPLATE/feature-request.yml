@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a visual grammar, renderer, quality, import, or Studio improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Communication outcome
+      description: What should a viewer understand or decide that is difficult today?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Example input and expected visual structure
+      description: Use redacted or synthetic content. Link established formats or tools when relevant.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Likely scope
+      options:
+        - Existing template or visual grammar
+        - New diagram type contract
+        - Renderer or quality gate
+        - Studio editor or import
+        - Documentation or gallery
+        - Not sure
+    validations:
+      required: true
+  - type: checkboxes
+    id: reuse
+    attributes:
+      label: Reuse check
+      options:
+        - label: I described any established standard, library, or compatible tool that may already solve this.
+          required: true

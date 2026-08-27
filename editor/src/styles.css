@@ -5,6 +5,13 @@
   font-synthesis: none;
   --brand-primary: #4f46e5;
   --brand-accent: #14b8a6;
+  --vs-page: #f8f7f3;
+  --vs-surface: #fffefa;
+  --vs-ink: #111827;
+  --vs-muted: #667085;
+  --vs-hair: #dddcd4;
+  --vs-group: #eef6ff;
+  --vs-group-stroke: #93c5fd;
 }
 
 * { box-sizing: border-box; }
@@ -46,32 +53,41 @@ button { cursor: pointer; }
 .rail-note strong { font-size: 10px; color: #344054; }
 .rail-note span { font-size: 9px; line-height: 1.55; color: #7b8798; }
 
-.canvas-area { min-width: 0; min-height: 0; position: relative; background: #f3f6fb; }
-.canvas { background: #f6f8fc; }
-.canvas--blueprint, .canvas--terminal { background: #0b1524; }
-.react-flow__minimap { border: 1px solid #d5dce7; border-radius: 9px; overflow: hidden; box-shadow: 0 5px 20px #0f172a10; }
-.react-flow__controls { border: 1px solid #d5dce7; border-radius: 9px; overflow: hidden; box-shadow: 0 5px 20px #0f172a10; }
-.visual-node { position: relative; width: 224px; min-height: 88px; display: grid; align-content: center; gap: 6px; padding: 15px 18px; text-align: center; border: 1.3px solid #cbd5e1; border-radius: 13px; background: #fff; box-shadow: 0 5px 15px #0f172a12; transition: border-color .15s, transform .15s, box-shadow .15s; }
+.canvas-area { min-width: 0; min-height: 0; position: relative; background: var(--vs-page); }
+.canvas { color: var(--vs-ink); background: var(--vs-page); }
+.react-flow__minimap { border: 1px solid var(--vs-hair); border-radius: 9px; overflow: hidden; box-shadow: 0 5px 20px #0f172a10; }
+.react-flow__controls { border: 1px solid var(--vs-hair); border-radius: 9px; overflow: hidden; background: var(--vs-surface); box-shadow: 0 5px 20px #0f172a10; }
+.react-flow__controls-button { color: var(--vs-ink); border-bottom-color: var(--vs-hair); background: var(--vs-surface); fill: currentColor; }
+.visual-node { position: relative; width: 224px; min-height: 88px; display: grid; align-content: center; gap: 6px; padding: 15px 18px; text-align: center; border: 1.3px solid var(--vs-hair); border-radius: 13px; background: var(--vs-surface); box-shadow: 0 5px 15px #0f172a12; transition: border-color .15s, transform .15s, box-shadow .15s; }
 .visual-node:hover, .visual-node.is-selected { border-color: var(--brand-primary); box-shadow: 0 8px 22px color-mix(in srgb, var(--brand-primary) 22%, transparent); }
 .visual-node.is-selected { transform: translateY(-1px); }
-.visual-node--agent { background: #f5f3ff; border-color: var(--brand-primary); }
-.visual-node--decision { background: #fff7ed; border-color: #fb923c; border-radius: 24px; }
-.visual-node--input { background: #fdf4ff; border-color: #d946ef; }
-.visual-node--document { background: #f0fdf4; border-color: #4ade80; }
-.visual-node--database { background: #ecfeff; border-color: #22d3ee; border-radius: 28px; }
-.visual-node--external { border-style: dashed; background: #f8fafc; }
-.visual-node__label { color: #172033; font-size: 13px; font-weight: 800; }
-.visual-node__subtitle { color: #68778c; font-size: 10px; line-height: 1.35; }
+.visual-node--agent { border-color: var(--brand-primary); }
+.visual-node--decision { border-color: var(--brand-accent); border-radius: 24px; }
+.visual-node--database { border-radius: 28px; }
+.visual-node--external { border-style: dashed; }
+.canvas--spectrum .visual-node--agent { background: #f5f3ff; }
+.canvas--spectrum .visual-node--decision { background: #fff7ed; border-color: #fb923c; }
+.canvas--spectrum .visual-node--input { background: #fdf4ff; border-color: #d946ef; }
+.canvas--spectrum .visual-node--document { background: #f0fdf4; border-color: #4ade80; }
+.canvas--spectrum .visual-node--database { background: #ecfeff; border-color: #22d3ee; }
+.canvas--spectrum .visual-node--external { background: #f8fafc; }
+.canvas--paper .visual-node { border-radius: 10px; box-shadow: 0 6px 20px #473d2d14; }
+.canvas--notion .visual-node { border-radius: 5px; box-shadow: 0 2px 7px #0f172a0d; }
+.canvas--blueprint .visual-node { box-shadow: inset 0 0 0 1px #ffffff08, 0 8px 24px #00000035; }
+.canvas--terminal .visual-node { border-radius: 4px; box-shadow: 0 6px 16px #00000040; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.visual-node__label { color: var(--vs-ink); font-size: 13px; font-weight: 800; }
+.visual-node__subtitle { color: var(--vs-muted); font-size: 10px; line-height: 1.35; }
 .visual-node__drill { position: absolute; right: 8px; bottom: 6px; color: var(--brand-primary); font-size: 8px; font-weight: 800; }
 .react-flow__handle { width: 7px; height: 7px; border: 1px solid #fff; background: var(--brand-primary); }
-.lane-node { width: 100%; height: 100%; padding: 15px 17px; border: 1px solid #d3dce8; border-radius: 15px; background: rgba(255,255,255,.58); box-shadow: inset 0 1px 0 #fff; pointer-events: none; }
-.lane-node span { color: #68778c; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.lane-node { width: 100%; height: 100%; padding: 15px 17px; border: 1px solid var(--vs-group-stroke); border-radius: 15px; background: var(--vs-group); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--vs-surface) 75%, transparent); pointer-events: none; }
+.lane-node span { color: var(--vs-muted); font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .edge-primary path { stroke: var(--brand-primary); }
 .edge-feedback path { stroke: #7c3aed; stroke-dasharray: 7 5; }
-.edge-control path { stroke: #ea580c; }
+.edge-control path { stroke: var(--brand-accent); }
 .edge-success path { stroke: #059669; }
 .edge-error path { stroke: #dc2626; stroke-dasharray: 7 5; }
-.edge-async path { stroke: #64748b; stroke-dasharray: 7 5; }
+.edge-async path { stroke: var(--brand-accent); stroke-dasharray: 7 5; }
+.canvas-error { position: absolute; z-index: 20; left: 50%; top: 20px; transform: translateX(-50%); max-width: 520px; padding: 10px 13px; color: #991b1b; border: 1px solid #fecaca; border-radius: 9px; background: #fff1f2; box-shadow: 0 8px 24px #0f172a18; font-size: 10px; }
 
 .right-panel { display: grid; grid-template-rows: 44px 1fr; border-left: 1px solid #dbe1ea; overflow: hidden; }
 .panel-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e3e8ef; }

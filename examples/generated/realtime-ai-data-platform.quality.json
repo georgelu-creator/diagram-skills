@@ -1,6 +1,7 @@
 {
-  "schema_version": 2,
-  "status": "passed",
+  "schema_version": 3,
+  "status": "pending-review",
+  "structural_status": "passed",
   "diagram": {
     "title": "实时 AI 数据平台端到端架构全景图",
     "type": "data-flow",
@@ -11,11 +12,11 @@
     "lanes": 0,
     "direction": "TB",
     "theme": "paper",
-    "brand": "VisualSpec"
+    "brand": "VisualSkills"
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1305.0
+    "height": 1359.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,8 +24,31 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 14
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for bands, pipeline flow, module grids, text, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "55b1edeab5d9478781a1a908f6a515438ed26434c287bd8ed0635284e8cf94cf",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "711892729e6b147a5f0cab8b2ed20a6aad1a39035263e9d269e5a6225ff04ee6",
+      "path": "realtime-ai-data-platform.svg"
+    },
+    "html": {
+      "sha256": "929032735a2958c87237a799a005126714dcde986863d97cc6cc9adc96d1ea06",
+      "path": "realtime-ai-data-platform.html"
+    },
+    "png": {
+      "sha256": "d3fe7a43d3023a088649e0a378c349dabf802f47b59ab7253cfb132d8b744a3c",
+      "path": "realtime-ai-data-platform.png"
+    }
+  },
+  "visual_review": {
+    "status": "pending",
+    "artifact": "png",
+    "evidence": null
+  }
 }

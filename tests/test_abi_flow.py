@@ -1,9 +1,12 @@
 import importlib.util
 import json
+import os
+import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,7 +28,9 @@ class AbiFlowTests(unittest.TestCase):
         self.assertTrue(svg.startswith("<svg"))
         self.assertIn("Interactive diagram viewport", page)
         self.assertEqual([], issues)
-        self.assertEqual("passed", report["status"])
+        self.assertEqual("pending-review", report["status"])
+        self.assertEqual("passed", report["structural_status"])
+        self.assertEqual("pending", report["visual_review"]["status"])
         self.assertEqual(0, report["geometry"]["node_overlap_count"])
         self.assertEqual(0, report["geometry"]["group_overlap_count"])
         self.assertEqual(0, report["geometry"]["group_intrusion_count"])
@@ -203,7 +208,8 @@ class AbiFlowTests(unittest.TestCase):
             spec = json.loads((template_dir / f"{diagram_type}.json").read_text(encoding="utf-8"))
             _, _, report, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
             self.assertEqual([], issues, diagram_type)
-            self.assertEqual("passed", report["status"], diagram_type)
+            self.assertEqual("pending-review", report["status"], diagram_type)
+            self.assertEqual("passed", report["structural_status"], diagram_type)
             self.assertEqual(diagram_type, report["diagram"]["type"])
 
     def test_rejects_unknown_diagram_type(self):
@@ -226,8 +232,11 @@ class AbiFlowTests(unittest.TestCase):
     def test_escapes_svg_text(self):
         spec = {
             "title": "A < B",
-            "nodes": [{"id": "a", "label": "<script>alert(1)</script>"}],
-            "edges": [],
+            "nodes": [
+                {"id": "a", "label": "<script>alert(1)</script>"},
+                {"id": "b", "label": "Safe"},
+            ],
+            "edges": [{"source": "a", "target": "b"}],
         }
         svg, _, _, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
         self.assertFalse([issue for issue in issues if issue.level == "error"])
@@ -244,6 +253,214 @@ class AbiFlowTests(unittest.TestCase):
             self.assertEqual(0, code)
             for suffix in ("svg", "html", "quality.json"):
                 self.assertTrue((Path(temp_dir) / f"sample.{suffix}").exists())
+            quality = json.loads((Path(temp_dir) / "sample.quality.json").read_text(encoding="utf-8"))
+            self.assertEqual("pending-review", quality["status"])
+            self.assertEqual("file-bytes", quality["artifacts"]["source"]["basis"])
+            self.assertEqual(64, len(quality["artifacts"]["svg"]["sha256"]))
+
+    def test_published_schema_rejects_types_and_additional_properties_without_crashing(self):
+        invalid_specs = [
+            {"title": "Bad", "direction": [], "nodes": [{"id": "a", "label": "A"}], "edges": []},
+            {"title": "Bad", "theme": [], "nodes": [{"id": "a", "label": "A"}], "edges": []},
+            {"title": "Bad", "nodes": [{"id": "a", "label": "A", "type": []}], "edges": []},
+        ]
+        for spec in invalid_specs:
+            self.assertIn("schema-type", {issue.code for issue in abi_flow.validate_spec(spec)})
+        unknown = {"title": "Bad", "nodes": [{"id": "a", "label": "A", "invented": True}], "edges": []}
+        self.assertIn("schema-additional-property", {issue.code for issue in abi_flow.validate_spec(unknown)})
+
+    def test_named_diagram_contracts_are_enforced(self):
+        decision = {
+            "title": "Not a tree", "diagram_type": "decision-tree", "direction": "LR",
+            "nodes": [{"id": "a", "label": "A", "type": "process"}], "edges": [],
+        }
+        decision_codes = {issue.code for issue in abi_flow.validate_spec(decision)}
+        self.assertIn("contract-direction", decision_codes)
+        self.assertIn("contract-node-types", decision_codes)
+        roadmap = {
+            "title": "One phase", "diagram_type": "roadmap", "direction": "LR",
+            "groups": [{"id": "now", "label": "Now"}],
+            "nodes": [{"id": "a", "label": "A", "group": "now"}], "edges": [],
+        }
+        self.assertIn("contract-groups", {issue.code for issue in abi_flow.validate_spec(roadmap)})
+        capability = json.loads((ROOT / "skills" / "abi-flow" / "templates" / "capability-map.json").read_text(encoding="utf-8"))
+        capability["edges"].append({"source": "speed", "target": "vision", "kind": "feedback"})
+        self.assertIn("contract-capability-sequence", {issue.code for issue in abi_flow.validate_spec(capability)})
+        for diagram_type, direction in (("system-architecture", "TB"), ("process-flow", "LR")):
+            trivial = {
+                "title": "Not a grammar", "diagram_type": diagram_type, "direction": direction,
+                "nodes": [{"id": "a", "label": "A", "type": "process"}], "edges": [],
+            }
+            codes = {issue.code for issue in abi_flow.validate_spec(trivial)}
+            self.assertIn("contract-node-count", codes, diagram_type)
+            self.assertIn("contract-edge-count", codes, diagram_type)
+        default_process = {"title": "Default is enforced", "nodes": [{"id": "a", "label": "A"}], "edges": []}
+        default_codes = {issue.code for issue in abi_flow.validate_spec(default_process)}
+        self.assertIn("contract-node-count", default_codes)
+        self.assertIn("contract-edge-count", default_codes)
+
+    def test_dense_board_adapts_columns_checks_text_and_renders_semantic_legend(self):
+        sections = []
+        for section_index in range(2):
+            blocks = []
+            for block_index in range(4):
+                prefix = f"s{section_index}b{block_index}"
+                blocks.append({
+                    "id": prefix, "kind": "grid", "title": f"Capability block {block_index}", "columns": 7,
+                    "cards": [
+                        {"id": f"{prefix}c{card_index}", "label": "Enterprise capability", "subtitle": "Semantic / Vector", "icon": "layers"}
+                        for card_index in range(7)
+                    ],
+                })
+            sections.append({"id": f"s{section_index}", "label": f"Layer {section_index}", "tone": "blue", "blocks": blocks})
+        spec = {
+            "title": "Dense", "diagram_type": "system-architecture", "layout": "board", "sections": sections,
+            "connections": [
+                {"source": "s0b0", "target": "s1b0", "kind": "primary"},
+                {"source": "s0b1", "target": "s1b1", "kind": "async"},
+            ],
+        }
+        self.assertEqual([], abi_flow.validate_spec(spec))
+        boxes, canvas, routes = abi_flow.layout_board(spec)
+        self.assertTrue(all(block["columns"] < 7 for section in canvas["sections"] for block in section["blocks"]))
+        self.assertGreater(min(box.w for box in boxes.values()), 140)
+        self.assertEqual([], abi_flow.board_text_issues(canvas))
+        svg = abi_flow.render_board_svg(spec, canvas, routes)
+        self.assertIn('stroke-dasharray="2 5"', svg)
+        self.assertIn("Async / event", svg)
+
+    def test_board_checks_every_single_line_text_region(self):
+        spec = json.loads((ROOT / "examples" / "enterprise-agent-office.json").read_text(encoding="utf-8"))
+        cases = [
+            ("subtitle", None),
+            ("section-subtitle", ("sections", 0, "subtitle")),
+            ("banner-subtitle", ("sections", 1, "blocks", 0, "subtitle")),
+            ("footer", ("sections", 2, "blocks", 0, "footer")),
+        ]
+        for name, path in cases:
+            candidate = json.loads(json.dumps(spec))
+            if path is None:
+                candidate["subtitle"] = "过长" * 400
+            else:
+                target = candidate
+                for part in path[:-1]:
+                    target = target[part]
+                target[path[-1]] = "过长" * 400
+            _, _, _, issues = abi_flow.build(candidate, abi_flow.validate_spec(candidate))
+            self.assertIn("board-text-overflow", {issue.code for issue in issues}, name)
+
+    def test_graph_edge_kinds_have_non_color_styles_in_paths_and_legend(self):
+        spec = json.loads((ROOT / "skills" / "abi-flow" / "templates" / "agent-workflow.json").read_text(encoding="utf-8"))
+        svg, _, _, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
+        self.assertEqual([], issues)
+        for kind in {edge.get("kind", "primary") for edge in spec["edges"]}:
+            style = abi_flow.EDGE_STYLES[kind]
+            self.assertIn(f'class="edge {kind}"', svg)
+            self.assertIn(f'stroke-width="{style["width"]:g}"', svg)
+            if style["dash"]:
+                self.assertIn(f'stroke-dasharray="{style["dash"]}"', svg)
+
+    def test_board_themes_and_brand_tokens_change_rendered_output(self):
+        spec = json.loads((ROOT / "skills" / "abi-flow" / "templates" / "system-architecture.json").read_text(encoding="utf-8"))
+        paper_boxes, paper_canvas, paper_routes = abi_flow.layout_board(spec)
+        paper = abi_flow.render_board_svg(spec, paper_canvas, paper_routes)
+        blueprint_spec = json.loads(json.dumps(spec))
+        blueprint_spec["theme"] = "blueprint"
+        _, blueprint_canvas, blueprint_routes = abi_flow.layout_board(blueprint_spec)
+        blueprint = abi_flow.render_board_svg(blueprint_spec, blueprint_canvas, blueprint_routes)
+        self.assertNotEqual(paper, blueprint)
+        self.assertIn('data-theme="dark"', blueprint)
+
+        branded = json.loads(json.dumps(spec))
+        branded["brand"] = {
+            "primary": "#112233", "accent": "#223344", "page": "#334455",
+            "surface": "#445566", "ink": "#556677", "muted": "#667788",
+            "hair": "#778899", "group": "#8899AA", "group_stroke": "#99AABB",
+        }
+        _, branded_canvas, branded_routes = abi_flow.layout_board(branded)
+        branded_svg = abi_flow.render_board_svg(branded, branded_canvas, branded_routes)
+        for expected in ("#112233", "#223344", "#334455", "#445566", "#556677", "#667788", "#778899", "#8899AA", "#99AABB"):
+            self.assertIn(expected, branded_svg)
+        self.assertEqual("#99AABB", abi_flow.resolve_visual_tokens(branded)[0]["group_stroke"])
+
+    def test_render_is_deterministic_across_python_hash_seeds(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            outputs = []
+            for seed in ("1", "2", "3", "98765"):
+                destination = Path(temp_dir) / seed
+                env = dict(os.environ, PYTHONHASHSEED=seed)
+                result = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), "render", str(ROOT / "examples" / "swimlane-release.json"), "--output-dir", str(destination), "--name", "same", "--strict"],
+                    text=True, capture_output=True, env=env,
+                )
+                self.assertEqual(0, result.returncode, result.stderr or result.stdout)
+                outputs.append(((destination / "same.svg").read_bytes(), (destination / "same.html").read_bytes()))
+            self.assertTrue(all(output == outputs[0] for output in outputs[1:]))
+
+    def test_png_failure_is_explicit_and_never_passes_quality(self):
+        with tempfile.TemporaryDirectory() as temp_dir, mock.patch.object(abi_flow.shutil, "which", return_value=None):
+            source = ROOT / "skills" / "abi-flow" / "templates" / "agent-workflow.json"
+            code = abi_flow.main([
+                "render", str(source),
+                "--output-dir", temp_dir, "--name", "no-png", "--png",
+            ])
+            self.assertEqual(1, code)
+            quality = json.loads((Path(temp_dir) / "no-png.quality.json").read_text(encoding="utf-8"))
+            self.assertEqual("failed", quality["status"])
+            self.assertEqual("blocked", quality["visual_review"]["status"])
+            self.assertEqual("png-export-failed", quality["issues"][-1]["code"])
+            self.assertTrue((Path(temp_dir) / "no-png.svg").exists())
+            self.assertEqual(1, abi_flow.main([
+                "review", str(source), "--quality", str(Path(temp_dir) / "no-png.quality.json"),
+                "--brief", str(ROOT / "examples" / "briefs" / "agent-workflow.brief.json"),
+                "--artifact", str(Path(temp_dir) / "no-png.svg"),
+            ]))
+
+    def test_review_finalizes_hash_bound_receipt_and_rejects_stale_artifact(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            source = Path(temp_dir) / "agent-workflow.json"
+            brief = Path(temp_dir) / "agent-workflow.brief.json"
+            source_bytes = (ROOT / "skills" / "abi-flow" / "templates" / "agent-workflow.json").read_bytes()
+            brief_bytes = (ROOT / "examples" / "briefs" / "agent-workflow.brief.json").read_bytes()
+            source.write_bytes(source_bytes)
+            brief.write_bytes(brief_bytes)
+            self.assertEqual(0, abi_flow.main(["render", str(source), "--output-dir", temp_dir, "--name", "agent", "--strict"]))
+            quality = Path(temp_dir) / "agent.quality.json"
+            artifact = Path(temp_dir) / "agent.svg"
+            html_artifact = Path(temp_dir) / "agent.html"
+            blocked_receipt = json.loads(quality.read_text(encoding="utf-8"))
+            blocked_receipt["visual_review"]["status"] = "blocked"
+            quality.write_text(json.dumps(blocked_receipt), encoding="utf-8")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            blocked_receipt["visual_review"]["status"] = "pending"
+            quality.write_text(json.dumps(blocked_receipt), encoding="utf-8")
+            html_bytes = html_artifact.read_bytes()
+            html_artifact.write_bytes(html_bytes + b"\n<!-- stale -->\n")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            html_artifact.write_bytes(html_bytes)
+
+            sibling_png = Path(temp_dir) / "agent.png"
+            sibling_png.write_bytes(b"\x89PNG\r\n\x1a\noriginal")
+            receipt = json.loads(quality.read_text(encoding="utf-8"))
+            receipt["artifacts"]["png"] = {"sha256": abi_flow.sha256_file(sibling_png), "path": sibling_png.name}
+            quality.write_text(json.dumps(receipt), encoding="utf-8")
+            sibling_png.write_bytes(b"\x89PNG\r\n\x1a\nstale")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            sibling_png.unlink()
+            receipt["artifacts"].pop("png")
+            quality.write_text(json.dumps(receipt), encoding="utf-8")
+            self.assertEqual(0, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            receipt = json.loads(quality.read_text(encoding="utf-8"))
+            self.assertEqual("passed", receipt["status"])
+            self.assertEqual("passed", receipt["visual_review"]["status"])
+            brief.write_bytes(brief_bytes + b"\n")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            brief.write_bytes(brief_bytes)
+            source.write_bytes(source_bytes + b"\n")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
+            source.write_bytes(source_bytes)
+            artifact.write_text(artifact.read_text(encoding="utf-8") + "\n<!-- stale -->\n", encoding="utf-8")
+            self.assertEqual(1, abi_flow.main(["review", str(source), "--quality", str(quality), "--brief", str(brief), "--artifact", str(artifact)]))
 
 
 if __name__ == "__main__":

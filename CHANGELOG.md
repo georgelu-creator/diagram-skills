@@ -1,0 +1,33 @@
+# Changelog
+
+VisualSkills is currently pre-release. Until the first tagged release, compatible improvements are recorded under **Unreleased** and breaking changes must also be documented in [`MIGRATION.md`](MIGRATION.md).
+
+## Unreleased
+
+### Added
+
+- Self-contained `$abi-flow` Agent Skill with ten visual grammars, enterprise boards, editable DiagramSpec JSON, SVG/HTML rendering, and optional local PNG export.
+- Optional VisualSkills Studio for native graph workspaces, swimlanes, ranks, Mermaid source views, CSV import, brand preview, drill-down, and offline persistence.
+- Reproducible example gallery, Diagram Briefs, machine-readable quality evidence, and CI validation.
+
+### Changed
+
+- Quality receipts use schema version 3 and remain `pending-review` until the exact source, brief, inspected SVG or PNG, and every declared sibling artifact are hash-bound by the `review` command.
+- The installed Skill is self-contained for generation; Studio, Mermaid/CSV import, and multi-view workspaces are clearly repository-only companions.
+- The homepage now has English and Chinese editions and seven reviewed visual structures.
+
+### Fixed
+
+- Enforced published JSON Schema and diagram-type contracts without adding a Python runtime dependency.
+- Made SVG/HTML deterministic across Python hash seeds, including complete brand-token overrides, and prevented every single-line board region from overflowing text.
+- Added non-color edge semantics and legends to both graphs and enterprise boards.
+- Applied renderer themes and all brand tokens to enterprise boards with explicit accent/group-stroke precedence.
+- Made PNG backend failures explicit and impossible to report as passed quality, including later SVG review attempts.
+- Isolated Studio collaboration by document id, prevented concurrent JSON concatenation, and made imports transactional and strict for duplicate rows, unknown enums, normalized collisions, and invalid ranks.
+- Rejected duplicate or colliding IDs, unsafe links, invalid references, empty groups/lanes, and non-feedback cycles in Studio.
+- Applied all theme and brand tokens to the Studio canvas.
+
+### Compatibility
+
+- The repository slug, Skill id, and command paths remain `abi-flow`.
+- VisualSkills is the public brand; DiagramSpec is the engine and source model. See [`MIGRATION.md`](MIGRATION.md).

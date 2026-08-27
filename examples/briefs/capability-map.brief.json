@@ -1,0 +1,24 @@
+{
+  "goal": "Explain which durable AI platform capabilities support the product north star and which product outcomes they enable.",
+  "audience": "Product strategy and AI platform leadership",
+  "narrative": "One trusted-work-platform north star is supported by three durable capability domains, each connected to a distinct customer or operating outcome.",
+  "scope": "A conceptual capability taxonomy covering understanding, orchestration, governance, and three supplied outcomes; roadmap timing, organization ownership, feature backlog, and metric targets are outside scope.",
+  "diagram_type": "capability-map",
+  "composition": "graph",
+  "must_show": ["Trusted intelligent work platform north star", "Understanding and retrieval", "Planning and orchestration", "Governance and evaluation", "Faster task completion", "More stable quality", "Controllability and traceability"],
+  "emphasize": ["Capabilities are durable domains rather than projects", "Governance is a core capability, not a footer", "Outcomes remain distinct from implementation features"],
+  "deemphasize": ["Delivery sequence", "Organization chart", "Unverified numerical targets"],
+  "relationships": ["The north star frames all three capability domains", "Understanding enables faster completion", "Orchestration supports stable quality", "Governance enables controllability and traceability"],
+  "uncertainties": ["Capability maturity is unspecified", "Metric baselines and targets are unspecified"],
+  "assumptions": ["The arrows express enabling relationships rather than chronology", "Each outcome is illustrative and not an exclusive one-to-one causal claim"],
+  "density": "medium",
+  "content_risks": ["Do not turn capabilities into a feature list", "Do not imply execution sequence", "Do not invent maturity status", "Do not present directional links as proven causal measurement"],
+  "quality_questions": ["Does the map answer what the product/platform can do, not how it executes?", "Are capabilities grouped by durable domains rather than temporary projects?", "Can foundational enablers be separated from differentiated value?", "Are outcomes visible without inventing metrics?", "Is the taxonomy mutually understandable and reasonably non-overlapping?"],
+  "review_answers": [
+    {"question": "Does the map answer what the product/platform can do, not how it executes?", "status": "pass", "evidence": "The middle band names durable abilities—理解与检索, 规划与编排, 治理与评估—without workflow verbs, handoffs, or runtime steps."},
+    {"question": "Are capabilities grouped by durable domains rather than temporary projects?", "status": "pass", "evidence": "All three middle nodes sit inside 核心能力 / CORE CAPABILITIES and use domain names rather than quarters, teams, releases, or project code names."},
+    {"question": "Can foundational enablers be separated from differentiated value?", "status": "pass", "evidence": "The TB composition visibly separates the capability band from the bottom 价值结果 / OUTCOMES band, so enablers are not confused with customer value."},
+    {"question": "Are outcomes visible without inventing metrics?", "status": "pass", "evidence": "更快完成任务, 更稳定的质量, and 可控与可追溯 are visible outcomes; their subtitles show direction arrows but no fabricated baseline, target, or date."},
+    {"question": "Is the taxonomy mutually understandable and reasonably non-overlapping?", "status": "pass", "evidence": "Search/Memory/Knowledge, Agent/Workflow/Tooling, and Permission/Eval/Audit form three visibly distinct scopes with no duplicate label across the capability nodes."}
+  ]
+}

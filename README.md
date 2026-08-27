@@ -2,6 +2,8 @@
   <img src="skills/abi-flow/assets/icon.svg" width="88" alt="VisualSkills mark">
 </p>
 
+<p align="center"><a href="README.zh-CN.md">简体中文</a> · <strong>English</strong></p>
+
 <h1 align="center">VisualSkills</h1>
 
 <p align="center"><strong>Beautiful visual thinking skills for AI agents.</strong></p>
@@ -40,7 +42,7 @@ npx skills add georgelu-creator/abi-flow --skill abi-flow
 
 ## See what it makes
 
-Six different communication goals, six different visual structures. Every example links to editable SVG, standalone HTML, source JSON and its checked-in quality report.
+Seven different communication goals, seven different visual structures. Every example links to editable SVG, standalone HTML, source JSON and its hash-bound quality report.
 
 <table>
   <tr>
@@ -85,6 +87,14 @@ Six different communication goals, six different visual structures. Every exampl
       <a href="skills/abi-flow/templates/system-topology.json">Source</a> · <a href="examples/generated/system-topology.html">Interactive HTML</a> · <a href="examples/generated/system-topology.quality.json">Quality report</a>
     </td>
   </tr>
+  <tr>
+    <td colspan="2" valign="top" align="center">
+      <a href="examples/generated/user-flow.svg"><img src="examples/generated/user-flow.png" width="52%" alt="AI assistant first-activation user flow"></a><br>
+      <strong>AI Assistant First-Activation User Flow</strong><br>
+      <sub>Follow discovery, value understanding, readiness, scoped connection, first success, repeat use and an uncertainty recovery path.</sub><br>
+      <a href="skills/abi-flow/templates/user-flow.json">Source</a> · <a href="examples/generated/user-flow.html">Interactive HTML</a> · <a href="examples/generated/user-flow.quality.json">Quality report</a>
+    </td>
+  </tr>
 </table>
 
 The launch-gallery metadata lives in [`gallery/manifest.json`](gallery/manifest.json). The complete artifact index is in [`examples/README.md`](examples/README.md).
@@ -115,8 +125,8 @@ Intent
 1. **Fix the story.** Record the audience, scope, must-show facts, uncertainty and failure risks before layout.
 2. **Choose the grammar.** Select one primary structure: architecture, workflow, data flow, capability map, user flow, topology, decision tree, roadmap, strategy map or process flow.
 3. **Author the source.** Keep content and relationships in JSON so revisions do not begin from pixels.
-4. **Render the result.** Produce reviewable SVG and standalone HTML; generate PNG when `rsvg-convert` is available.
-5. **Inspect and revise.** Treat automated reports as diagnostics, then check the full-size visual before delivery.
+4. **Render the result.** Produce reviewable SVG and standalone HTML; generate PNG only after `png-backend` finds a supported local rasterizer.
+5. **Inspect and bind the evidence.** Check the full-size visual, answer type-specific review questions, then bind source, brief, inspected artifact and SHA-256 values into the quality receipt.
 
 ## Why DiagramSpec
 
@@ -145,10 +155,10 @@ Mermaid remains excellent for diagrams-as-text. VisualSkills is aimed at communi
 
 | Status | What belongs here |
 |---|---|
-| **Available** | 10 starter visual grammars; graph and enterprise-board compositions; Chinese-first labels; five renderer themes; SVG/HTML and optional PNG; checked-in examples and templates |
-| **Preview** | Local VisualSkills Studio; native workspace editing; manual rank; swimlanes; Mermaid source views; CSV import; overview-to-detail files |
-| **Next** | Stronger type-specific contracts; text-bound checks; consistent browser/CLI validation; theme parity; installable editor/import workflow; gallery automation |
-| **Exploring** | Diagram diff; portable multi-view export; diagrams.net interoperability; extension API; authenticated and isolated collaboration deployment |
+| **Available** | 10 enforced visual grammars; graph and enterprise-board compositions; Chinese-first labels; five renderer themes; deterministic SVG/HTML; optional PNG; text-bound diagnostics; hash-bound review receipts |
+| **Preview** | Local VisualSkills Studio; native workspace editing; complete theme tokens; manual rank; swimlanes; strict Mermaid/CSV import; document-isolated offline and Yjs workspaces; overview-to-detail files |
+| **Next** | Generated Gallery site; visual diff; portable multi-view export; browser bundle optimization |
+| **Exploring** | diagrams.net interoperability; extension API; authenticated collaboration deployment |
 
 “Available” means a current checked-in path exists. It does not mean every visual or review decision can be proven automatically.
 
@@ -187,13 +197,14 @@ and asynchronous paths, and create a second detail view for the retrieval pipeli
 
 ```bash
 python3 skills/abi-flow/scripts/abi_flow.py types
+python3 skills/abi-flow/scripts/abi_flow.py png-backend
 python3 skills/abi-flow/scripts/abi_flow.py new system-architecture --output work/architecture.json
 python3 skills/abi-flow/scripts/abi_flow.py validate work/architecture.json --strict
 python3 skills/abi-flow/scripts/abi_flow.py render work/architecture.json \
-  --output-dir output --name architecture --png --strict
+  --output-dir output --name architecture --strict
 ```
 
-`render` always targets SVG, standalone HTML and a quality report. PNG requires `rsvg-convert`; if it is not installed, use the SVG directly or install a compatible SVG rasterizer.
+`render` always writes SVG, standalone HTML and a hash-bound quality receipt. A valid render remains `pending-review` until the Agent inspects the SVG or PNG and runs the documented `review` command with its reviewed Diagram Brief. PNG supports the backends reported by `png-backend`; if none is present, review and deliver the SVG directly.
 
 See [`spec.md`](skills/abi-flow/references/spec.md), [`prompt-system.md`](skills/abi-flow/references/prompt-system.md) and [`quality-contract.md`](skills/abi-flow/references/quality-contract.md).
 
@@ -209,7 +220,7 @@ npm install
 npm run dev
 ```
 
-Use it locally for graph/workspace inspection, manual positioning, ranks, swimlanes, Mermaid preview, CSV import and overview-to-detail navigation. The current supported posture is **local/offline-first**. Networked Yjs synchronization is experimental and should not be enabled for sensitive or multi-tenant workspaces until authenticated room isolation and conflict-safe document updates are implemented.
+Use it locally for graph/workspace inspection, manual positioning, ranks, swimlanes, Mermaid preview, CSV import and overview-to-detail navigation. The current supported posture is **local/offline-first**. Networked Yjs synchronization uses conflict-safe workspace values and document-scoped room/storage ids, but remains experimental because the repository does not bundle an authenticated collaboration service; configure only a trusted endpoint with application-level authorization and retention controls.
 
 See [`editor.md`](skills/abi-flow/references/editor.md), [`imports.md`](skills/abi-flow/references/imports.md) and [`workspaces.md`](skills/abi-flow/references/workspaces.md).
 
@@ -236,7 +247,8 @@ VisualSkills currently focuses on explanatory diagrams: architecture, workflows,
 - [x] SVG and standalone HTML outputs; optional PNG export
 - [x] Swimlanes, manual ranks, brand tokens and multi-view workspace files
 - [x] Local Studio preview for JSON, Mermaid and CSV workflows
-- [ ] Close the published validation and packaging gaps documented in [`AUDIT.md`](AUDIT.md)
+- [x] Enforce type contracts, schema parity, deterministic output, text bounds and hash-bound review receipts
+- [x] Isolate the installed Skill from repository-only Studio/import workflows
 - [ ] Add a generated Gallery site from [`gallery/manifest.json`](gallery/manifest.json)
 - [ ] Add visual diff and portable multi-view export
 - [ ] Publish an authenticated, isolated collaboration recipe
@@ -244,7 +256,7 @@ VisualSkills currently focuses on explanatory diagrams: architecture, workflows,
 
 ## Contributing
 
-Contributions are welcome for visual grammars, layout quality, accessibility, tests, examples and documentation. Read [`CONTRIBUTING.md`](CONTRIBUTING.md) and keep each change focused on one concern.
+Contributions are welcome for visual grammars, layout quality, accessibility, tests, examples and documentation. Read [`CONTRIBUTING.md`](CONTRIBUTING.md), follow [`CHANGELOG.md`](CHANGELOG.md) for compatibility notes, and keep each change focused on one concern.
 
 ## License
 

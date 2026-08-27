@@ -14,8 +14,10 @@
   "density": "medium",
   "content_risks": ["Replace with the easiest way this diagram could mislead"],
   "quality_questions": [
-    "Can the viewer identify the main story in five seconds?",
-    "Are must-show facts visible and correctly related?",
-    "Does the visual avoid unsupported claims?"
+    "Can a viewer identify the system's center of gravity in five seconds?",
+    "Are sources of truth visually distinguishable from orchestration and memory?",
+    "Does each layer have a single responsibility story?",
+    "Are external systems and trust boundaries represented only when supported by facts?",
+    "Is the main request/data path obvious without reading every label?"
   ]
 }

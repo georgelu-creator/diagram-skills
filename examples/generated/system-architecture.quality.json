@@ -1,6 +1,7 @@
 {
-  "schema_version": 2,
-  "status": "passed",
+  "schema_version": 3,
+  "status": "pending-review",
+  "structural_status": "passed",
   "diagram": {
     "title": "企业 AI 工作系统架构全景图",
     "type": "system-architecture",
@@ -15,7 +16,7 @@
   },
   "canvas": {
     "width": 1800.0,
-    "height": 1207.0
+    "height": 1261.0
   },
   "geometry": {
     "node_overlap_count": 0,
@@ -23,8 +24,31 @@
     "edge_crossing_count": 0,
     "group_overlap_count": 0,
     "group_intrusion_count": 0,
+    "text_overflow_count": 0,
     "route_segment_count": 10
   },
   "issues": [],
-  "visual_review": "passed: inspected at 1920 px for bands, nested grids, icons, routes, text, contrast, and clipping"
+  "artifacts": {
+    "source": {
+      "sha256": "43e712715f5fa32dfa8f4222e1ac6efd4902a3894e0584908beb8671f16877a2",
+      "basis": "file-bytes"
+    },
+    "svg": {
+      "sha256": "53a577dd4fb6ab650a66b5360704c929572b331900b11d9da619019de940570d",
+      "path": "system-architecture.svg"
+    },
+    "html": {
+      "sha256": "048102409c82efa8f4a9391323e044e7d21ab4d8bf0ddbc69dbe89ed6c53131e",
+      "path": "system-architecture.html"
+    },
+    "png": {
+      "sha256": "d5c236ad5e84b71452f4318e26bdaff20e9eed2bb06630eef0e122f3e8f4ea11",
+      "path": "system-architecture.png"
+    }
+  },
+  "visual_review": {
+    "status": "pending",
+    "artifact": "png",
+    "evidence": null
+  }
 }
