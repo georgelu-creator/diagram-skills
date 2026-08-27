@@ -15,8 +15,13 @@ Collect or infer these fields:
 | `content` | Which actors, steps, systems, capabilities, or milestones exist? | Preserve source wording |
 | `relationships` | What flows, controls, branches, stores, or feeds back? | Primary only unless evidence supports more |
 | `boundaries` | Which layers, owners, stages, domains, or trust zones matter? | None |
+| `lanes` | Do owners/roles need explicit swimlanes? | None |
+| `rank_hints` | Which nodes must stay at a specified hierarchy/stage? | Compute from relationships |
 | `language` | Which language and technical vocabulary? | Chinese-first, English technical terms retained |
 | `theme` | Which presentation context? | `spectrum` |
+| `brand` | Are approved brand colors required? | Theme defaults |
+| `views` | Does the overview need focused drill-downs? | One view unless density requires splitting |
+| `imports` | Is Mermaid or CSV an input source? | None |
 | `outputs` | Which deliverables are needed? | JSON + SVG + HTML; PNG when available |
 
 Do not infer business facts, performance numbers, ownership, or security boundaries. Ask only when their absence materially changes the diagram.
@@ -48,8 +53,12 @@ Scope: {scope}
 Content: {content}
 Relationships: {relationships}
 Boundaries: {boundaries}
+Swimlanes: {lanes}
+Manual rank hints: {rank_hints}
 Language: Chinese-first; retain established English technical terms
 Theme: {theme}
+Brand tokens: {brand}
+Views/imports: {views_and_imports}
 
 Requirements:
 1. Preserve facts and relationships. Do not invent components, metrics, ownership, or sequence.
@@ -57,7 +66,7 @@ Requirements:
 3. Use concise Chinese primary labels and English technical subtitles where useful.
 4. Use semantic node types and edge kinds; mark intentional cycles as feedback.
 5. Target 4–10 nodes and split views above 14 nodes unless a single overview is essential.
-6. Output valid VisualSpec JSON with title, subtitle, diagram_type, direction, theme, nodes, edges, optional groups, and legend.
+6. Output valid VisualSpec JSON with title, subtitle, diagram_type, direction, theme, nodes, edges, optional groups, lanes, rank hints, brand, and legend. Use a version 3.0 workspace when linked views are needed.
 7. After rendering, run strict validation and report any visual review that could not be completed.
 ```
 

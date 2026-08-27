@@ -50,6 +50,18 @@ Color is never the only signal: line patterns, labels, and the legend preserve m
 
 Themes change surface and typography colors, never graph meaning.
 
+## Brand configuration
+
+Start from a theme, then override only the allowlisted `brand` tokens. Use `primary` for the main flow/Agent accent and `accent` for boundary emphasis. Change `page`, `surface`, `ink`, `muted`, `hair`, `group`, and `group_stroke` only when a real brand kit supplies those values. Keep contrast and semantic edge colors legible.
+
+## Swimlanes and hierarchy
+
+- Use `lanes` for responsibility, actor, team, or system-of-record ownership.
+- Use `rank` for the intended hierarchy/stage when topological ordering alone is wrong.
+- In `LR`, lanes run horizontally and rank advances left to right. In `TB`, lanes run vertically and rank advances top to bottom.
+- Keep lane labels short and bilingual when useful. Do not use lane background color as the only ownership signal.
+- Use `groups` inside or across lanes only for a different semantic dimension such as trust boundary or capability domain.
+
 ## Density limits
 
 - Target 4–10 nodes; split above 14 unless a single overview is essential.

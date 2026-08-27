@@ -11,9 +11,11 @@ The renderer consumes UTF-8 JSON. Keep sources under version control. Editors ma
 | `diagram_type` | no | Supported type slug; defaults to `process-flow` |
 | `direction` | no | `LR` (default) or `TB` |
 | `theme` | no | `paper`, `notion`, `spectrum`, `blueprint`, or `terminal` |
+| `brand` | no | Injection-safe brand color overrides |
 | `nodes` | yes | Array of node objects |
 | `edges` | yes | Array of edge objects |
 | `groups` | no | Array of group objects |
+| `lanes` | no | Ordered horizontal or vertical swimlanes |
 | `legend` | no | Boolean; defaults to true when multiple edge kinds exist |
 
 Supported `diagram_type` values:
@@ -31,6 +33,9 @@ The type is semantic metadata: it records intent, selects a template, appears as
   "subtitle": "Memory · Files · Recent activity",
   "type": "process",
   "group": "core",
+  "lane": "engineering",
+  "rank": 2,
+  "child_view": "context-detail",
   "link": "https://example.com/context"
 }
 ```
@@ -40,6 +45,9 @@ The type is semantic metadata: it records intent, selects a template, appears as
 - `subtitle`: optional detail, English technical terms, or a compact metric.
 - `type`: `process`, `decision`, `input`, `document`, `database`, `agent`, or `external`.
 - `group`: optional group id.
+- `lane`: optional swimlane id. When `lanes` are declared, every node must be assigned.
+- `rank`: optional non-negative manual hierarchy level. It overrides the computed topological rank.
+- `child_view`: optional target view id used by the browser workspace for drill-down.
 - `link`: optional `https`, `http`, `mailto`, or `#fragment` target.
 
 ## Edges
@@ -68,6 +76,45 @@ The type is semantic metadata: it records intent, selects a template, appears as
 ```
 
 Groups are visual enclosures, not graph nodes. Use them only for layers, ownership, lifecycle stages, domains, or trust boundaries. Every referenced group must be declared; empty groups are rejected.
+
+## Swimlanes
+
+```json
+{
+  "lanes": [
+    {"id": "product", "label": "产品 / PRODUCT", "order": 0},
+    {"id": "engineering", "label": "研发 / ENGINEERING", "order": 1}
+  ]
+}
+```
+
+Swimlanes are full diagram bands. In `LR` diagrams they are horizontal; in `TB` diagrams they are vertical. Use a lane for ownership or responsibility and a group for a semantic enclosure. Do not overload one construct to mean both.
+
+## Brand tokens
+
+```json
+{
+  "theme": "paper",
+  "brand": {
+    "name": "Acme",
+    "primary": "#1D4ED8",
+    "accent": "#0F766E",
+    "page": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "ink": "#172033",
+    "muted": "#667085",
+    "hair": "#D7E0EA",
+    "group": "#EFF6FF",
+    "group_stroke": "#93C5FD"
+  }
+}
+```
+
+All color values must be six- or eight-digit hex colors. The renderer maps `primary` to the primary edge and Agent accent, and `accent` to group emphasis. The allowlist prevents arbitrary CSS from entering generated SVG.
+
+## Multi-view workspaces
+
+This file describes one renderable diagram. For overview-to-detail projects, wrap diagram views in the versioned workspace contract documented in [workspaces.md](workspaces.md) and validated by [workspace.schema.json](workspace.schema.json).
 
 ## Complete minimal example
 

@@ -1,0 +1,40 @@
+{
+  "title": "AI 功能发布泳道",
+  "subtitle": "从业务意图到可审计发布 · Ownership + Manual Rank",
+  "diagram_type": "process-flow",
+  "direction": "LR",
+  "theme": "paper",
+  "brand": {
+    "name": "VisualSpec",
+    "primary": "#4F46E5",
+    "accent": "#0F766E",
+    "page": "#F8FAFC",
+    "surface": "#FFFFFF",
+    "ink": "#172033",
+    "muted": "#667085",
+    "hair": "#D7E0EA",
+    "group": "#EFF6FF",
+    "group_stroke": "#93C5FD"
+  },
+  "lanes": [
+    {"id": "product", "label": "产品 / PRODUCT", "order": 0},
+    {"id": "security", "label": "安全与合规 / SECURITY", "order": 1},
+    {"id": "engineering", "label": "研发与平台 / ENGINEERING", "order": 2}
+  ],
+  "nodes": [
+    {"id": "intent", "label": "业务意图", "subtitle": "Goal · Audience · Risk", "type": "input", "lane": "product", "rank": 0},
+    {"id": "brief", "label": "发布简报", "subtitle": "Scope · Acceptance criteria", "type": "document", "lane": "product", "rank": 1},
+    {"id": "gate", "label": "风险可接受？", "subtitle": "Privacy · Security · Policy", "type": "decision", "lane": "security", "rank": 2},
+    {"id": "build", "label": "实现与集成", "subtitle": "Code · Config · Migration", "type": "process", "lane": "engineering", "rank": 3},
+    {"id": "verify", "label": "验证与证据", "subtitle": "Tests · Audit · Rollback", "type": "process", "lane": "engineering", "rank": 4},
+    {"id": "release", "label": "分阶段发布", "subtitle": "Canary · Observe · Expand", "type": "process", "lane": "product", "rank": 5}
+  ],
+  "edges": [
+    {"source": "intent", "target": "brief", "kind": "primary"},
+    {"source": "brief", "target": "gate", "kind": "control", "label": "review"},
+    {"source": "gate", "target": "build", "kind": "success", "label": "批准"},
+    {"source": "build", "target": "verify", "kind": "primary"},
+    {"source": "verify", "target": "release", "kind": "success", "label": "通过"},
+    {"source": "verify", "target": "build", "kind": "feedback", "label": "修正"}
+  ]
+}

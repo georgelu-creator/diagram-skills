@@ -1,0 +1,72 @@
+{
+  "$schema": "../skills/abi-flow/references/workspace.schema.json",
+  "schema_version": "3.0",
+  "title": "企业 AI 交付工作台",
+  "entry_view": "overview",
+  "views": [
+    {
+      "id": "overview",
+      "format": "visualspec",
+      "title": "企业 AI 交付闭环",
+      "subtitle": "从业务意图到可验证交付 · Overview → Drill-down",
+      "diagram_type": "system-architecture",
+      "direction": "LR",
+      "theme": "spectrum",
+      "layout_mode": "ranked",
+      "brand": {"name": "VisualSpec", "primary": "#4F46E5", "accent": "#14B8A6"},
+      "groups": [],
+      "lanes": [
+        {"id": "business", "label": "业务与产品 / BUSINESS", "order": 0},
+        {"id": "agent", "label": "Agent 编排 / ORCHESTRATION", "order": 1},
+        {"id": "platform", "label": "平台与数据 / PLATFORM", "order": 2}
+      ],
+      "nodes": [
+        {"id": "intent", "label": "业务意图", "subtitle": "Goal · Audience · Constraint", "type": "input", "lane": "business", "rank": 0},
+        {"id": "brief", "label": "结构化简报", "subtitle": "Normalized Brief", "type": "document", "lane": "business", "rank": 1, "child_view": "brief-detail"},
+        {"id": "plan", "label": "Agent 规划", "subtitle": "Plan · Route · Context", "type": "agent", "lane": "agent", "rank": 1},
+        {"id": "execute", "label": "工具执行", "subtitle": "Tools · API · Browser", "type": "process", "lane": "agent", "rank": 2},
+        {"id": "verify", "label": "质量验证", "subtitle": "Schema · Geometry · Review", "type": "decision", "lane": "agent", "rank": 3, "child_view": "quality-detail"},
+        {"id": "memory", "label": "上下文与记忆", "subtitle": "Context · History · Evidence", "type": "database", "lane": "platform", "rank": 1},
+        {"id": "artifact", "label": "交付资产", "subtitle": "JSON · SVG · HTML · PNG", "type": "document", "lane": "platform", "rank": 4}
+      ],
+      "edges": [
+        {"source": "intent", "target": "brief", "kind": "primary"},
+        {"source": "brief", "target": "plan", "kind": "control"},
+        {"source": "memory", "target": "plan", "kind": "async", "label": "context"},
+        {"source": "plan", "target": "execute", "kind": "primary"},
+        {"source": "execute", "target": "verify", "kind": "primary"},
+        {"source": "verify", "target": "artifact", "kind": "success", "label": "通过"},
+        {"source": "verify", "target": "plan", "kind": "feedback", "label": "修正"}
+      ]
+    },
+    {
+      "id": "brief-detail",
+      "format": "visualspec",
+      "title": "结构化简报",
+      "subtitle": "把模糊需求固定成可审查输入",
+      "diagram_type": "process-flow",
+      "direction": "TB",
+      "theme": "paper",
+      "layout_mode": "auto",
+      "groups": [],
+      "lanes": [],
+      "nodes": [
+        {"id": "goal", "label": "目标", "subtitle": "Decision to support", "type": "input"},
+        {"id": "scope", "label": "范围与边界", "subtitle": "In scope · Out of scope", "type": "process"},
+        {"id": "relationships", "label": "关系与语义", "subtitle": "Flow · Control · Feedback", "type": "process"},
+        {"id": "contract", "label": "生成契约", "subtitle": "Layout · Theme · Outputs", "type": "document"}
+      ],
+      "edges": [
+        {"source": "goal", "target": "scope", "kind": "primary"},
+        {"source": "scope", "target": "relationships", "kind": "primary"},
+        {"source": "relationships", "target": "contract", "kind": "primary"}
+      ]
+    },
+    {
+      "id": "quality-detail",
+      "format": "mermaid",
+      "title": "质量门禁 / Quality Gate",
+      "source": "flowchart LR\n  A[结构验证] --> B[布局检查]\n  B --> C{视觉审查通过?}\n  C -->|是| D[发布]\n  C -->|否| E[修正源文件]\n  E --> A"
+    }
+  ]
+}

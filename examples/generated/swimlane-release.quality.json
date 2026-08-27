@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "status": "passed",
+  "diagram": {
+    "title": "AI 功能发布泳道",
+    "type": "process-flow",
+    "nodes": 6,
+    "edges": 6,
+    "groups": 0,
+    "lanes": 3,
+    "direction": "LR",
+    "theme": "paper",
+    "brand": "VisualSpec"
+  },
+  "canvas": {
+    "width": 2072.2,
+    "height": 886
+  },
+  "geometry": {
+    "node_overlap_count": 0,
+    "edge_node_collision_count": 0,
+    "edge_crossing_count": 0,
+    "group_overlap_count": 0,
+    "group_intrusion_count": 0,
+    "route_segment_count": 18
+  },
+  "issues": [],
+  "visual_review": "passed: inspected at 1920 px for labels, lanes, routes, contrast, and clipping"
+}

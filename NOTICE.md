@@ -1,13 +1,16 @@
 # Inspirations and provenance
 
-VisualSpec (formerly ABI Flow) is an original implementation. It does not vendor, copy, or modify source code from the projects below. Their public interfaces and design approaches informed the requirements:
+VisualSpec (formerly ABI Flow) is an original implementation. The dependency-free Python renderer does not vendor source from the projects below. VisualSpec Studio consumes released packages through npm; their public APIs provide the generic editor infrastructure:
 
-- [Mermaid](https://github.com/mermaid-js/mermaid): text-first diagrams and SVG output
-- [D2](https://github.com/terrastruct/d2): declarative sources, themes and automated layout
-- [Graphviz](https://gitlab.com/graphviz/graphviz): deterministic graph layout and SVG export
-- [React Flow](https://github.com/xyflow/xyflow): interactive graph navigation and custom node concepts
-- [ELK](https://github.com/eclipse-elk/elk): layered layout and orthogonal routing concepts
-- [Excalidraw](https://github.com/excalidraw/excalidraw): portable, editable vector diagrams
-- [fireworks-tech-graph](https://github.com/yizhiyanhua-ai/fireworks-tech-graph): semantic arrows, geometry validation and bounded visual review
+- [React Flow](https://github.com/xyflow/xyflow): interactive graph canvas and parent-child nodes (MIT)
+- [Eclipse ELK / elkjs](https://github.com/kieler/elkjs): layered automatic layout (EPL-2.0)
+- [Mermaid](https://github.com/mermaid-js/mermaid): source validation and rendering (MIT)
+- [Papa Parse](https://github.com/mholt/PapaParse): CSV parsing (MIT)
+- [Monaco Editor](https://github.com/microsoft/monaco-editor): browser source editor (MIT)
+- [Yjs](https://github.com/yjs/yjs), y-indexeddb, and y-websocket: CRDT document, offline persistence, and optional network provider (MIT)
+- [Zod](https://github.com/colinhacks/zod): browser workspace validation (MIT)
+- [Vite](https://github.com/vitejs/vite), React, and TypeScript: application build and runtime (MIT)
 
-All VisualSpec source files were written for this repository. Refer to each upstream project for its own license and terms before using that project directly.
+Earlier design research also considered Mermaid, D2, Graphviz, diagrams.net, Excalidraw, and fireworks-tech-graph. The resulting VisualSpec schemas, rendering code, lane/rank adapter, import mappings, interface, prompts, and documentation were written for this repository.
+
+Refer to `editor/package-lock.json` for the resolved dependency graph and to each upstream package for its license and notices.

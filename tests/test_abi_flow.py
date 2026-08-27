@@ -118,6 +118,53 @@ class AbiFlowTests(unittest.TestCase):
         schema = json.loads((ROOT / "skills" / "abi-flow" / "references" / "spec.schema.json").read_text(encoding="utf-8"))
         self.assertEqual("object", schema["type"])
 
+    def test_swimlanes_manual_ranks_and_brand_tokens_render(self):
+        spec = {
+            "title": "泳道发布流程",
+            "diagram_type": "process-flow",
+            "direction": "LR",
+            "theme": "paper",
+            "brand": {"name": "Acme", "primary": "#1D4ED8", "accent": "#0F766E"},
+            "lanes": [
+                {"id": "product", "label": "产品", "order": 0},
+                {"id": "engineering", "label": "研发", "order": 1},
+            ],
+            "nodes": [
+                {"id": "brief", "label": "需求", "type": "input", "lane": "product", "rank": 0},
+                {"id": "review", "label": "评审", "type": "decision", "lane": "product", "rank": 1},
+                {"id": "build", "label": "开发", "lane": "engineering", "rank": 2},
+                {"id": "ship", "label": "发布", "lane": "engineering", "rank": 3},
+            ],
+            "edges": [
+                {"source": "brief", "target": "review", "kind": "primary"},
+                {"source": "review", "target": "build", "kind": "control"},
+                {"source": "build", "target": "ship", "kind": "success"},
+            ],
+        }
+        svg, _, report, issues = abi_flow.build(spec, abi_flow.validate_spec(spec))
+        self.assertEqual([], issues)
+        self.assertEqual(2, report["diagram"]["lanes"])
+        self.assertEqual("Acme", report["diagram"]["brand"])
+        self.assertIn('class="lane"', svg)
+        self.assertIn("--edge-primary:#1D4ED8", svg)
+
+    def test_lane_assignment_and_brand_colors_are_validated(self):
+        spec = {
+            "title": "Invalid lane",
+            "brand": {"primary": "blue"},
+            "lanes": [{"id": "ops", "label": "Ops"}],
+            "nodes": [{"id": "a", "label": "A"}],
+            "edges": [],
+        }
+        codes = {issue.code for issue in abi_flow.validate_spec(spec)}
+        self.assertIn("invalid-brand-color", codes)
+        self.assertIn("missing-lane", codes)
+        self.assertIn("empty-lane", codes)
+
+    def test_multi_view_workspace_validates(self):
+        workspace = json.loads((ROOT / "examples" / "enterprise-ai-workspace.json").read_text(encoding="utf-8"))
+        self.assertEqual([], abi_flow.validate_workspace(workspace))
+
     def test_every_diagram_type_has_a_strict_template(self):
         template_dir = ROOT / "skills" / "abi-flow" / "templates"
         self.assertEqual(set(abi_flow.DIAGRAM_TYPES), {path.stem for path in template_dir.glob("*.json")})

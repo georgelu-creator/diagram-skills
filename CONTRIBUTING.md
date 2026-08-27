@@ -7,7 +7,7 @@ VisualSpec accepts focused contributions that improve diagram meaning, determini
 - Check whether the request belongs to an existing diagram type.
 - Add a new type only when it has a distinct information model or fixed layout contract.
 - Preserve existing JSON compatibility unless the change is intentionally versioned.
-- Do not add runtime dependencies when the standard library is sufficient.
+- Keep the Python renderer dependency-free. In `editor`, reuse established packages, justify additions in the architecture record, and commit the lock file.
 
 ## Local workflow
 
@@ -17,9 +17,18 @@ for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/abi-flow
+python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
+cd editor
+npm ci
+npm run typecheck
+npm test
+npm run build
+npm audit
 ```
 
 For visual changes, render representative `LR` and `TB` diagrams in light and dark themes. Inspect the PNG at full size for clipping, text wrapping, hierarchy, edge routes, group boundaries, and contrast.
+
+For editor changes, test a desktop viewport, overview-to-detail navigation, one CSV import, Mermaid live preview, JSON validation, and offline restore. Do not replace mature canvas, layout, editor, parser, or CRDT infrastructure with project-local equivalents.
 
 ## Add a diagram type
 

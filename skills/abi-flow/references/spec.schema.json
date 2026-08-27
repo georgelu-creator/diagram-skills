@@ -14,6 +14,22 @@
     },
     "direction": {"enum": ["LR", "TB"], "default": "LR"},
     "theme": {"enum": ["paper", "notion", "spectrum", "blueprint", "terminal"], "default": "paper"},
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "primary": {"$ref": "#/$defs/color"},
+        "accent": {"$ref": "#/$defs/color"},
+        "page": {"$ref": "#/$defs/color"},
+        "surface": {"$ref": "#/$defs/color"},
+        "ink": {"$ref": "#/$defs/color"},
+        "muted": {"$ref": "#/$defs/color"},
+        "hair": {"$ref": "#/$defs/color"},
+        "group": {"$ref": "#/$defs/color"},
+        "group_stroke": {"$ref": "#/$defs/color"}
+      }
+    },
     "legend": {"type": "boolean"},
     "groups": {
       "type": "array",
@@ -24,6 +40,19 @@
         "properties": {
           "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
           "label": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "lanes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "order": {"type": "integer", "minimum": 0}
         }
       }
     },
@@ -40,6 +69,9 @@
           "subtitle": {"type": "string"},
           "type": {"enum": ["process", "decision", "input", "document", "database", "agent", "external"], "default": "process"},
           "group": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "lane": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+          "rank": {"type": "integer", "minimum": 0},
+          "child_view": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
           "link": {"type": "string"}
         }
       }
@@ -58,5 +90,8 @@
         }
       }
     }
+  },
+  "$defs": {
+    "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$"}
   }
 }

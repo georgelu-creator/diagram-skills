@@ -15,11 +15,12 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-4F46E5.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/runtime-Python%20stdlib-0EA5E9.svg" alt="Python standard library">
   <img src="https://img.shields.io/badge/output-SVG%20%7C%20HTML%20%7C%20PNG-14B8A6.svg" alt="SVG HTML PNG output">
+  <img src="https://img.shields.io/badge/editor-React%20Flow%20%2B%20ELK-4F46E5.svg" alt="React Flow and ELK editor">
 </p>
 
 [![企业 AI 工作系统架构](examples/generated/system-architecture.svg)](examples/generated/system-architecture.svg)
 
-VisualSpec turns natural-language intent or structured content into a version-controlled JSON specification, then renders polished SVG, responsive interactive HTML, optional PNG, and machine-readable quality evidence. It is built for diagrams that must survive revision—not one-off pictures that cannot be reproduced.
+VisualSpec turns natural-language intent, Mermaid, CSV, or structured content into a version-controlled specification, then renders polished SVG, responsive HTML, optional PNG, and machine-readable quality evidence. **VisualSpec Studio** adds a real browser editor with swimlanes, manual hierarchy, brand themes, multi-view drill-down, Mermaid live preview, and offline persistence.
 
 The repository and public Skill id remain `abi-flow` for compatibility; the project brand and expanded framework are now **VisualSpec**.
 
@@ -29,6 +30,9 @@ The repository and public Skill id remain `abi-flow` for compatibility; the proj
 - **10 diagram contracts** — each type has a use case, input schema, fixed layout rules, visual rules, a starter source, and an example prompt.
 - **Agent-native** — install and invoke the included `$abi-flow` Skill from compatible agents.
 - **Deterministic output** — the same JSON produces reviewable SVG, HTML, PNG, and a quality report.
+- **Real editing surface** — React Flow canvas, ELK automatic layout, Monaco source editing, and direct node inspection.
+- **Import without lock-in** — CSV becomes native VisualSpec; Mermaid source stays intact and uses the official renderer.
+- **Overview → detail** — versioned workspaces link focused views through `child_view` instead of forcing everything onto one canvas.
 - **Enterprise visual language** — Chinese-first labels, preserved English technical terms, low-saturation themes, semantic nodes and arrows.
 - **Quality gates** — cycles, references, unsafe links, overlaps, edge/node collisions, crossings, accessibility, and SVG integrity are checked.
 - **Zero required runtime dependencies** — SVG and HTML rendering use only the Python standard library; PNG export optionally uses `rsvg-convert`.
@@ -52,13 +56,15 @@ Every type has a dedicated guide under [`references/diagram-types`](skills/abi-f
 
 ## How it works
 
-`Intent → normalized brief → typed JSON spec → deterministic layout → SVG/HTML/PNG → quality evidence`
+`Intent / Mermaid / CSV → typed spec or workspace → ELK / rank / lane layout → browser edit or deterministic export → quality evidence`
 
 1. **Choose the information model.** The Skill routes the request to one primary diagram type.
 2. **Normalize the content.** Audience, scope, actors, relationships, boundaries, language, theme, and outputs become an explicit brief.
 3. **Author the source of truth.** A small JSON graph records meaning independently of presentation.
 4. **Render.** The standard-library engine lays out nodes, routes semantic arrows, applies a theme, and creates portable artifacts.
 5. **Gate quality.** Strict validation catches structural, geometry, accessibility, and security problems before delivery.
+
+The implementation deliberately reuses [React Flow](https://reactflow.dev/learn/layouting/sub-flows), [ELK](https://eclipse.dev/elk/reference/algorithms/org-eclipse-elk-layered.html), [Mermaid](https://mermaid.js.org/config/usage.html), [Papa Parse](https://www.papaparse.com/docs), [Monaco](https://microsoft.github.io/monaco-editor/), and [Yjs](https://docs.yjs.dev/). The research and boundaries are recorded in [`docs/research-and-architecture.md`](docs/research-and-architecture.md).
 
 ## Quick start
 
@@ -95,6 +101,27 @@ Outputs:
 - `my-architecture.html` — dependency-free viewer with pan/zoom, light/dark mode, and downloads
 - `my-architecture.png` — 1920 px preview when `rsvg-convert` is available
 - `my-architecture.quality.json` — validation and geometry evidence
+
+### Run VisualSpec Studio
+
+Requires Node.js 20.19+ or 22.12+.
+
+```bash
+cd editor
+npm install
+npm run dev
+```
+
+Studio runs locally and includes:
+
+- React Flow editing with selection, drag, connect, delete, pan, zoom, minimap, and lane parents;
+- ELK Layered automatic layout plus explicit `rank` and saved manual positions;
+- CSV, Mermaid, and full Workspace JSON import;
+- brand preset and color-token controls;
+- multiple native or Mermaid views with double-click drill-down;
+- Monaco source editing, live validation, IndexedDB offline restore, and optional Yjs WebSocket sync.
+
+No public CDN is required. See [`editor.md`](skills/abi-flow/references/editor.md) and the checked-in [`enterprise-ai-workspace.json`](examples/enterprise-ai-workspace.json).
 
 ### Start from JSON
 
@@ -139,8 +166,12 @@ The Skill accepts prose or these structured parameters:
 | `content` | Actors, systems, steps, capabilities, milestones, or questions |
 | `relationships` | Primary, control, async, success, error, and feedback links |
 | `boundaries` | Layers, owners, stages, domains, or trust zones |
+| `lanes` / `rank` | Swimlane ownership and explicit hierarchy |
 | `language` | Chinese-first by default; technical English retained |
 | `theme` | `paper`, `notion`, `spectrum`, `blueprint`, or `terminal` |
+| `brand` | Allowlisted brand colors layered over a preset |
+| `views` | Overview/detail views linked by `child_view` |
+| `imports` | Mermaid source or CSV node/edge table |
 | `outputs` | JSON plus SVG, HTML, PNG, and/or quality report |
 
 See the reusable [`prompt-system.md`](skills/abi-flow/references/prompt-system.md) for the normalized brief and copy/paste generation contract.
@@ -163,6 +194,10 @@ All gallery images below are generated by this repository from checked-in JSON t
   </tr>
 </table>
 
+[![AI 功能发布泳道](examples/generated/swimlane-release.png)](examples/generated/swimlane-release.svg)
+
+**泳道 + 手动层级 + 品牌主题** — Product / Security / Engineering ownership, explicit rank, semantic handoffs, feedback, and brand-token overrides.
+
 The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-resilience-network.svg) remains as a larger spectrum-theme stress example.
 
 ## Design principles
@@ -174,6 +209,14 @@ The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-r
 5. **High density, easy scanning.** Use layers, groups, hierarchy, and whitespace—not tiny type.
 6. **Reproducible by default.** Source JSON and generated evidence travel with every diagram.
 7. **Accessible and safe.** Color is not the only signal; links and embedded text are validated and escaped.
+
+## Import contracts
+
+Mermaid is imported as a source view and validated/rendered by Mermaid itself in strict security mode. VisualSpec does not pretend that every Mermaid diagram has been losslessly converted to native nodes.
+
+CSV imports support `node_id`, `label`, `type`, `lane`, `lane_label`, `rank`, `child_view`, `source`, `target`, `edge_label`, and `edge_kind`. A simple `source,target,source_label,target_label` edge table is also accepted. See [`imports.md`](skills/abi-flow/references/imports.md).
+
+Multi-view files use `schema_version: "3.0"`, one `entry_view`, native `visualspec` views, optional `mermaid` views, and node `child_view` links. See [`workspaces.md`](skills/abi-flow/references/workspaces.md) and [`workspace.schema.json`](skills/abi-flow/references/workspace.schema.json).
 
 ## Project structure
 
@@ -188,11 +231,20 @@ The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-r
 │   │   ├── diagram-types/*.md       # 10 type-specific contracts
 │   │   ├── spec.md                  # JSON authoring guide
 │   │   ├── spec.schema.json         # Editor/schema support
+│   │   ├── workspace.schema.json    # Multi-view workspace contract
+│   │   ├── editor.md                # Browser editor workflow
+│   │   ├── imports.md               # Mermaid/CSV contracts
+│   │   ├── workspaces.md            # Drill-down model
 │   │   ├── visual-language.md       # Themes and semantics
 │   │   └── quality-contract.md      # Delivery gates
 │   ├── templates/*.json             # 10 validated starter sources
 │   └── scripts/abi_flow.py          # Renderer, scaffolder, validator
 ├── examples/generated/              # SVG, HTML, PNG, quality reports
+├── editor/                           # React/TypeScript VisualSpec Studio
+│   ├── src/                          # React Flow, ELK, import and realtime adapters
+│   ├── package.json                  # Pinned browser dependencies and checks
+│   └── vite.config.ts                # Local and production build
+├── docs/research-and-architecture.md # Adopted components and boundaries
 ├── tests/test_abi_flow.py            # Behavior and security coverage
 ├── CONTRIBUTING.md
 ├── SECURITY.md
@@ -206,11 +258,14 @@ The fictional [Aurora Deep-Space Resilience Network](examples/generated/aurora-r
 - [x] Deterministic SVG/HTML/PNG rendering and quality evidence
 - [x] Agent Skill packaging with progressive references
 - [x] Multi-type example gallery
-- [ ] Swimlanes and explicit manual rank hints for dense enterprise flows
-- [ ] Import adapters for Mermaid and CSV/table sources
-- [ ] Theme tokens and brand-kit overrides in the JSON spec
-- [ ] Multi-view projects with overview → drill-down links
-- [ ] Browser-based source editor and live validation
+- [x] Swimlanes and explicit manual rank hints for dense enterprise flows
+- [x] Mermaid and CSV/table import adapters
+- [x] Theme tokens and brand-kit overrides in the JSON spec
+- [x] Multi-view projects with overview → drill-down links
+- [x] Browser editor with live JSON/Mermaid validation and offline persistence
+- [ ] Authenticated shared rooms, presence cursors, and deployable collaboration server recipe
+- [ ] diagrams.net import/export adapter and portable workspace HTML export
+- [ ] Command palette, undo history UI, and plugin API for custom nodes
 
 ## Contributing
 
@@ -224,13 +279,15 @@ for spec in skills/abi-flow/templates/*.json; do
   python3 skills/abi-flow/scripts/abi_flow.py validate "$spec" --strict
 done
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/abi-flow
+python3 skills/abi-flow/scripts/abi_flow.py workspace-validate examples/enterprise-ai-workspace.json --strict
+cd editor && npm ci && npm run typecheck && npm test && npm run build && npm audit
 ```
 
 Release evidence and known limitations are recorded in [`AUDIT.md`](AUDIT.md).
 
 ## Scope
 
-VisualSpec is optimized for explanatory diagrams: architecture, workflows, data movement, capability structures, topology, decisions, and strategy. It is not a quantitative charting library, BPMN engine, general whiteboard, or unrestricted illustration generator.
+VisualSpec is optimized for explanatory diagrams: architecture, workflows, data movement, capability structures, topology, decisions, and strategy. The Python renderer has zero required third-party runtime dependencies; the separate browser editor uses audited open-source packages. VisualSpec is not a quantitative charting library, BPMN execution engine, general whiteboard, or unrestricted illustration generator.
 
 ## License
 

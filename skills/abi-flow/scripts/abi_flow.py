@@ -24,6 +24,7 @@ NODE_TYPES = {"process", "decision", "input", "document", "database", "agent", "
 EDGE_KINDS = {"primary", "control", "feedback", "async", "success", "error"}
 THEMES = {"paper", "notion", "spectrum", "blueprint", "terminal"}
 DIRECTIONS = {"LR", "TB"}
+BRAND_COLOR_FIELDS = {"primary", "accent", "page", "surface", "ink", "muted", "hair", "group", "group_stroke"}
 DIAGRAM_TYPES = {
     "system-architecture": "系统架构图 / System Architecture",
     "agent-workflow": "Agent 工作流 / Agent Workflow",
@@ -37,6 +38,7 @@ DIAGRAM_TYPES = {
     "process-flow": "流程图 / Process Flow",
 }
 ID_RE = re.compile(r"^[A-Za-z0-9_.-]+$")
+HEX_COLOR_RE = re.compile(r"^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$")
 ALLOWED_LINK_SCHEMES = {"http", "https", "mailto"}
 TEMPLATE_DIR = Path(__file__).resolve().parents[1] / "templates"
 
@@ -113,6 +115,33 @@ EDGE_COLORS = {
     "primary": "#2563eb", "control": "#ea580c", "feedback": "#7c3aed",
     "async": "#64748b", "success": "#059669", "error": "#dc2626",
 }
+
+
+def resolve_visual_tokens(spec: Dict[str, Any]) -> Tuple[Dict[str, str], Dict[str, str]]:
+    """Resolve a preset plus a small, injection-safe brand-token override."""
+    tokens = dict(THEME_TOKENS[spec.get("theme", "paper")])
+    edges = dict(EDGE_COLORS)
+    brand = spec.get("brand", {})
+    if not isinstance(brand, dict):
+        return tokens, edges
+    for field in BRAND_COLOR_FIELDS:
+        value = brand.get(field)
+        if not isinstance(value, str) or not HEX_COLOR_RE.fullmatch(value):
+            continue
+        if field == "primary":
+            edges["primary"] = value
+            tokens["node-agent-stroke"] = value
+        elif field == "accent":
+            tokens["group_stroke"] = value
+        else:
+            tokens[field] = value
+            if field == "surface":
+                for node_type in NODE_TYPES:
+                    tokens[f"node-{node_type}"] = value
+            elif field == "hair":
+                for node_type in NODE_TYPES:
+                    tokens[f"node-{node_type}-stroke"] = value
+    return tokens, edges
 
 
 @dataclass
@@ -229,9 +258,77 @@ def load_spec(path: Path) -> Tuple[Dict[str, Any], List[Issue]]:
     return data, issues
 
 
+def load_json_object(path: Path) -> Tuple[Dict[str, Any], List[Issue]]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return {}, [Issue("error", "file-not-found", f"Input file not found: {path}")]
+    except json.JSONDecodeError as exc:
+        return {}, [Issue("error", "invalid-json", f"JSON parse error at line {exc.lineno}: {exc.msg}")]
+    if not isinstance(data, dict):
+        return {}, [Issue("error", "invalid-root", "JSON root must be an object")]
+    return data, []
+
+
+def validate_workspace(workspace: Dict[str, Any]) -> List[Issue]:
+    issues: List[Issue] = []
+    allowed = {"$schema", "schema_version", "title", "entry_view", "views"}
+    for key in sorted(set(workspace) - allowed):
+        issues.append(Issue("warning", "unknown-workspace-field", f"Unknown workspace field: {key}"))
+    if workspace.get("schema_version") != "3.0":
+        issues.append(Issue("error", "invalid-workspace-version", "schema_version must be 3.0"))
+    if not isinstance(workspace.get("title"), str) or not workspace.get("title", "").strip():
+        issues.append(Issue("error", "missing-workspace-title", "workspace title must be non-empty"))
+    views = workspace.get("views")
+    if not isinstance(views, list) or not views:
+        return issues + [Issue("error", "missing-views", "views must be a non-empty array")]
+    view_ids: List[str] = []
+    for index, view in enumerate(views):
+        if not isinstance(view, dict):
+            issues.append(Issue("error", "invalid-view", f"views[{index}] must be an object"))
+            continue
+        view_id = view.get("id")
+        if not isinstance(view_id, str) or not ID_RE.fullmatch(view_id):
+            issues.append(Issue("error", "invalid-view-id", f"views[{index}].id is invalid"))
+        elif view_id in view_ids:
+            issues.append(Issue("error", "duplicate-view-id", f"Duplicate view id: {view_id}"))
+        else:
+            view_ids.append(view_id)
+    if workspace.get("entry_view") not in view_ids:
+        issues.append(Issue("error", "unknown-entry-view", "entry_view must reference an existing view"))
+    for index, view in enumerate(views):
+        if not isinstance(view, dict):
+            continue
+        view_id = view.get("id", f"views[{index}]")
+        view_format = view.get("format")
+        if view_format == "visualspec":
+            diagram = {key: value for key, value in view.items() if key not in {"id", "format", "layout_mode"}}
+            diagram["nodes"] = [
+                {key: value for key, value in node.items() if key != "position"}
+                if isinstance(node, dict) else node
+                for node in diagram.get("nodes", [])
+            ]
+            for issue in validate_spec(diagram):
+                issues.append(Issue(issue.level, issue.code, f"View {view_id!r}: {issue.message}"))
+            for node in view.get("nodes", []):
+                if not isinstance(node, dict):
+                    continue
+                child_view = node.get("child_view")
+                if child_view is not None and child_view not in view_ids:
+                    issues.append(Issue("error", "unknown-child-view", f"View {view_id!r} node {node.get('id')!r} references unknown child view {child_view!r}"))
+        elif view_format == "mermaid":
+            if not isinstance(view.get("title"), str) or not view.get("title", "").strip():
+                issues.append(Issue("error", "missing-view-title", f"Mermaid view {view_id!r} title must be non-empty"))
+            if not isinstance(view.get("source"), str) or not view.get("source", "").strip():
+                issues.append(Issue("error", "missing-mermaid-source", f"Mermaid view {view_id!r} source must be non-empty"))
+        else:
+            issues.append(Issue("error", "invalid-view-format", f"View {view_id!r} format must be visualspec or mermaid"))
+    return issues
+
+
 def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
     issues: List[Issue] = []
-    allowed_top = {"title", "subtitle", "diagram_type", "direction", "theme", "nodes", "edges", "groups", "legend"}
+    allowed_top = {"title", "subtitle", "diagram_type", "direction", "theme", "brand", "nodes", "edges", "groups", "lanes", "legend"}
     for key in sorted(set(spec) - allowed_top):
         issues.append(Issue("warning", "unknown-field", f"Unknown top-level field: {key}"))
     if not isinstance(spec.get("title"), str) or not spec.get("title", "").strip():
@@ -242,10 +339,24 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
         issues.append(Issue("error", "invalid-theme", f"theme must be one of: {', '.join(sorted(THEMES))}"))
     if spec.get("diagram_type", "process-flow") not in DIAGRAM_TYPES:
         issues.append(Issue("error", "invalid-diagram-type", f"diagram_type must be one of: {', '.join(sorted(DIAGRAM_TYPES))}"))
+    brand = spec.get("brand")
+    if brand is not None:
+        if not isinstance(brand, dict):
+            issues.append(Issue("error", "invalid-brand", "brand must be an object"))
+        else:
+            unknown_brand = sorted(set(brand) - ({"name"} | BRAND_COLOR_FIELDS))
+            for field in unknown_brand:
+                issues.append(Issue("warning", "unknown-brand-field", f"Unknown brand field: {field}"))
+            if "name" in brand and (not isinstance(brand["name"], str) or not brand["name"].strip()):
+                issues.append(Issue("error", "invalid-brand-name", "brand.name must be a non-empty string"))
+            for field in BRAND_COLOR_FIELDS:
+                if field in brand and (not isinstance(brand[field], str) or not HEX_COLOR_RE.fullmatch(brand[field])):
+                    issues.append(Issue("error", "invalid-brand-color", f"brand.{field} must be a six- or eight-digit hex color"))
 
     nodes = spec.get("nodes")
     edges = spec.get("edges")
     groups = spec.get("groups", [])
+    lanes = spec.get("lanes", [])
     if not isinstance(nodes, list) or not nodes:
         issues.append(Issue("error", "missing-nodes", "nodes must be a non-empty array"))
         nodes = []
@@ -255,9 +366,13 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
     if not isinstance(groups, list):
         issues.append(Issue("error", "invalid-groups", "groups must be an array"))
         groups = []
+    if not isinstance(lanes, list):
+        issues.append(Issue("error", "invalid-lanes", "lanes must be an array"))
+        lanes = []
 
     node_ids: List[str] = []
     group_ids: List[str] = []
+    lane_ids: List[str] = []
     for index, group in enumerate(groups):
         if not isinstance(group, dict):
             issues.append(Issue("error", "invalid-group", f"groups[{index}] must be an object"))
@@ -271,6 +386,27 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
             group_ids.append(group_id)
         if not isinstance(group.get("label"), str) or not group.get("label", "").strip():
             issues.append(Issue("error", "missing-group-label", f"groups[{index}].label must be non-empty"))
+
+    lane_orders = set()
+    for index, lane in enumerate(lanes):
+        if not isinstance(lane, dict):
+            issues.append(Issue("error", "invalid-lane", f"lanes[{index}] must be an object"))
+            continue
+        lane_id = lane.get("id")
+        if not isinstance(lane_id, str) or not ID_RE.fullmatch(lane_id):
+            issues.append(Issue("error", "invalid-lane-id", f"lanes[{index}].id is invalid"))
+        elif lane_id in lane_ids:
+            issues.append(Issue("error", "duplicate-lane-id", f"Duplicate lane id: {lane_id}"))
+        else:
+            lane_ids.append(lane_id)
+        if not isinstance(lane.get("label"), str) or not lane.get("label", "").strip():
+            issues.append(Issue("error", "missing-lane-label", f"lanes[{index}].label must be non-empty"))
+        order = lane.get("order", index)
+        if not isinstance(order, int) or isinstance(order, bool) or order < 0:
+            issues.append(Issue("error", "invalid-lane-order", f"lanes[{index}].order must be a non-negative integer"))
+        elif order in lane_orders:
+            issues.append(Issue("warning", "duplicate-lane-order", f"Multiple lanes use order {order}"))
+        lane_orders.add(order)
 
     for index, node in enumerate(nodes):
         if not isinstance(node, dict):
@@ -291,6 +427,17 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
         group_id = node.get("group")
         if group_id is not None and group_id not in group_ids:
             issues.append(Issue("error", "unknown-group", f"Node {node_id!r} references unknown group {group_id!r}"))
+        lane_id = node.get("lane")
+        if lane_id is not None and lane_id not in lane_ids:
+            issues.append(Issue("error", "unknown-lane", f"Node {node_id!r} references unknown lane {lane_id!r}"))
+        if lane_ids and lane_id is None:
+            issues.append(Issue("error", "missing-lane", f"Node {node_id!r} is not assigned to a swimlane"))
+        rank = node.get("rank")
+        if rank is not None and (not isinstance(rank, int) or isinstance(rank, bool) or rank < 0):
+            issues.append(Issue("error", "invalid-rank", f"Node {node_id!r} rank must be a non-negative integer"))
+        child_view = node.get("child_view")
+        if child_view is not None and (not isinstance(child_view, str) or not ID_RE.fullmatch(child_view)):
+            issues.append(Issue("error", "invalid-child-view", f"Node {node_id!r} child_view must be a valid id"))
         link = node.get("link")
         if link is not None and (not isinstance(link, str) or not safe_link(link)):
             issues.append(Issue("error", "unsafe-link", f"Node {node_id!r} has a disallowed or malformed link"))
@@ -301,6 +448,10 @@ def validate_spec(spec: Dict[str, Any]) -> List[Issue]:
     for group_id in group_ids:
         if group_id not in used_groups:
             issues.append(Issue("error", "empty-group", f"Group {group_id!r} has no nodes"))
+    used_lanes = {node.get("lane") for node in nodes if isinstance(node, dict) and node.get("lane")}
+    for lane_id in lane_ids:
+        if lane_id not in used_lanes:
+            issues.append(Issue("error", "empty-lane", f"Lane {lane_id!r} has no nodes"))
 
     seen_edges = set()
     for index, edge in enumerate(edges):
@@ -353,6 +504,9 @@ def calculate_ranks(nodes: Sequence[Dict[str, Any]], edges: Sequence[Dict[str, A
                 queue.append(target)
                 queue.sort(key=order.get)
     cycle_nodes = [node_id for node_id in ids if node_id not in visited]
+    for node in nodes:
+        if isinstance(node.get("rank"), int) and not isinstance(node.get("rank"), bool):
+            ranks[node["id"]] = node["rank"]
     return ranks, cycle_nodes
 
 
@@ -370,6 +524,12 @@ def measure_node(node: Dict[str, Any]) -> Tuple[float, float, List[str]]:
     elif node_type == "database":
         height += 10
     return round(width, 1), round(height, 1), subtitle_lines
+
+
+def ordered_lanes(spec: Dict[str, Any]) -> List[Dict[str, Any]]:
+    indexed = list(enumerate(spec.get("lanes", [])))
+    indexed.sort(key=lambda item: (item[1].get("order", item[0]), item[0]))
+    return [lane for _, lane in indexed]
 
 
 def layout_graph(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, float], Dict[str, int]]:
@@ -390,8 +550,82 @@ def layout_graph(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, float]
     feedback_space = 64 + max(0, feedback_count - 1) * 22 if feedback_count else 24
     legend_space = 66 if legend else 20
     boxes: Dict[str, Box] = {}
+    lanes = ordered_lanes(spec)
+    lane_frames: List[Dict[str, Any]] = []
 
-    if direction == "LR":
+    if lanes and direction == "LR":
+        rank_ids = sorted(by_rank)
+        widths = {rank: max(measured[node["id"]][0] for node in by_rank[rank]) for rank in rank_ids}
+        content_w = sum(widths[rank] for rank in rank_ids) + rank_gap * max(0, len(rank_ids) - 1)
+        canvas_w = max(1040, margin * 2 + content_w + 28)
+        rank_x: Dict[int, float] = {}
+        x = (canvas_w - content_w) / 2
+        for rank in rank_ids:
+            rank_x[rank] = x
+            x += widths[rank] + rank_gap
+        lane_heights: Dict[str, float] = {}
+        for lane in lanes:
+            lane_nodes = [node for node in nodes if node.get("lane") == lane["id"]]
+            max_cell_h = 0.0
+            for rank in rank_ids:
+                cell = [node for node in lane_nodes if ranks[node["id"]] == rank]
+                cell_h = sum(measured[node["id"]][1] for node in cell) + node_gap * max(0, len(cell) - 1)
+                max_cell_h = max(max_cell_h, cell_h)
+            lane_heights[lane["id"]] = max(164.0, 62 + max_cell_h + 28)
+        lane_gap = 14
+        content_h = sum(lane_heights.values()) + lane_gap * max(0, len(lanes) - 1)
+        canvas_h = max(700, title_h + content_h + feedback_space + legend_space + margin)
+        y = title_h
+        for lane in lanes:
+            lane_h = lane_heights[lane["id"]]
+            lane_frames.append({"id": lane["id"], "label": lane["label"], "x": margin - 22, "y": y, "w": canvas_w - (margin - 22) * 2, "h": lane_h, "orientation": "horizontal"})
+            lane_nodes = [node for node in nodes if node.get("lane") == lane["id"]]
+            for rank in rank_ids:
+                cell = [node for node in lane_nodes if ranks[node["id"]] == rank]
+                cell_h = sum(measured[node["id"]][1] for node in cell) + node_gap * max(0, len(cell) - 1)
+                node_y = y + 54 + max(0, (lane_h - 54 - cell_h) / 2)
+                for node in cell:
+                    w, h, lines = measured[node["id"]]
+                    boxes[node["id"]] = Box(node["id"], rank_x[rank] + (widths[rank] - w) / 2, node_y, w, h, rank, lines)
+                    node_y += h + node_gap
+            y += lane_h + lane_gap
+    elif lanes and direction == "TB":
+        rank_ids = sorted(by_rank)
+        heights = {rank: max(measured[node["id"]][1] for node in by_rank[rank]) for rank in rank_ids}
+        content_h = sum(heights[rank] for rank in rank_ids) + rank_gap * max(0, len(rank_ids) - 1)
+        rank_y: Dict[int, float] = {}
+        y = title_h + 42
+        for rank in rank_ids:
+            rank_y[rank] = y
+            y += heights[rank] + rank_gap
+        lane_widths: Dict[str, float] = {}
+        for lane in lanes:
+            lane_nodes = [node for node in nodes if node.get("lane") == lane["id"]]
+            max_cell_w = 0.0
+            for rank in rank_ids:
+                cell = [node for node in lane_nodes if ranks[node["id"]] == rank]
+                cell_w = sum(measured[node["id"]][0] for node in cell) + node_gap * max(0, len(cell) - 1)
+                max_cell_w = max(max_cell_w, cell_w)
+            lane_widths[lane["id"]] = max(280.0, max_cell_w + 52)
+        lane_gap = 14
+        content_w = sum(lane_widths.values()) + lane_gap * max(0, len(lanes) - 1)
+        canvas_w = max(1040, margin * 2 + content_w + feedback_space)
+        canvas_h = max(760, title_h + 42 + content_h + legend_space + margin)
+        x = (canvas_w - content_w) / 2
+        for lane in lanes:
+            lane_w = lane_widths[lane["id"]]
+            lane_frames.append({"id": lane["id"], "label": lane["label"], "x": x, "y": title_h, "w": lane_w, "h": content_h + 78, "orientation": "vertical"})
+            lane_nodes = [node for node in nodes if node.get("lane") == lane["id"]]
+            for rank in rank_ids:
+                cell = [node for node in lane_nodes if ranks[node["id"]] == rank]
+                cell_w = sum(measured[node["id"]][0] for node in cell) + node_gap * max(0, len(cell) - 1)
+                node_x = x + (lane_w - cell_w) / 2
+                for node in cell:
+                    w, h, lines = measured[node["id"]]
+                    boxes[node["id"]] = Box(node["id"], node_x, rank_y[rank] + (heights[rank] - h) / 2, w, h, rank, lines)
+                    node_x += w + node_gap
+            x += lane_w + lane_gap
+    elif direction == "LR":
         widths = {rank: max(measured[node["id"]][0] for node in rank_nodes) for rank, rank_nodes in by_rank.items()}
         heights = {
             rank: sum(measured[node["id"]][1] for node in rank_nodes) + node_gap * max(0, len(rank_nodes) - 1)
@@ -436,6 +670,7 @@ def layout_graph(spec: Dict[str, Any]) -> Tuple[Dict[str, Box], Dict[str, float]
         "content_bottom": max(box.bottom for box in boxes.values()),
         "content_right": max(box.right for box in boxes.values()),
         "legend": 1 if legend else 0,
+        "lanes": lane_frames,
     }
     return boxes, canvas, ranks
 
@@ -670,6 +905,7 @@ def css_variables(tokens: Dict[str, str]) -> str:
 def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, float], routes: Sequence[Dict[str, Any]]) -> str:
     width, height = canvas["width"], canvas["height"]
     theme = spec.get("theme", "paper")
+    visual_tokens, edge_colors = resolve_visual_tokens(spec)
     default_mode = "dark" if theme in {"blueprint", "terminal"} else "light"
     kinds = []
     for edge in spec["edges"]:
@@ -690,10 +926,10 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
     for kind in EDGE_KINDS:
         lines.append(f'<marker id="arrow-{kind}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="var(--edge-{kind})"/></marker>')
     lines.extend(['</defs>', '<style>'])
-    lines.append(f'.abi-flow{{{css_variables(THEME_TOKENS[theme])};' + ";".join(f"--edge-{kind}:{color}" for kind, color in EDGE_COLORS.items()) + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}')
+    lines.append(f'.abi-flow{{{css_variables(visual_tokens)};' + ";".join(f"--edge-{kind}:{color}" for kind, color in edge_colors.items()) + ';font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--page)}}')
     lines.append(f'.abi-flow[data-theme="dark"]{{{css_variables(DARK_TOKENS)}}}')
     lines.append('text{fill:var(--ink)}.page-bg{fill:var(--page)}.title{font-size:25px;font-weight:800}.subtitle{font-size:12.5px;fill:var(--muted)}.type-badge{font-size:10px;font-weight:800;fill:var(--muted);letter-spacing:.4px}.type-badge-bg{fill:var(--surface);stroke:var(--hair)}')
-    lines.append('.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}')
+    lines.append('.lane-box{fill:var(--surface);stroke:var(--hair);stroke-width:1.1}.lane:nth-child(even) .lane-box{fill:var(--group)}.lane-title{font-size:12px;font-weight:850;fill:var(--muted);letter-spacing:.45px}.group-box{fill:var(--group);stroke:var(--group-stroke);stroke-width:1.2}.group.tone-0 .group-box{fill:var(--group-tone-0)}.group.tone-1 .group-box{fill:var(--group-tone-1)}.group.tone-2 .group-box{fill:var(--group-tone-2)}.group.tone-3 .group-box{fill:var(--group-tone-3)}.group.tone-4 .group-box{fill:var(--group-tone-4)}.group.tone-5 .group-box{fill:var(--group-tone-5)}.group-title{font-size:12px;font-weight:800;fill:var(--muted);letter-spacing:.5px}')
     lines.append('.node-shape{stroke-width:1.25;filter:url(#shadow)}.node-shape.process{fill:var(--node-process);stroke:var(--node-process-stroke)}.node-shape.decision{fill:var(--node-decision);stroke:var(--node-decision-stroke)}.node-shape.input{fill:var(--node-input);stroke:var(--node-input-stroke)}.node-shape.document{fill:var(--node-document);stroke:var(--node-document-stroke)}.node-shape.database{fill:var(--node-database);stroke:var(--node-database-stroke)}.node-shape.agent{fill:var(--node-agent);stroke:var(--node-agent-stroke);stroke-width:1.7}.node-shape.external{fill:var(--node-external);stroke:var(--node-external-stroke);stroke-dasharray:6 4}.agent-inner{fill:none;stroke:var(--node-agent-stroke);stroke-width:.8;opacity:.55}.node-detail{fill:none;stroke:var(--hair);stroke-width:1.1}')
     lines.append('.node-title{font-size:14.5px;font-weight:750;text-anchor:middle;dominant-baseline:middle}.node-subtitle{font-size:11.5px;fill:var(--muted);text-anchor:middle;dominant-baseline:middle}')
     lines.append('.edge{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.edge.async,.edge.error{stroke-dasharray:6 5}.edge.feedback{stroke-width:2.2}.edge-label-bg{fill:var(--page);stroke:var(--hair);stroke-width:.7;opacity:.97}.edge-label{font-size:10.8px;font-weight:650;text-anchor:middle;dominant-baseline:middle;fill:var(--muted)}')
@@ -705,6 +941,11 @@ def render_svg(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str, fl
         lines.append(f'<text class="subtitle" x="{canvas["margin"]:g}" y="75">{subtitle}</text>')
     badge_w = display_units(DIAGRAM_TYPES[diagram_type]) * 5.6 + 24
     lines.append(f'<g class="diagram-type"><rect class="type-badge-bg" x="{width - canvas["margin"] - badge_w:g}" y="31" width="{badge_w:g}" height="25" rx="12.5"/><text class="type-badge" x="{width - canvas["margin"] - badge_w / 2:g}" y="47" text-anchor="middle">{type_label}</text></g>')
+
+    for lane in canvas.get("lanes", []):
+        title_x = lane["x"] + 15
+        title_y = lane["y"] + 25
+        lines.append(f'<g class="lane"><rect class="lane-box" x="{lane["x"]:g}" y="{lane["y"]:g}" width="{lane["w"]:g}" height="{lane["h"]:g}" rx="14"/><text class="lane-title" x="{title_x:g}" y="{title_y:g}">{esc(lane["label"])}</text></g>')
 
     for index, group in enumerate(group_boxes(spec, boxes)):
         lines.append(f'<g class="group tone-{index % 6}"><rect class="group-box" x="{group["x"]:g}" y="{group["y"]:g}" width="{group["w"]:g}" height="{group["h"]:g}" rx="16"/><text class="group-title" x="{group["x"] + 14:g}" y="{group["y"] + 21:g}">{esc(group["label"])}</text></g>')
@@ -838,7 +1079,7 @@ def quality_report(spec: Dict[str, Any], boxes: Dict[str, Box], canvas: Dict[str
     return {
         "schema_version": 2,
         "status": "passed" if not any(issue.level == "error" for issue in issues) else "failed",
-        "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "nodes": len(spec.get("nodes", [])), "edges": len(spec.get("edges", [])), "groups": len(spec.get("groups", [])), "direction": spec.get("direction", "LR"), "theme": spec.get("theme", "paper")},
+        "diagram": {"title": spec.get("title"), "type": spec.get("diagram_type", "process-flow"), "nodes": len(spec.get("nodes", [])), "edges": len(spec.get("edges", [])), "groups": len(spec.get("groups", [])), "lanes": len(spec.get("lanes", [])), "direction": spec.get("direction", "LR"), "theme": spec.get("theme", "paper"), "brand": spec.get("brand", {}).get("name") if isinstance(spec.get("brand"), dict) else None},
         "canvas": {"width": canvas.get("width"), "height": canvas.get("height")},
         "geometry": {
             "node_overlap_count": count_node_overlaps(list(boxes.values())),
@@ -877,14 +1118,14 @@ def strict_failed(issues: Sequence[Issue], strict: bool) -> bool:
     return any(issue.level == "error" or (strict and issue.level == "warning") for issue in issues)
 
 
-def render_png(svg_path: Path, png_path: Path, theme: str) -> Optional[str]:
+def render_png(svg_path: Path, png_path: Path, spec: Dict[str, Any]) -> Optional[str]:
     renderer = shutil.which("rsvg-convert")
     if not renderer:
         return "rsvg-convert is unavailable; PNG export skipped"
-    tokens = dict(THEME_TOKENS[theme])
-    if theme in {"blueprint", "terminal"}:
+    tokens, edge_colors = resolve_visual_tokens(spec)
+    if spec.get("theme", "paper") in {"blueprint", "terminal"}:
         tokens.update(DARK_TOKENS)
-    tokens.update({f"edge-{kind}": color for kind, color in EDGE_COLORS.items()})
+    tokens.update({f"edge-{kind}": color for kind, color in edge_colors.items()})
     source = svg_path.read_text(encoding="utf-8")
     source = re.sub(r"var\(--([a-z-]+)\)", lambda match: tokens.get(match.group(1), match.group(0)), source)
     with tempfile.NamedTemporaryFile("w", suffix=".svg", encoding="utf-8", delete=False) as handle:
@@ -908,6 +1149,16 @@ def command_validate(args: argparse.Namespace) -> int:
     return 1 if strict_failed(issues, args.strict) else 0
 
 
+def command_workspace_validate(args: argparse.Namespace) -> int:
+    workspace, issues = load_json_object(args.input)
+    if not issues:
+        issues.extend(validate_workspace(workspace))
+    print_issues(issues)
+    if not issues:
+        print(f"workspace: {workspace.get('title')} ({len(workspace.get('views', []))} views)")
+    return 1 if strict_failed(issues, args.strict) else 0
+
+
 def command_render(args: argparse.Namespace) -> int:
     spec, initial_issues = load_spec(args.input)
     svg, page, quality, issues = build(spec, initial_issues)
@@ -925,7 +1176,7 @@ def command_render(args: argparse.Namespace) -> int:
     png_warning = None
     png_path = output_dir / f"{name}.png"
     if args.png:
-        png_warning = render_png(svg_path, png_path, spec.get("theme", "paper"))
+        png_warning = render_png(svg_path, png_path, spec)
         if png_warning:
             quality["visual_review"] = "skipped: PNG renderer unavailable or failed"
             quality["issues"].append(Issue("warning", "png-export-skipped", png_warning).as_dict())
@@ -971,6 +1222,10 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("input", type=Path)
     validate.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     validate.set_defaults(func=command_validate)
+    workspace_validate = subparsers.add_parser("workspace-validate", help="Validate a multi-view browser workspace")
+    workspace_validate.add_argument("input", type=Path)
+    workspace_validate.add_argument("--strict", action="store_true", help="Treat warnings as failures")
+    workspace_validate.set_defaults(func=command_workspace_validate)
     render = subparsers.add_parser("render", help="Render SVG, HTML, quality JSON, and optional PNG")
     render.add_argument("input", type=Path)
     render.add_argument("--output-dir", type=Path, required=True)
