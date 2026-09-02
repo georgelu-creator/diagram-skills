@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="diagram-skills board" data-theme="light" viewBox="0 0 1800 1270" role="img" aria-labelledby="diagram-title diagram-desc">
-<title id="diagram-title">跨设备云端 Agent 办公系统架构全景图</title><desc id="diagram-desc">High-density 系统架构图 / System Architecture with 5 sections</desc>
+<title id="diagram-title">跨设备本机优先 Agent 工作系统架构全景图</title><desc id="diagram-desc">High-density 系统架构图 / System Architecture with 5 sections</desc>
 <defs>
 <marker id="arrow-primary" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#246BCE" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
 <marker id="arrow-control" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#ea580c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
@@ -15,8 +15,8 @@
 <rect x="0" y="0" width="1800" height="84" fill="#fffefa" stroke="#dddcd4" stroke-width=".7"/>
 <rect x="866" y="77" width="42" height="3" rx="1.5" fill="#246BCE"/>
 <rect x="908" y="77" width="26" height="3" rx="1.5" fill="#6D3BC3"/>
-<text class="board-title" x="900" y="39">跨设备云端 Agent 办公系统架构全景图</text>
-<text class="board-subtitle" x="900" y="64">跨设备 · 长期记忆 · 工具调用 · 知识沉淀 · 多 Agent 协作</text>
+<text class="board-title" x="900" y="39">跨设备本机优先 Agent 工作系统架构全景图</text>
+<text class="board-subtitle" x="900" y="64">本机 Git 主源 · 只读投影 · 工具调用 · 可追溯接力 · 多 Agent 协作</text>
 <g class="board-section"><rect x="20" y="96" width="1760" height="140" rx="12" fill="#F4F8FF" stroke="#6D3BC3" stroke-width="1"/>
 <text class="section-label" x="40" y="166" fill="#0B4F93">使用设备 / Agent</text>
 <text class="section-subtitle" x="40" y="189" fill="#0B4F93">WHO USES THE SYSTEM</text>
@@ -52,79 +52,79 @@
 </g>
 <g class="board-section"><rect x="20" y="248" width="1760" height="96" rx="12" fill="#FAF7FF" stroke="#6D3BC3" stroke-width="1"/>
 <text class="section-label" x="40" y="296" fill="#5226A5">接入层</text>
-<text class="section-subtitle" x="40" y="319" fill="#5226A5">MCP / API</text>
+<text class="section-subtitle" x="40" y="319" fill="#5226A5">BOOTSTRAP / CONTRACT</text>
 <path d="M 206 260 V 332" fill="none" stroke="#6D3BC3" stroke-width=".8"/>
 <g class="board-block"><rect x="216" y="260" width="1552" height="72" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
 <g transform="translate(870 282) scale(1.16667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 18H6a4 4 0 0 1 0-8h1M15 6h3a4 4 0 0 1 0 8h-1M8 12h8"/></g>
-<text class="block-title" x="1000" y="292" fill="#5226A5">Memory MCP / API 网关</text>
-<text class="block-subtitle" x="1000" y="313">统一认证 · 权限控制 · 请求路由 · 限流 · 日志</text>
+<text class="block-title" x="1000" y="292" fill="#5226A5">客户端 Bootstrap 与能力路由</text>
+<text class="block-subtitle" x="1000" y="313">发现主源 · 加载契约 · 权限边界 · 客户端验收</text>
 </g>
 </g>
 <g class="board-section"><rect x="20" y="356" width="1760" height="242" rx="12" fill="#F5FBF5" stroke="#6D3BC3" stroke-width="1"/>
-<text class="section-label" x="40" y="477" fill="#176A31">记忆层</text>
-<text class="section-subtitle" x="40" y="500" fill="#176A31">BASIC MEMORY CLOUD</text>
+<text class="section-label" x="40" y="477" fill="#176A31">长期知识与上下文层</text>
+<text class="section-subtitle" x="40" y="500" fill="#176A31">LOCAL GIT / READ-ONLY</text>
 <path d="M 206 368 V 586" fill="none" stroke="#6D3BC3" stroke-width=".8"/>
-<g class="board-block"><rect x="216" y="372.5" width="1122.06" height="209" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
-<text class="block-title" x="777.029" y="397.5" fill="#176A31">Basic Memory Cloud（Agent 的长期记忆大脑）</text>
-<g class="board-card"><rect x="228" y="422.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="372.5" width="1119" height="209" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
+<text class="block-title" x="775.502" y="397.5" fill="#176A31">正式 Git main 主源（唯一可写长期事实源）</text>
+<g class="board-card"><rect x="228" y="422.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
 <g transform="translate(239 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M5 3h11l3 3v15H5zM16 3v4h4M8 11h8M8 15h6"/></g>
-<text class="card-title" x="270" y="444.5" fill="#176A31">Markdown 笔记</text>
-<text class="card-subtitle" x="270" y="462.5">结构化存储</text>
+<text class="card-title" x="270" y="444.5" fill="#176A31">Markdown 事实</text>
+<text class="card-subtitle" x="270" y="462.5">Git 版本化主源</text>
 </g>
-<g class="board-card"><rect x="504.514" y="422.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(515.514 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
-<text class="card-title" x="546.514" y="444.5" fill="#176A31">语义 / 向量搜索</text>
-<text class="card-subtitle" x="546.514" y="462.5">Semantic / Vector / Hybrid</text>
+<g class="board-card"><rect x="503.751" y="422.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(514.751 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
+<text class="card-title" x="545.751" y="444.5" fill="#176A31">本地检索</text>
+<text class="card-subtitle" x="545.751" y="462.5">全文 / 语义索引</text>
 </g>
-<g class="board-card"><rect x="781.029" y="422.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(792.029 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="5" cy="12" r="2"/><circle fill="none" cx="18" cy="5" r="2"/><circle fill="none" cx="19" cy="18" r="2"/><path fill="none" d="m7 11 9-5M7 13l10 4M18 7v9"/></g>
-<text class="card-title" x="823.029" y="444.5" fill="#176A31">知识图谱</text>
-<text class="card-subtitle" x="823.029" y="462.5">Graph / Relations</text>
+<g class="board-card"><rect x="779.502" y="422.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(790.502 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="5" cy="12" r="2"/><circle fill="none" cx="18" cy="5" r="2"/><circle fill="none" cx="19" cy="18" r="2"/><path fill="none" d="m7 11 9-5M7 13l10 4M18 7v9"/></g>
+<text class="card-title" x="821.502" y="444.5" fill="#176A31">只读快照</text>
+<text class="card-subtitle" x="821.502" y="462.5">按接受 SHA 构建</text>
 </g>
-<g class="board-card"><rect x="1057.54" y="422.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(1068.54 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
-<text class="card-title" x="1099.54" y="444.5" fill="#176A31">上下文构建</text>
-<text class="card-subtitle" x="1099.54" y="462.5">Build Context</text>
+<g class="board-card"><rect x="1055.25" y="422.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(1066.25 437.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
+<text class="card-title" x="1097.25" y="444.5" fill="#176A31">上下文构建</text>
+<text class="card-subtitle" x="1097.25" y="462.5">按任务最小读取</text>
 </g>
-<g class="board-card"><rect x="228" y="484.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g class="board-card"><rect x="228" y="484.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
 <g transform="translate(239 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="16" rx="2"/><path fill="none" d="M7 2v6M17 2v6M3 10h18M7 14h3M14 14h3M7 18h3"/></g>
-<text class="card-title" x="270" y="506.5" fill="#176A31">最近活动</text>
-<text class="card-subtitle" x="270" y="524.5">Recent Activity</text>
+<text class="card-title" x="270" y="506.5" fill="#176A31">入口与路由</text>
+<text class="card-subtitle" x="270" y="524.5">身份 / 能力 / 工作流</text>
 </g>
-<g class="board-card"><rect x="504.514" y="484.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(515.514 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="3" width="7" height="6" rx="1"/><rect fill="none" x="14" y="15" width="7" height="6" rx="1"/><path fill="none" d="M10 6h5a3 3 0 0 1 3 3v6M7 9v6a3 3 0 0 0 3 3h4"/></g>
-<text class="card-title" x="546.514" y="506.5" fill="#176A31">Schema 管理</text>
-<text class="card-subtitle" x="546.514" y="524.5">Infer / Validate / Diff</text>
+<g class="board-card"><rect x="503.751" y="484.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(514.751 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="3" width="7" height="6" rx="1"/><rect fill="none" x="14" y="15" width="7" height="6" rx="1"/><path fill="none" d="M10 6h5a3 3 0 0 1 3 3v6M7 9v6a3 3 0 0 0 3 3h4"/></g>
+<text class="card-title" x="545.751" y="506.5" fill="#176A31">候选接纳</text>
+<text class="card-subtitle" x="545.751" y="524.5">校验 / Seal / Integrate</text>
 </g>
-<g class="board-card"><rect x="781.029" y="484.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(792.029 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M3 6h7l2 3h9v11H3z"/></g>
-<text class="card-title" x="823.029" y="506.5" fill="#176A31">多项目 / 工作区</text>
-<text class="card-subtitle" x="823.029" y="524.5">Project / Workspace</text>
+<g class="board-card"><rect x="779.502" y="484.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(790.502 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M3 6h7l2 3h9v11H3z"/></g>
+<text class="card-title" x="821.502" y="506.5" fill="#176A31">跨设备接力</text>
+<text class="card-subtitle" x="821.502" y="524.5">同一 SHA / 能力状态</text>
 </g>
-<g class="board-card"><rect x="1057.54" y="484.5" width="268.514" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(1068.54 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
-<text class="card-title" x="1099.54" y="506.5" fill="#176A31">关系管理</text>
-<text class="card-subtitle" x="1099.54" y="524.5">Relations / Metadata</text>
+<g class="board-card"><rect x="1055.25" y="484.5" width="267.751" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(1066.25 499.5) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
+<text class="card-title" x="1097.25" y="506.5" fill="#176A31">投影与部署</text>
+<text class="card-subtitle" x="1097.25" y="524.5">快照 / 索引 / Skills</text>
 </g>
-<rect x="228" y="553.5" width="1098.06" height="19" rx="5" fill="#F5FBF5" stroke="#6D3BC3" stroke-width=".5"/>
-<text class="footer-text" x="777.029" y="566.5" fill="#176A31">统一索引层（全文索引 + 向量索引 + 元数据）</text>
+<rect x="228" y="553.5" width="1095" height="19" rx="5" fill="#F5FBF5" stroke="#6D3BC3" stroke-width=".5"/>
+<text class="footer-text" x="775.502" y="566.5" fill="#176A31">同一接受 SHA → 远端备份 + 只读快照 + 本地索引 + Skill 部署</text>
 </g>
-<g class="board-block"><rect x="1350.06" y="368" width="417.942" height="218" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1" stroke-dasharray="5 4"/>
-<text class="list-title" x="1364.06" y="392" fill="#176A31">Memory 中典型内容</text>
-<g transform="translate(1363.06 404) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="416" fill="#176A31">个人偏好与身份</text>
-<g transform="translate(1363.06 426) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="438" fill="#176A31">公司 / 团队 / 角色</text>
-<g transform="translate(1363.06 448) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="460" fill="#176A31">产品原则与决策记录</text>
-<g transform="translate(1363.06 470) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="482" fill="#176A31">项目背景与需求上下文</text>
-<g transform="translate(1363.06 492) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="504" fill="#176A31">会议结论与跟进事项</text>
-<g transform="translate(1363.06 514) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="526" fill="#176A31">SOP / 工作规范 / Prompt</text>
-<g transform="translate(1363.06 536) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1384.06" y="548" fill="#176A31">长期待办与 Follow-up</text>
+<g class="board-block"><rect x="1347" y="368" width="420.995" height="218" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1361" y="392" fill="#176A31">长期知识中的典型内容</text>
+<g transform="translate(1360 404) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="416" fill="#176A31">个人偏好与身份</text>
+<g transform="translate(1360 426) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="438" fill="#176A31">公司 / 团队 / 角色</text>
+<g transform="translate(1360 448) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="460" fill="#176A31">产品原则与决策记录</text>
+<g transform="translate(1360 470) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="482" fill="#176A31">项目背景与需求上下文</text>
+<g transform="translate(1360 492) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="504" fill="#176A31">会议结论与跟进事项</text>
+<g transform="translate(1360 514) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="526" fill="#176A31">SOP / 工作规范 / Prompt</text>
+<g transform="translate(1360 536) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1381" y="548" fill="#176A31">长期待办与 Follow-up</text>
 </g>
 </g>
 <g class="board-section"><rect x="20" y="610" width="1760" height="140" rx="12" fill="#FFF9F3" stroke="#6D3BC3" stroke-width="1"/>
@@ -171,77 +171,77 @@
 </g>
 </g>
 <g class="board-section"><rect x="20" y="762" width="1760" height="202" rx="12" fill="#F4F8FF" stroke="#6D3BC3" stroke-width="1"/>
-<text class="section-label" x="40" y="863" fill="#0B4F93">资产层</text>
-<text class="section-subtitle" x="40" y="886" fill="#0B4F93">SOURCE OF TRUTH</text>
+<text class="section-label" x="40" y="863" fill="#0B4F93">备份与原始资产层</text>
+<text class="section-subtitle" x="40" y="886" fill="#0B4F93">BACKUP / RAW ASSETS</text>
 <path d="M 206 774 V 952" fill="none" stroke="#6D3BC3" stroke-width=".8"/>
-<g class="board-block"><rect x="216" y="774" width="575.222" height="178" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
-<text class="block-title" x="503.611" y="799" fill="#0B4F93">GitHub（代码 / 版本 / 工程资产）</text>
-<g class="board-card"><rect x="228" y="824" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g class="board-block"><rect x="216" y="774" width="569.101" height="178" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
+<text class="block-title" x="500.55" y="799" fill="#0B4F93">GitHub（同一 SHA 远端备份 / 跨设备拉取）</text>
+<g class="board-card"><rect x="228" y="824" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
 <g transform="translate(239 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="m9 7-5 5 5 5M15 7l5 5-5 5M13 4l-2 16"/></g>
 <text class="card-title" x="270" y="846" fill="#0B4F93">代码仓库</text>
 <text class="card-subtitle" x="270" y="864">Agent / Skill / 工具</text>
 </g>
-<g class="board-card"><rect x="414.407" y="824" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(425.407 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
-<text class="card-title" x="456.407" y="846" fill="#0B4F93">文档 / RFC</text>
-<text class="card-subtitle" x="456.407" y="864">技术方案 / 设计文档</text>
+<g class="board-card"><rect x="412.367" y="824" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(423.367 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="454.367" y="846" fill="#0B4F93">文档 / RFC</text>
+<text class="card-subtitle" x="454.367" y="864">技术方案 / 设计文档</text>
 </g>
-<g class="board-card"><rect x="600.815" y="824" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(611.815 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="2"/><path fill="none" d="m7 9 3 3-3 3M12 15h5"/></g>
-<text class="card-title" x="642.815" y="846" fill="#0B4F93">Prompt / SOP</text>
-<text class="card-subtitle" x="642.815" y="864">版本管理 / 迭代</text>
+<g class="board-card"><rect x="596.734" y="824" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(607.734 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="2"/><path fill="none" d="m7 9 3 3-3 3M12 15h5"/></g>
+<text class="card-title" x="638.734" y="846" fill="#0B4F93">Prompt / SOP</text>
+<text class="card-subtitle" x="638.734" y="864">版本管理 / 迭代</text>
 </g>
-<g class="board-card"><rect x="228" y="886" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g class="board-card"><rect x="228" y="886" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
 <g transform="translate(239 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="3"/><path fill="none" d="m7 9 3 3-3 3M13 15h4"/></g>
 <text class="card-title" x="270" y="908" fill="#0B4F93">Scripts / 配置</text>
 <text class="card-subtitle" x="270" y="926">自动化脚本 / YAML</text>
 </g>
-<g class="board-card"><rect x="414.407" y="886" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(425.407 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/></g>
-<text class="card-title" x="456.407" y="908" fill="#0B4F93">测试 / 数据</text>
-<text class="card-subtitle" x="456.407" y="926">测试用例 / 数据集</text>
+<g class="board-card"><rect x="412.367" y="886" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(423.367 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 3h6M10 3v5l-5 9a3 3 0 0 0 3 4h8a3 3 0 0 0 3-4l-5-9V3M8 15h8"/></g>
+<text class="card-title" x="454.367" y="908" fill="#0B4F93">测试 / 数据</text>
+<text class="card-subtitle" x="454.367" y="926">测试用例 / 数据集</text>
 </g>
-<g class="board-card"><rect x="600.815" y="886" width="178.407" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(611.815 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
-<text class="card-title" x="642.815" y="908" fill="#0B4F93">版本历史</text>
-<text class="card-subtitle" x="642.815" y="926">Git / PR / Review</text>
-</g>
-</g>
-<g class="board-block"><rect x="803.222" y="774" width="565.046" height="178" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
-<text class="block-title" x="1085.75" y="799" fill="#0B4F93">其他文件存储（大文件 / 原始资料）</text>
-<g class="board-card"><rect x="815.222" y="824" width="266.523" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(826.222 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
-<text class="card-title" x="857.222" y="846" fill="#0B4F93">原始文档</text>
-<text class="card-subtitle" x="857.222" y="864">需求 / PRD / 资料</text>
-</g>
-<g class="board-card"><rect x="1089.75" y="824" width="266.523" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(1100.75 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
-<text class="card-title" x="1131.75" y="846" fill="#0B4F93">数据文件</text>
-<text class="card-subtitle" x="1131.75" y="864">数据集 / 分析结果</text>
-</g>
-<g class="board-card"><rect x="815.222" y="886" width="266.523" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(826.222 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="2"/><circle fill="none" cx="9" cy="9" r="2"/><path fill="none" d="m4 17 5-5 4 4 3-3 4 4"/></g>
-<text class="card-title" x="857.222" y="908" fill="#0B4F93">图片 / 媒体</text>
-<text class="card-subtitle" x="857.222" y="926">截图 / 录屏 / 图片</text>
-</g>
-<g class="board-card"><rect x="1089.75" y="886" width="266.523" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
-<g transform="translate(1100.75 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
-<text class="card-title" x="1131.75" y="908" fill="#0B4F93">备份 / 归档</text>
-<text class="card-subtitle" x="1131.75" y="926">历史版本 / 备份</text>
+<g class="board-card"><rect x="596.734" y="886" width="176.367" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(607.734 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
+<text class="card-title" x="638.734" y="908" fill="#0B4F93">版本历史</text>
+<text class="card-subtitle" x="638.734" y="926">Git / PR / Review</text>
 </g>
 </g>
-<g class="board-block"><rect x="1380.27" y="776" width="387.731" height="174" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1" stroke-dasharray="5 4"/>
-<text class="list-title" x="1394.27" y="800" fill="#0B4F93">为什么分层？</text>
-<g transform="translate(1393.27 812) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1414.27" y="824" fill="#0B4F93">Memory = 高价值上下文</text>
-<g transform="translate(1393.27 834) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1414.27" y="846" fill="#0B4F93">GitHub = 版本化工程资产</text>
-<g transform="translate(1393.27 856) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1414.27" y="868" fill="#0B4F93">Drive = 大文件与原始资料</text>
-<g transform="translate(1393.27 878) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1414.27" y="890" fill="#0B4F93">工具 = 实时信息与能力</text>
-<g transform="translate(1393.27 900) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
-<text class="list-item" x="1414.27" y="912" fill="#0B4F93">Agent 只读取所需上下文</text>
+<g class="board-block"><rect x="797.101" y="774" width="558.925" height="178" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1"/>
+<text class="block-title" x="1076.56" y="799" fill="#0B4F93">其他文件存储（大文件 / 原始资料）</text>
+<g class="board-card"><rect x="809.101" y="824" width="263.462" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(820.101 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
+<text class="card-title" x="851.101" y="846" fill="#0B4F93">原始文档</text>
+<text class="card-subtitle" x="851.101" y="864">需求 / PRD / 资料</text>
+</g>
+<g class="board-card"><rect x="1080.56" y="824" width="263.462" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(1091.56 839) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><ellipse fill="none" cx="12" cy="5" rx="8" ry="3"/><path fill="none" d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></g>
+<text class="card-title" x="1122.56" y="846" fill="#0B4F93">数据文件</text>
+<text class="card-subtitle" x="1122.56" y="864">数据集 / 分析结果</text>
+</g>
+<g class="board-card"><rect x="809.101" y="886" width="263.462" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(820.101 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="4" width="18" height="16" rx="2"/><circle fill="none" cx="9" cy="9" r="2"/><path fill="none" d="m4 17 5-5 4 4 3-3 4 4"/></g>
+<text class="card-title" x="851.101" y="908" fill="#0B4F93">图片 / 媒体</text>
+<text class="card-subtitle" x="851.101" y="926">截图 / 录屏 / 图片</text>
+</g>
+<g class="board-card"><rect x="1080.56" y="886" width="263.462" height="54" rx="8" fill="#fffefa" stroke="#6D3BC3" stroke-width=".8"/>
+<g transform="translate(1091.56 901) scale(0.958333)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="3" y="5" width="18" height="4" rx="1"/><path fill="none" d="M5 9v11h14V9M9 13h6"/></g>
+<text class="card-title" x="1122.56" y="908" fill="#0B4F93">备份 / 归档</text>
+<text class="card-subtitle" x="1122.56" y="926">历史版本 / 备份</text>
+</g>
+</g>
+<g class="board-block"><rect x="1368.03" y="776" width="399.974" height="174" rx="11" fill="#FFFFFF" stroke="#6D3BC3" stroke-width="1" stroke-dasharray="5 4"/>
+<text class="list-title" x="1382.03" y="800" fill="#0B4F93">为什么分层？</text>
+<g transform="translate(1381.03 812) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1402.03" y="824" fill="#0B4F93">本机 Git main = 唯一可写主源</text>
+<g transform="translate(1381.03 834) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1402.03" y="846" fill="#0B4F93">GitHub = 同一 SHA 远端备份</text>
+<g transform="translate(1381.03 856) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1402.03" y="868" fill="#0B4F93">文件存储 = 大文件与原始资料</text>
+<g transform="translate(1381.03 878) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1402.03" y="890" fill="#0B4F93">只读投影 = 发现与检索</text>
+<g transform="translate(1381.03 900) scale(0.541667)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="12" r="9"/><path fill="none" d="m8 12 3 3 6-7"/></g>
+<text class="list-item" x="1402.03" y="912" fill="#0B4F93">Agent 只读取所需上下文</text>
 </g>
 </g>
 <g class="board-flow"><rect x="20" y="976" width="1760" height="98" rx="12" fill="#FFFBF0" stroke="#6D3BC3"/>
@@ -249,17 +249,17 @@
 <rect x="216" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(226 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="4" y="7" width="16" height="13" rx="3"/><path fill="none" d="M12 3v4M9 12h.1M15 12h.1M8 16h8M2 11h2M20 11h2"/></g>
 <text class="step-title" x="257" y="1018" fill="#8A5A08">1. Agent 发起请求</text>
-<text class="step-subtitle" x="257" y="1037">需要上下文 / 记忆</text>
+<text class="step-subtitle" x="257" y="1037">识别任务与权限</text>
 <path d="M 468.333 1025 H 473.333" fill="none" stroke="#246BCE" stroke-width="1.4" marker-end="url(#arrow-control)"/>
 <rect x="476.333" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(486.333 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
-<text class="step-title" x="517.333" y="1018" fill="#8A5A08">2. Memory 检索</text>
-<text class="step-subtitle" x="517.333" y="1037">搜索相关记忆</text>
+<text class="step-title" x="517.333" y="1018" fill="#8A5A08">2. Bootstrap 路由</text>
+<text class="step-subtitle" x="517.333" y="1037">加载入口与契约</text>
 <path d="M 728.667 1025 H 733.667" fill="none" stroke="#246BCE" stroke-width="1.4" marker-end="url(#arrow-control)"/>
 <rect x="736.667" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(746.667 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
-<text class="step-title" x="777.667" y="1018" fill="#8A5A08">3. 构建上下文</text>
-<text class="step-subtitle" x="777.667" y="1037">组装最相关信息</text>
+<text class="step-title" x="777.667" y="1018" fill="#8A5A08">3. 只读检索</text>
+<text class="step-subtitle" x="777.667" y="1037">组装最相关上下文</text>
 <path d="M 989 1025 H 994" fill="none" stroke="#246BCE" stroke-width="1.4" marker-end="url(#arrow-control)"/>
 <rect x="997" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(1007 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="12" cy="9" r="4"/><path fill="none" d="M4 21a8 8 0 0 1 16 0M18 4l1 1 2-2"/></g>
@@ -268,36 +268,36 @@
 <path d="M 1249.33 1025 H 1254.33" fill="none" stroke="#246BCE" stroke-width="1.4" marker-end="url(#arrow-control)"/>
 <rect x="1257.33" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(1267.33 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M5 3h11l3 3v15H5zM16 3v4h4M8 11h8M8 15h6"/></g>
-<text class="step-title" x="1298.33" y="1018" fill="#8A5A08">5. 写入更新记忆</text>
-<text class="step-subtitle" x="1298.33" y="1037">决策 / 结论 / 经验</text>
+<text class="step-title" x="1298.33" y="1018" fill="#8A5A08">5. 提交候选</text>
+<text class="step-subtitle" x="1298.33" y="1037">校验 / 封存 / 接纳</text>
 <path d="M 1509.67 1025 H 1514.67" fill="none" stroke="#246BCE" stroke-width="1.4" marker-end="url(#arrow-control)"/>
 <rect x="1517.67" y="991" width="250.333" height="68" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(1527.67 1012) scale(1)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M7 19h11a4 4 0 0 0 .4-8 7 7 0 0 0-13.3-1.7A5 5 0 0 0 7 19z"/></g>
-<text class="step-title" x="1558.67" y="1018" fill="#8A5A08">6. 同步到各层</text>
-<text class="step-subtitle" x="1558.67" y="1037">Memory / GitHub / 工具</text>
+<text class="step-title" x="1558.67" y="1018" fill="#8A5A08">6. 同 SHA 投影</text>
+<text class="step-subtitle" x="1558.67" y="1037">备份 / 索引 / Skills</text>
 </g>
 <g class="board-principles"><rect x="20" y="1086" width="1760" height="108" rx="12" fill="#F7F8FA" stroke="#6D3BC3"/>
 <text class="principles-title" x="40" y="1144" fill="#354052">核心原则</text>
 <rect x="216" y="1101" width="302.4" height="78" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(229 1126) scale(1.04167)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M9 4a3 3 0 0 0-5 2 3 3 0 0 0 0 5 3 3 0 0 0 2 5 3 3 0 0 0 3 4M15 4a3 3 0 0 1 5 2 3 3 0 0 1 0 5 3 3 0 0 1-2 5 3 3 0 0 1-3 4M9 4v16M15 4v16M9 8h3M12 12h3M9 16h3"/></g>
-<text class="step-title" x="264" y="1132" fill="#354052">记忆最小化</text>
-<text class="step-subtitle" x="264" y="1152">只保存长期有价值的信息</text>
+<text class="step-title" x="264" y="1132" fill="#354052">本地主源</text>
+<text class="step-subtitle" x="264" y="1152">正式 Git main 唯一可写</text>
 <rect x="528.4" y="1101" width="302.4" height="78" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(541.4 1126) scale(1.04167)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle fill="none" cx="10" cy="10" r="6"/><path fill="none" d="m15 15 6 6M7 10h6M10 7v6"/></g>
-<text class="step-title" x="576.4" y="1132" fill="#354052">上下文精准</text>
-<text class="step-subtitle" x="576.4" y="1152">只读取与当前任务相关内容</text>
+<text class="step-title" x="576.4" y="1132" fill="#354052">只读默认</text>
+<text class="step-subtitle" x="576.4" y="1152">客户端从投影发现与检索</text>
 <rect x="840.8" y="1101" width="302.4" height="78" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(853.8 1126) scale(1.04167)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M6 2h9l4 4v16H6zM15 2v5h5M9 12h7M9 16h7"/></g>
-<text class="step-title" x="888.8" y="1132" fill="#354052">单一事实来源</text>
-<text class="step-subtitle" x="888.8" y="1152">重要事实在一个地方维护</text>
+<text class="step-title" x="888.8" y="1132" fill="#354052">同一 SHA</text>
+<text class="step-subtitle" x="888.8" y="1152">备份、索引与部署可核对</text>
 <rect x="1153.2" y="1101" width="302.4" height="78" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(1166.2 1126) scale(1.04167)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path fill="none" d="M20 7v5h-5M4 17v-5h5M18 12a7 7 0 0 0-12-4l-2 2M6 12a7 7 0 0 0 12 4l2-2"/></g>
-<text class="step-title" x="1201.2" y="1132" fill="#354052">持续进化</text>
-<text class="step-subtitle" x="1201.2" y="1152">定期清理、更新与合并记忆</text>
+<text class="step-title" x="1201.2" y="1132" fill="#354052">候选写入</text>
+<text class="step-subtitle" x="1201.2" y="1152">校验和接纳后才进主源</text>
 <rect x="1465.6" y="1101" width="302.4" height="78" rx="9" fill="#fffefa" stroke="#6D3BC3" stroke-width=".7"/>
 <g transform="translate(1478.6 1126) scale(1.04167)" fill="none" stroke="#246BCE" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect fill="none" x="5" y="10" width="14" height="11" rx="2"/><path fill="none" d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></g>
-<text class="step-title" x="1513.6" y="1132" fill="#354052">隐私安全</text>
-<text class="step-subtitle" x="1513.6" y="1152">权限控制与敏感信息保护</text>
+<text class="step-title" x="1513.6" y="1132" fill="#354052">跨设备复验</text>
+<text class="step-subtitle" x="1513.6" y="1152">每个平台独立证明可用</text>
 </g>
 <path class="connection kind-primary" data-kind="primary" d="M 377.6 212 L 377.6 260" fill="none" stroke="#246BCE" stroke-width="2" marker-end="url(#arrow-primary)"/>
 <path class="connection kind-primary" data-kind="primary" d="M 684.8 212 L 684.8 260" fill="none" stroke="#246BCE" stroke-width="2" marker-end="url(#arrow-primary)"/>
@@ -305,9 +305,9 @@
 <path class="connection kind-primary" data-kind="primary" d="M 1299.2 212 L 1299.2 260" fill="none" stroke="#246BCE" stroke-width="2" marker-end="url(#arrow-primary)"/>
 <path class="connection kind-primary" data-kind="primary" d="M 1606.4 212 L 1606.4 260" fill="none" stroke="#246BCE" stroke-width="2" marker-end="url(#arrow-primary)"/>
 <path class="connection kind-feedback" data-kind="feedback" d="M 992 332 L 992 372.5" fill="none" stroke="#7c3aed" stroke-width="2.1" stroke-dasharray="10 4" marker-end="url(#arrow-feedback)" marker-start="url(#arrow-feedback)"/>
-<path class="connection kind-success" data-kind="success" d="M 1338.1 477 L 1344.1 477 L 1350.1 477" fill="none" stroke="#059669" stroke-width="2.7" marker-end="url(#arrow-success)"/>
-<path class="connection kind-success" data-kind="success" d="M 777 581.5 L 777 622" fill="none" stroke="#059669" stroke-width="2.7" marker-end="url(#arrow-success)" marker-start="url(#arrow-success)"/>
-<path class="connection kind-control" data-kind="control" d="M 777.2 738 L 777.2 774" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-dasharray="7 3" marker-end="url(#arrow-control)" marker-start="url(#arrow-control)"/>
+<path class="connection kind-success" data-kind="success" d="M 1335 477 L 1341 477 L 1347 477" fill="none" stroke="#059669" stroke-width="2.7" marker-end="url(#arrow-success)"/>
+<path class="connection kind-success" data-kind="success" d="M 775.5 581.5 L 775.5 622" fill="none" stroke="#059669" stroke-width="2.7" marker-end="url(#arrow-success)" marker-start="url(#arrow-success)"/>
+<path class="connection kind-control" data-kind="control" d="M 771.1 738 L 771.1 774" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-dasharray="7 3" marker-end="url(#arrow-control)" marker-start="url(#arrow-control)"/>
 <path class="connection kind-control" data-kind="control" d="M 992 738 L 992 774" fill="none" stroke="#ea580c" stroke-width="1.8" stroke-dasharray="7 3" marker-end="url(#arrow-control)" marker-start="url(#arrow-control)"/>
 <g class="board-legend"><rect x="506" y="1204" width="788" height="36" rx="11" fill="#fffefa" stroke="#dddcd4"/>
 <path d="M 522 1222 H 550" fill="none" stroke="#246BCE" stroke-width="2" marker-end="url(#arrow-primary)"/><text class="board-legend-text" x="560" y="1226">Primary flow</text>

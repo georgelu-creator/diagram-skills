@@ -3,7 +3,7 @@
   "status": "passed",
   "structural_status": "passed",
   "diagram": {
-    "title": "跨设备云端 Agent 办公系统架构全景图",
+    "title": "跨设备本机优先 Agent 工作系统架构全景图",
     "type": "system-architecture",
     "layout": "board",
     "nodes": 41,
@@ -30,32 +30,32 @@
   "issues": [],
   "artifacts": {
     "source": {
-      "sha256": "4efad468b41050dfba624bf308ac405f95f34c375552c38641c123c2fd9c1159",
+      "sha256": "8f48bc874e643043566b01dd755976d6402e543847e1a8086406c4024d965c03",
       "basis": "file-bytes"
     },
     "svg": {
-      "sha256": "444056e69c806378d31f32fb153c92f47eb2a905890ed32983dc9bae2473d502",
+      "sha256": "37092cb95fc335816cb2eb3e1657bf74174ee10cacd5ed285b64d041cb1d4766",
       "path": "enterprise-agent-office.svg"
     },
     "html": {
-      "sha256": "315481c70d70a3ff48b70d153a07929684f1f801fa33ec7f5a135d9ab65a6e86",
+      "sha256": "dc501d46455f9b8c0a2d04dd47c79714dc3c4d8cd3e695ff531a275e274cc821",
       "path": "enterprise-agent-office.html"
     },
     "png": {
-      "sha256": "89e3252f708ea58b0fa2de949c0729ae6c06846bced3dd786a50ab0e0773a0f5",
+      "sha256": "3f8d2d9da62a560402b142fbd9d790ac3d01751daf9ad2b3baa62c1c626d5211",
       "path": "enterprise-agent-office.png"
     },
     "brief": {
-      "sha256": "e8b026b46b4b36bf862430d3ccc2b669e1cc7c3f47d5b1165f277d8460514fdc",
+      "sha256": "dd421d4a9c1c5b7ece90fed349b9ea2687548cadf00df036769ec8948b3409dc",
       "basis": "file-bytes"
     }
   },
   "visual_review": {
     "status": "passed",
     "artifact": "png",
-    "artifact_sha256": "89e3252f708ea58b0fa2de949c0729ae6c06846bced3dd786a50ab0e0773a0f5",
-    "brief_sha256": "e8b026b46b4b36bf862430d3ccc2b669e1cc7c3f47d5b1165f277d8460514fdc",
-    "source_sha256": "4efad468b41050dfba624bf308ac405f95f34c375552c38641c123c2fd9c1159",
+    "artifact_sha256": "3f8d2d9da62a560402b142fbd9d790ac3d01751daf9ad2b3baa62c1c626d5211",
+    "brief_sha256": "dd421d4a9c1c5b7ece90fed349b9ea2687548cadf00df036769ec8948b3409dc",
+    "source_sha256": "8f48bc874e643043566b01dd755976d6402e543847e1a8086406c4024d965c03",
     "evidence": "review_answers"
   }
 }

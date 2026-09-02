@@ -26,7 +26,7 @@ npx skills add georgelu-creator/diagram-skills --skill diagram-skills
 
 <p align="center">
   <a href="examples/generated/enterprise-agent-office.svg">
-    <img src="examples/generated/enterprise-agent-office.png" alt="跨设备云端 Agent 办公系统架构全景图">
+    <img src="examples/generated/enterprise-agent-office.png" alt="跨设备本机优先 Agent 工作系统架构全景图">
   </a>
 </p>
 

@@ -7,8 +7,8 @@
     {
       "slug": "ai-agent-workspace-architecture",
       "title": "AI Agent Workspace Architecture",
-      "title_zh": "跨设备云端 Agent 办公系统架构全景图",
-      "alt": "跨设备云端 Agent 办公系统架构全景图，展示入口、记忆、工具、资产与任务流",
+      "title_zh": "跨设备本机优先 Agent 工作系统架构全景图",
+      "alt": "跨设备本机优先 Agent 工作系统架构全景图，展示入口、本机 Git 主源、只读投影、工具、备份与任务流",
       "diagram_type": "system-architecture",
       "theme": "paper",
       "status": "available",

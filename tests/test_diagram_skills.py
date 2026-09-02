@@ -131,7 +131,8 @@ class DiagramSkillsTests(unittest.TestCase):
         self.assertEqual(5, report["diagram"]["groups"])
         self.assertGreaterEqual(report["diagram"]["nodes"], 35)
         self.assertEqual(0, report["geometry"]["node_overlap_count"])
-        self.assertIn("Memory MCP / API 网关", svg)
+        self.assertIn("客户端 Bootstrap 与能力路由", svg)
+        self.assertIn("正式 Git main 主源", svg)
         self.assertIn("数据流向说明", svg)
         self.assertIn("Interactive diagram viewport", page)
 
